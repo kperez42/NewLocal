@@ -1,6 +1,7 @@
 /*
- * Celestia Localization - English
+ * NewLocal Localization - English
  * Language: English (en)
+ * Your Community When You're New in Town
  */
 
 // MARK: - Common
@@ -40,38 +41,52 @@
 // MARK: - Profile
 
 "profile.profile" = "Profile";
+"profile.my_local_profile" = "My Local Profile";
 "profile.edit_profile" = "Edit Profile";
-"profile.bio" = "Bio";
+"profile.bio" = "About Me";
 "profile.photos" = "Photos";
 "profile.add_photo" = "Add Photo";
 "profile.settings" = "Settings";
 "profile.age" = "Age";
-"profile.location" = "Location";
+"profile.location" = "Current City";
 "profile.gender" = "Gender";
-"profile.looking_for" = "Looking For";
+"profile.looking_to_connect" = "Looking to Connect";
 "profile.male" = "Male";
 "profile.female" = "Female";
 "profile.non_binary" = "Non-Binary";
+"profile.moved_from" = "Moved From";
+"profile.time_in_city" = "Time in City";
+"profile.why_i_moved" = "Why I Moved";
+"profile.what_to_explore" = "Want to Explore";
+"profile.local_tips" = "Local Tips I Can Share";
+"profile.best_local_find" = "Best Local Find";
+"profile.neighborhood" = "My Neighborhood";
+"profile.new_to_city" = "New to %@";
 
-// MARK: - Swipe
+// MARK: - Discovery
 
-"swipe.discover" = "Discover";
-"swipe.like" = "Like";
-"swipe.dislike" = "Pass";
-"swipe.super_like" = "Super Like";
-"swipe.its_a_match" = "It's a Match!";
-"swipe.send_message" = "Send Message";
-"swipe.keep_swiping" = "Keep Swiping";
-"swipe.no_more_profiles" = "No more profiles available";
+"discover.discover" = "Discover";
+"discover.meet_people" = "Meet People in Your New City";
+"discover.connect" = "Want to Meet";
+"discover.pass" = "Pass";
+"discover.save_profile" = "Save Profile";
+"discover.new_connection" = "New Connection!";
+"discover.send_message" = "Send Message";
+"discover.keep_exploring" = "Keep Exploring";
+"discover.no_more_profiles" = "No more profiles nearby";
+"discover.expand_search" = "Try expanding your search";
 
-// MARK: - Matches
+// MARK: - Connections
 
-"matches.matches" = "Matches";
-"matches.new_match" = "New Match!";
-"matches.no_matches" = "No matches yet";
-"matches.unmatch" = "Unmatch";
-"matches.unmatch_confirm" = "Are you sure you want to unmatch?";
-"matches.matched_with" = "Matched with %@";
+"connections.connections" = "Connections";
+"connections.new_connection" = "New Connection!";
+"connections.no_connections" = "No connections yet";
+"connections.disconnect" = "Disconnect";
+"connections.disconnect_confirm" = "Are you sure you want to disconnect?";
+"connections.connected_with" = "Connected with %@";
+"connections.local_connection" = "Local Connection in %@!";
+"connections.fellow_newcomer" = "Fellow Newcomer";
+"connections.local_guide" = "Local Guide";
 
 // MARK: - Messages
 
@@ -82,6 +97,7 @@
 "messages.delivered" = "Delivered";
 "messages.read" = "Read";
 "messages.typing" = "typing...";
+"messages.start_conversation" = "Start the conversation!";
 
 // MARK: - Premium
 
@@ -92,10 +108,11 @@
 "premium.subscribe" = "Subscribe";
 "premium.restore_purchases" = "Restore Purchases";
 "premium.features" = "Premium Features";
-"premium.unlimited_likes" = "Unlimited Likes";
-"premium.see_who_likes_you" = "See Who Likes You";
-"premium.rewind" = "Rewind Last Swipe";
+"premium.unlimited_connections" = "Unlimited Connections";
+"premium.see_who_viewed" = "See Who Viewed You";
+"premium.advanced_filters" = "Advanced Filters";
 "premium.boost_profile" = "Boost Your Profile";
+"premium.priority_support" = "Priority Support";
 
 // MARK: - Settings
 
@@ -122,9 +139,66 @@
 
 // MARK: - Onboarding
 
-"onboarding.welcome" = "Welcome to Celestia";
-"onboarding.find_your_match" = "Find your perfect match";
+"onboarding.welcome" = "Welcome to NewLocal";
+"onboarding.tagline" = "Your Community When You're New in Town";
+"onboarding.welcome_city" = "Welcome to %@!";
+"onboarding.lets_help_settle" = "Let's help you settle in";
 "onboarding.get_started" = "Get Started";
+"onboarding.when_moved" = "When did you move here?";
+"onboarding.what_explore" = "What do you want to explore?";
+"onboarding.find_community" = "Find your community";
+
+// MARK: - Newcomer Goals
+
+"goals.find_local_friends" = "Find Local Friends";
+"goals.explore_city" = "Explore the City";
+"goals.find_roommate" = "Find a Roommate";
+"goals.get_local_tips" = "Get Local Tips";
+"goals.find_expats" = "Connect with Expats";
+"goals.professional_networking" = "Professional Networking";
+"goals.find_activity_buddies" = "Find Activity Buddies";
+"goals.join_community_groups" = "Join Community Groups";
+"goals.discover_neighborhood" = "Discover My Neighborhood";
+"goals.find_food_spots" = "Find Food Spots";
+
+// MARK: - Connection Types
+
+"connection_type.local_guide" = "Local Guide";
+"connection_type.fellow_newcomer" = "Fellow Newcomer";
+"connection_type.neighborhood_friend" = "Neighborhood Friend";
+"connection_type.activity_buddy" = "Activity Buddy";
+"connection_type.foodie_partner" = "Foodie Partner";
+"connection_type.exploration_buddy" = "Exploration Buddy";
+"connection_type.professional_contact" = "Professional Contact";
+"connection_type.roommate_search" = "Roommate Search";
+"connection_type.event_companion" = "Event Companion";
+
+// MARK: - Time in City
+
+"time_in_city.just_arrived" = "Just Arrived";
+"time_in_city.less_than_3_months" = "Less than 3 months";
+"time_in_city.less_than_1_year" = "Less than 1 year";
+"time_in_city.1_to_3_years" = "1-3 years";
+"time_in_city.3_years_plus" = "3+ years";
+"time_in_city.local" = "Local / Born here";
+
+// MARK: - Relocation Type
+
+"relocation_type.work" = "Work / Career";
+"relocation_type.school" = "School / Education";
+"relocation_type.family" = "Family";
+"relocation_type.adventure" = "Adventure / New Start";
+"relocation_type.retirement" = "Retirement";
+"relocation_type.remote" = "Remote Work / Digital Nomad";
+
+// MARK: - Features
+
+"features.ask_a_local" = "Ask a Local";
+"features.newcomer_events" = "Newcomer Events";
+"features.neighborhood_guide" = "Neighborhood Guide";
+"features.explore_together" = "Explore Together";
+"features.local_tips" = "Local Tips";
+"features.community_groups" = "Community Groups";
 
 // MARK: - Referrals
 
@@ -132,3 +206,13 @@
 "referral.share_code" = "Share your referral code";
 "referral.your_code" = "Your Code";
 "referral.enter_code" = "Enter Referral Code (Optional)";
+"referral.help_friends" = "Help friends discover their new city";
+
+// MARK: - Safety
+
+"safety.community_safety" = "Community Safety";
+"safety.safe_meeting_tips" = "Safe Meeting Tips";
+"safety.report_user" = "Report User";
+"safety.block_user" = "Block User";
+"safety.meet_public" = "Meet in public places";
+"safety.trust_instincts" = "Trust your instincts";

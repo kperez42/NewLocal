@@ -1,8 +1,8 @@
 //
 //  FilterModels.swift
-//  Celestia
+//  NewLocal
 //
-//  Data models for advanced search and filtering
+//  Data models for advanced search and filtering for relocation community app
 //
 
 import Foundation
@@ -38,9 +38,16 @@ struct SearchFilter: Codable, Equatable {
     var exercise: ExerciseFrequency = .any
     var diet: DietPreference = .any
 
-    // MARK: - Relationship
-    var relationshipGoals: [RelationshipGoal] = []
-    var lookingFor: [LookingFor] = []
+    // MARK: - Relocation & Community
+    var newcomerGoals: [NewcomerGoal] = []
+    var connectionTypes: [ConnectionType] = []
+    var timeInCity: TimeInCity?
+    var relocationType: RelocationType?
+    var movedFromCity: String?
+    var movedFromCountry: String?
+    var neighborhood: String?
+    var showLocalsOnly: Bool = false
+    var showNewcomersOnly: Bool = false
 
     // MARK: - Preferences
     var verifiedOnly: Bool = false
@@ -72,7 +79,12 @@ struct SearchFilter: Codable, Equatable {
                smoking == .any &&
                drinking == .any &&
                pets == .any &&
-               relationshipGoals.isEmpty &&
+               newcomerGoals.isEmpty &&
+               connectionTypes.isEmpty &&
+               timeInCity == nil &&
+               relocationType == nil &&
+               !showLocalsOnly &&
+               !showNewcomersOnly &&
                !verifiedOnly
     }
 
@@ -91,7 +103,15 @@ struct SearchFilter: Codable, Equatable {
         if pets != .any { count += 1 }
         if hasChildren != .any { count += 1 }
         if wantsChildren != .any { count += 1 }
-        if !relationshipGoals.isEmpty { count += 1 }
+        if !newcomerGoals.isEmpty { count += 1 }
+        if !connectionTypes.isEmpty { count += 1 }
+        if timeInCity != nil { count += 1 }
+        if relocationType != nil { count += 1 }
+        if movedFromCity != nil { count += 1 }
+        if movedFromCountry != nil { count += 1 }
+        if neighborhood != nil { count += 1 }
+        if showLocalsOnly { count += 1 }
+        if showNewcomersOnly { count += 1 }
         if verifiedOnly { count += 1 }
         if activeInLastDays != nil { count += 1 }
         if newUsers { count += 1 }
@@ -404,55 +424,195 @@ enum DietPreference: String, Codable, CaseIterable {
     }
 }
 
-// MARK: - Relationship Goal
+// MARK: - Newcomer Goal
 
-enum RelationshipGoal: String, Codable, CaseIterable {
-    case longTerm = "long_term"
-    case shortTerm = "short_term"
-    case marriage = "marriage"
-    case friendship = "friendship"
-    case casual = "casual"
-    case figureItOut = "figure_out"
+enum NewcomerGoal: String, Codable, CaseIterable {
+    case findLocalFriends = "find_local_friends"
+    case exploreCity = "explore_city"
+    case findRoommate = "find_roommate"
+    case getLocalTips = "get_local_tips"
+    case findExpats = "find_expats"
+    case professionalNetworking = "professional_networking"
+    case findActivityBuddies = "find_activity_buddies"
+    case joinCommunityGroups = "join_community_groups"
+    case discoverNeighborhood = "discover_neighborhood"
+    case findFoodSpots = "find_food_spots"
 
     var displayName: String {
         switch self {
-        case .longTerm: return "Long-term Relationship"
-        case .shortTerm: return "Short-term Relationship"
-        case .marriage: return "Marriage"
-        case .friendship: return "Friendship"
-        case .casual: return "Casual Dating"
-        case .figureItOut: return "Figure it Out"
+        case .findLocalFriends: return "Find Local Friends"
+        case .exploreCity: return "Explore the City"
+        case .findRoommate: return "Find a Roommate"
+        case .getLocalTips: return "Get Local Tips"
+        case .findExpats: return "Connect with Expats"
+        case .professionalNetworking: return "Professional Networking"
+        case .findActivityBuddies: return "Find Activity Buddies"
+        case .joinCommunityGroups: return "Join Community Groups"
+        case .discoverNeighborhood: return "Discover My Neighborhood"
+        case .findFoodSpots: return "Find Food Spots"
         }
     }
 
     var icon: String {
         switch self {
-        case .longTerm: return "heart.fill"
-        case .shortTerm: return "heart"
-        case .marriage: return "heart.circle.fill"
-        case .friendship: return "person.2.fill"
-        case .casual: return "figure.walk"
-        case .figureItOut: return "questionmark.circle"
+        case .findLocalFriends: return "person.2.fill"
+        case .exploreCity: return "map.fill"
+        case .findRoommate: return "house.fill"
+        case .getLocalTips: return "lightbulb.fill"
+        case .findExpats: return "globe"
+        case .professionalNetworking: return "briefcase.fill"
+        case .findActivityBuddies: return "figure.run"
+        case .joinCommunityGroups: return "person.3.fill"
+        case .discoverNeighborhood: return "building.2.fill"
+        case .findFoodSpots: return "fork.knife"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .findLocalFriends: return "Meet people who live in your new city"
+        case .exploreCity: return "Discover hidden gems and local favorites"
+        case .findRoommate: return "Find someone to share housing with"
+        case .getLocalTips: return "Learn insider tips from locals"
+        case .findExpats: return "Connect with others from your home country"
+        case .professionalNetworking: return "Expand your professional network"
+        case .findActivityBuddies: return "Find people to do activities with"
+        case .joinCommunityGroups: return "Join groups based on interests"
+        case .discoverNeighborhood: return "Get to know your neighborhood"
+        case .findFoodSpots: return "Discover local restaurants and cafes"
         }
     }
 }
 
-// MARK: - Looking For
+// MARK: - Connection Type
 
-enum LookingFor: String, Codable, CaseIterable {
-    case relationshipPartner = "partner"
-    case chatFriends = "chat_friends"
-    case activityPartner = "activity_partner"
-    case travelBuddy = "travel_buddy"
-    case workoutPartner = "workout_partner"
+enum ConnectionType: String, Codable, CaseIterable {
+    case localGuide = "local_guide"
+    case fellowNewcomer = "fellow_newcomer"
+    case neighborhoodFriend = "neighborhood_friend"
+    case activityBuddy = "activity_buddy"
+    case foodiePartner = "foodie_partner"
+    case explorationBuddy = "exploration_buddy"
+    case professionalContact = "professional_contact"
+    case roommateSearch = "roommate_search"
+    case eventCompanion = "event_companion"
 
     var displayName: String {
         switch self {
-        case .relationshipPartner: return "Relationship Partner"
-        case .chatFriends: return "Chat & Friends"
-        case .activityPartner: return "Activity Partner"
-        case .travelBuddy: return "Travel Buddy"
-        case .workoutPartner: return "Workout Partner"
+        case .localGuide: return "Local Guide"
+        case .fellowNewcomer: return "Fellow Newcomer"
+        case .neighborhoodFriend: return "Neighborhood Friend"
+        case .activityBuddy: return "Activity Buddy"
+        case .foodiePartner: return "Foodie Partner"
+        case .explorationBuddy: return "Exploration Buddy"
+        case .professionalContact: return "Professional Contact"
+        case .roommateSearch: return "Roommate Search"
+        case .eventCompanion: return "Event Companion"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .localGuide: return "mappin.and.ellipse"
+        case .fellowNewcomer: return "person.2.wave.2.fill"
+        case .neighborhoodFriend: return "house.and.flag.fill"
+        case .activityBuddy: return "figure.hiking"
+        case .foodiePartner: return "fork.knife.circle.fill"
+        case .explorationBuddy: return "binoculars.fill"
+        case .professionalContact: return "briefcase.fill"
+        case .roommateSearch: return "bed.double.fill"
+        case .eventCompanion: return "ticket.fill"
+        }
+    }
+
+    var description: String {
+        switch self {
+        case .localGuide: return "Someone who knows the city well"
+        case .fellowNewcomer: return "Someone who also recently moved here"
+        case .neighborhoodFriend: return "Someone in your area to hang out with"
+        case .activityBuddy: return "Someone to do hobbies and sports with"
+        case .foodiePartner: return "Someone to try restaurants with"
+        case .explorationBuddy: return "Someone to explore the city with"
+        case .professionalContact: return "Someone for career networking"
+        case .roommateSearch: return "Someone looking for housing together"
+        case .eventCompanion: return "Someone to attend events with"
+        }
+    }
+}
+
+// MARK: - Time in City
+
+enum TimeInCity: String, Codable, CaseIterable {
+    case justArrived = "just_arrived"
+    case lessThan3Months = "less_than_3_months"
+    case lessThan1Year = "less_than_1_year"
+    case oneToThreeYears = "1_to_3_years"
+    case threeYearsPlus = "3_years_plus"
+    case local = "local"
+
+    var displayName: String {
+        switch self {
+        case .justArrived: return "Just Arrived"
+        case .lessThan3Months: return "Less than 3 months"
+        case .lessThan1Year: return "Less than 1 year"
+        case .oneToThreeYears: return "1-3 years"
+        case .threeYearsPlus: return "3+ years"
+        case .local: return "Local / Born here"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .justArrived: return "airplane.arrival"
+        case .lessThan3Months: return "calendar.badge.clock"
+        case .lessThan1Year: return "calendar"
+        case .oneToThreeYears: return "calendar.circle"
+        case .threeYearsPlus: return "calendar.circle.fill"
+        case .local: return "house.fill"
+        }
+    }
+
+    var badgeText: String {
+        switch self {
+        case .justArrived: return "New!"
+        case .lessThan3Months: return "< 3mo"
+        case .lessThan1Year: return "< 1yr"
+        case .oneToThreeYears: return "1-3yr"
+        case .threeYearsPlus: return "3yr+"
+        case .local: return "Local"
+        }
+    }
+}
+
+// MARK: - Relocation Type
+
+enum RelocationType: String, Codable, CaseIterable {
+    case work = "work"
+    case school = "school"
+    case family = "family"
+    case adventure = "adventure"
+    case retirement = "retirement"
+    case remote = "remote"
+
+    var displayName: String {
+        switch self {
+        case .work: return "Work / Career"
+        case .school: return "School / Education"
+        case .family: return "Family"
+        case .adventure: return "Adventure / New Start"
+        case .retirement: return "Retirement"
+        case .remote: return "Remote Work / Digital Nomad"
+        }
+    }
+
+    var icon: String {
+        switch self {
+        case .work: return "briefcase.fill"
+        case .school: return "graduationcap.fill"
+        case .family: return "figure.2.and.child.holdinghands"
+        case .adventure: return "star.fill"
+        case .retirement: return "sun.max.fill"
+        case .remote: return "laptopcomputer"
         }
     }
 }

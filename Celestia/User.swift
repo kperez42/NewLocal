@@ -74,13 +74,19 @@ struct User: Identifiable, Codable, Equatable {
 
     // Relocation Info
     var userType: String = "newcomer"  // "local", "newcomer", "transplant"
-    var movedFrom: String = ""  // Previous city/country
+    var movedFrom: String = ""  // Previous city
     var movedFromCountry: String = ""
     var movedToDate: Date?  // When they moved to current city
-    var whyMoved: String = ""  // Reason for relocation (work, family, adventure, etc.)
+    var timeInCity: String = ""  // How long they've been in the city (maps to TimeInCity enum)
+    var relocationType: String = ""  // Why they moved (maps to RelocationType enum)
+    var whyMoved: String = ""  // Detailed reason for relocation
     var profession: String = ""
     var company: String = ""
     var whatToExplore: [String] = []  // Things they want to discover in their new city
+    var localTips: [String] = []  // Tips they can share (for established residents)
+    var bestLocalFind: String = ""  // Their favorite discovery in the city
+    var connectionTypes: [String] = []  // Types of connections they're looking for
+    var newcomerGoals: [String] = []  // Their goals as a newcomer
     
     // Profile Details
     var languages: [String]
@@ -209,10 +215,16 @@ struct User: Identifiable, Codable, Equatable {
         try container.encode(movedFrom, forKey: .movedFrom)
         try container.encode(movedFromCountry, forKey: .movedFromCountry)
         try container.encodeIfPresent(movedToDate, forKey: .movedToDate)
+        try container.encode(timeInCity, forKey: .timeInCity)
+        try container.encode(relocationType, forKey: .relocationType)
         try container.encode(whyMoved, forKey: .whyMoved)
         try container.encode(profession, forKey: .profession)
         try container.encode(company, forKey: .company)
         try container.encode(whatToExplore, forKey: .whatToExplore)
+        try container.encode(localTips, forKey: .localTips)
+        try container.encode(bestLocalFind, forKey: .bestLocalFind)
+        try container.encode(connectionTypes, forKey: .connectionTypes)
+        try container.encode(newcomerGoals, forKey: .newcomerGoals)
 
         try container.encode(languages, forKey: .languages)
         try container.encode(interests, forKey: .interests)
@@ -273,7 +285,9 @@ struct User: Identifiable, Codable, Equatable {
         case email, fullName, age, gender, bio
         case location, country, neighborhood, latitude, longitude
         case userType, movedFrom, movedFromCountry, movedToDate
+        case timeInCity, relocationType
         case whyMoved, profession, company, whatToExplore
+        case localTips, bestLocalFind, connectionTypes, newcomerGoals
         case languages, interests, photos, profileImageURL
         case timestamp, lastActive, isOnline
         case isPremium, isVerified, isAdmin, premiumTier, subscriptionExpiryDate
@@ -315,10 +329,16 @@ struct User: Identifiable, Codable, Equatable {
         if let movedToDateTs = dictionary["movedToDate"] as? Timestamp {
             self.movedToDate = movedToDateTs.dateValue()
         }
+        self.timeInCity = dictionary["timeInCity"] as? String ?? ""
+        self.relocationType = dictionary["relocationType"] as? String ?? ""
         self.whyMoved = dictionary["whyMoved"] as? String ?? ""
         self.profession = dictionary["profession"] as? String ?? ""
         self.company = dictionary["company"] as? String ?? ""
         self.whatToExplore = dictionary["whatToExplore"] as? [String] ?? []
+        self.localTips = dictionary["localTips"] as? [String] ?? []
+        self.bestLocalFind = dictionary["bestLocalFind"] as? String ?? ""
+        self.connectionTypes = dictionary["connectionTypes"] as? [String] ?? []
+        self.newcomerGoals = dictionary["newcomerGoals"] as? [String] ?? []
 
         self.languages = dictionary["languages"] as? [String] ?? []
         self.interests = dictionary["interests"] as? [String] ?? []
@@ -448,10 +468,16 @@ struct User: Identifiable, Codable, Equatable {
         movedFrom: String = "",
         movedFromCountry: String = "",
         movedToDate: Date? = nil,
+        timeInCity: String = "",
+        relocationType: String = "",
         whyMoved: String = "",
         profession: String = "",
         company: String = "",
         whatToExplore: [String] = [],
+        localTips: [String] = [],
+        bestLocalFind: String = "",
+        connectionTypes: [String] = [],
+        newcomerGoals: [String] = [],
         languages: [String] = [],
         interests: [String] = [],
         photos: [String] = [],
@@ -480,10 +506,16 @@ struct User: Identifiable, Codable, Equatable {
         self.movedFrom = movedFrom
         self.movedFromCountry = movedFromCountry
         self.movedToDate = movedToDate
+        self.timeInCity = timeInCity
+        self.relocationType = relocationType
         self.whyMoved = whyMoved
         self.profession = profession
         self.company = company
         self.whatToExplore = whatToExplore
+        self.localTips = localTips
+        self.bestLocalFind = bestLocalFind
+        self.connectionTypes = connectionTypes
+        self.newcomerGoals = newcomerGoals
         self.languages = languages
         self.interests = interests
         self.photos = photos
