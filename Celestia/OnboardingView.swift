@@ -78,7 +78,7 @@ struct OnboardingView: View {
     let totalSteps = 8
 
     // Step 6 options
-    let relationshipGoalOptions = ["Prefer not to say", "Casual Dating", "Long-term Relationship", "Marriage", "Friendship", "Not Sure Yet"]
+    let relationshipGoalOptions = ["Prefer not to say", "Find Local Friends", "Activity Buddies", "Professional Network", "Roommate Search", "Explore the City", "Not Sure Yet"]
     let heightOptions: [Int] = Array(140...220) // cm range
 
     // Step 7 & 8 options (Lifestyle)
@@ -1365,12 +1365,12 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 20) {
-                    // Relationship Goal
+                    // Connection Goal
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 8) {
-                            Image(systemName: "heart.text.square.fill")
-                                .foregroundColor(.pink)
-                            Text("What are you looking for?")
+                            Image(systemName: "person.2.fill")
+                                .foregroundColor(.teal)
+                            Text("What are you hoping to find?")
                                 .font(.headline)
                         }
 
