@@ -1,8 +1,8 @@
 //
 //  MatchService.swift
-//  Celestia
+//  NewLocal
 //
-//  Service for match-related operations
+//  Service for connection-related operations (when two users mutually want to meet)
 //
 
 import Foundation
@@ -108,7 +108,7 @@ class MatchService: ObservableObject, MatchServiceProtocol, ListenerLifecycleAwa
         listener = nil
     }
     
-    /// Create a new match between two users
+    /// Create a new connection between two users (when both want to meet)
     func createMatch(user1Id: String, user2Id: String) async {
         // CONCURRENCY FIX: Removed redundant check - repository now handles atomically with transaction
         // The FirestoreMatchRepository.createMatch() now uses a deterministic ID and transaction
@@ -119,17 +119,17 @@ class MatchService: ObservableObject, MatchServiceProtocol, ListenerLifecycleAwa
         do {
             let matchId = try await repository.createMatch(match: match)
 
-            // Update match counts for both users (non-blocking - may fail due to permissions)
+            // Update connection counts for both users (non-blocking - may fail due to permissions)
             // Note: Security rules only allow users to update their own document, so updating
-            // the other user's matchCount requires a Cloud Function. For now, we just update
+            // the other user's connectionCount requires a Cloud Function. For now, we just update
             // the current user's count and log if the other fails.
             if let firestoreRepo = repository as? FirestoreMatchRepository {
                 do {
                     try await firestoreRepo.updateMatchCounts(user1Id: user1Id, user2Id: user2Id)
                 } catch {
                     // Expected to fail for the other user due to security rules
-                    // The match is still created, just the denormalized count may be off
-                    Logger.shared.debug("Could not update match counts (expected): \(error.localizedDescription)", category: .matching)
+                    // The connection is still created, just the denormalized count may be off
+                    Logger.shared.debug("Could not update connection counts (expected): \(error.localizedDescription)", category: .matching)
                 }
             }
 
@@ -165,12 +165,12 @@ class MatchService: ObservableObject, MatchServiceProtocol, ListenerLifecycleAwa
                     await notificationService.sendNewMatchNotification(match: matchWithId, otherUser: user2)
                     await notificationService.sendNewMatchNotification(match: matchWithId, otherUser: user1)
                 } catch {
-                    Logger.shared.error("Failed to create user objects for match notification: \(error.localizedDescription)", category: .matching)
+                    Logger.shared.error("Failed to create user objects for connection notification: \(error.localizedDescription)", category: .matching)
                     return
                 }
             }
         } catch {
-            Logger.shared.error("Error creating match: \(error)", category: .general)
+            Logger.shared.error("Error creating connection: \(error)", category: .general)
             self.error = error
         }
     }
@@ -199,12 +199,12 @@ class MatchService: ObservableObject, MatchServiceProtocol, ListenerLifecycleAwa
         }
     }
 
-    /// Unmatch - Deactivate match and clean up related data
+    /// Disconnect - Deactivate connection and clean up related data
     func unmatch(matchId: String, userId: String) async throws {
         if let firestoreRepo = repository as? FirestoreMatchRepository {
             try await firestoreRepo.unmatch(matchId: matchId, userId: userId)
         }
-        Logger.shared.info("Unmatched successfully", category: .matching)
+        Logger.shared.info("Disconnected successfully", category: .matching)
     }
 
     /// Deactivate a match (soft delete)
@@ -226,10 +226,15 @@ class MatchService: ObservableObject, MatchServiceProtocol, ListenerLifecycleAwa
         }
     }
     
-    /// Check if two users have matched
+    /// Check if two users have connected
     func hasMatched(user1Id: String, user2Id: String) async throws -> Bool {
         let match = try await fetchMatch(user1Id: user1Id, user2Id: user2Id)
         return match != nil
+    }
+
+    /// Check if two users are connected (alias for hasMatched)
+    func hasConnected(user1Id: String, user2Id: String) async throws -> Bool {
+        return try await hasMatched(user1Id: user1Id, user2Id: user2Id)
     }
     
     
