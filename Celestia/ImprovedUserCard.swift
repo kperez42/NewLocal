@@ -42,7 +42,7 @@ struct ImprovedUserCard: View {
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(user.fullName), \(user.age) years old")
         .accessibilityValue(buildAccessibilityValue())
-        .accessibilityHint("Swipe right to like, left to pass, or tap for details")
+        .accessibilityHint("Swipe right to connect, left to pass, or tap for details")
         .accessibilityIdentifier(AccessibilityIdentifier.userCard)
         .accessibilityActions([
             AccessibilityCustomAction(name: "Like") {

@@ -833,7 +833,7 @@ struct ProfileView: View {
                         .font(.headline)
                         .foregroundColor(.primary)
 
-                    Text("Unlimited likes & see who likes you")
+                    Text("Unlimited connections & see who's interested")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .lineLimit(1)

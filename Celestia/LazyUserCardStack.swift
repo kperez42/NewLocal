@@ -40,7 +40,7 @@ struct LazyUserCardStack: View {
                     .rotationEffect(.degrees(cardIndex == 0 ? Double(dragOffset.width / 20) : 0))
                     .contentShape(Rectangle())
                     .accessibilityLabel(cardIndex == 0 ? "\(cardData.user.fullName), \(cardData.user.age) years old" : "")
-                    .accessibilityHint(cardIndex == 0 ? "Swipe right to like, left to pass, or tap for full profile" : "")
+                    .accessibilityHint(cardIndex == 0 ? "Swipe right to connect, left to pass, or tap for full profile" : "")
                     .onTapGesture {
                         if cardIndex == 0 {
                             onTap(cardData.user)

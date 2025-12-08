@@ -118,7 +118,7 @@ struct SeeWhoLikesYouView: View {
                         .font(.headline)
                         .foregroundColor(.primary)
 
-                    Text("See who likes you without limits")
+                    Text("See who's interested without limits")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
