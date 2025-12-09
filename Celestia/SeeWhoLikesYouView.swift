@@ -2,7 +2,7 @@
 //  SeeWhoLikesYouView.swift
 //  Celestia
 //
-//  Premium feature: See who has liked you
+//  Premium feature: See who wants to connect with you
 //
 
 import SwiftUI
@@ -45,7 +45,7 @@ struct SeeWhoLikesYouView: View {
                     .padding()
                 }
             }
-            .navigationTitle("Likes")
+            .navigationTitle("Connection Requests")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -78,11 +78,11 @@ struct SeeWhoLikesYouView: View {
     private var headerView: some View {
         VStack(spacing: 8) {
             HStack(spacing: 12) {
-                Image(systemName: "heart.fill")
+                Image(systemName: "person.2.fill")
                     .font(.title)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.pink, .purple],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -93,7 +93,7 @@ struct SeeWhoLikesYouView: View {
                     .foregroundColor(.primary)
             }
 
-            Text(viewModel.usersWhoLiked.count == 1 ? "person likes you" : "people like you")
+            Text(viewModel.usersWhoLiked.count == 1 ? "person wants to connect" : "people want to connect")
                 .font(.title3)
                 .foregroundColor(.secondary)
         }
@@ -109,16 +109,16 @@ struct SeeWhoLikesYouView: View {
             HapticManager.shared.impact(.medium)
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "crown.fill")
+                Image(systemName: "star.circle.fill")
                     .font(.title2)
-                    .foregroundColor(.orange)
+                    .foregroundColor(.teal)
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Upgrade to Premium")
                         .font(.headline)
                         .foregroundColor(.primary)
 
-                    Text("See who likes you without limits")
+                    Text("See who wants to connect without limits")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
@@ -131,7 +131,7 @@ struct SeeWhoLikesYouView: View {
             .padding()
             .background(
                 LinearGradient(
-                    colors: [Color.orange.opacity(0.1), Color.pink.opacity(0.1)],
+                    colors: [Color.teal.opacity(0.1), Color.cyan.opacity(0.1)],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
@@ -188,16 +188,16 @@ struct SeeWhoLikesYouView: View {
 
     private var emptyStateView: some View {
         VStack(spacing: 24) {
-            Image(systemName: "heart.slash")
+            Image(systemName: "person.2.slash")
                 .font(.system(size: 80))
                 .foregroundColor(.gray.opacity(0.5))
 
             VStack(spacing: 8) {
-                Text("No Likes Yet")
+                Text("No Connection Requests Yet")
                     .font(.title2)
                     .fontWeight(.bold)
 
-                Text("Keep swiping to find your perfect match!")
+                Text("Keep exploring to connect with locals and fellow newcomers!")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -237,7 +237,7 @@ struct LikeCardView: View {
                         // Placeholder when no image
                         ZStack {
                             LinearGradient(
-                                colors: [Color.pink.opacity(0.7), Color.purple.opacity(0.5)],
+                                colors: [Color.teal.opacity(0.7), Color.cyan.opacity(0.5)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -343,7 +343,7 @@ class SeeWhoLikesYouViewModel: ObservableObject {
            let lastFetch = lastFetchTime,
            !usersWhoLiked.isEmpty,
            Date().timeIntervalSince(lastFetch) < cacheDuration {
-            Logger.shared.debug("SeeWhoLikesYou cache HIT - using cached data", category: .performance)
+            Logger.shared.debug("ConnectionRequests cache HIT - using cached data", category: .performance)
             return
         }
 
@@ -372,7 +372,7 @@ class SeeWhoLikesYouViewModel: ObservableObject {
             lastFetchTime = Date()
             errorMessage = nil
 
-            Logger.shared.info("Loaded \(users.count) users who liked you (batch query)", category: .matching)
+            Logger.shared.info("Loaded \(users.count) connection requests (batch query)", category: .matching)
 
             // Prefetch images for smooth scrolling
             Task {
@@ -381,8 +381,8 @@ class SeeWhoLikesYouViewModel: ObservableObject {
                 }
             }
         } catch {
-            Logger.shared.error("Error loading likes", category: .matching, error: error)
-            errorMessage = "Failed to load likes. Pull to refresh."
+            Logger.shared.error("Error loading connection requests", category: .matching, error: error)
+            errorMessage = "Failed to load connection requests. Pull to refresh."
         }
     }
 
@@ -438,14 +438,14 @@ class SeeWhoLikesYouViewModel: ObservableObject {
 
             if isMatch {
                 HapticManager.shared.notification(.success)
-                Logger.shared.info("Liked back user - it's a match!", category: .matching)
+                Logger.shared.info("Connected back - you're now connected!", category: .matching)
             } else {
                 HapticManager.shared.impact(.medium)
             }
 
             return isMatch
         } catch {
-            Logger.shared.error("Error liking back user", category: .matching, error: error)
+            Logger.shared.error("Error connecting back with user", category: .matching, error: error)
             HapticManager.shared.notification(.error)
             return false
         }

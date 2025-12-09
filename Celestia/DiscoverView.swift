@@ -1,7 +1,8 @@
 //
 //  DiscoverView.swift
-//  Celestia
+//  NewLocal
 //
+//  Discover locals and fellow newcomers in your community
 //  ACCESSIBILITY: Full VoiceOver support, Dynamic Type, Reduce Motion, and WCAG 2.1 AA compliant
 //
 
@@ -23,9 +24,9 @@ struct DiscoverView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                // Background
+                // Background - NewLocal teal theme
                 LinearGradient(
-                    colors: [Color.purple.opacity(0.1), Color.pink.opacity(0.05)],
+                    colors: [Color.teal.opacity(0.1), Color.cyan.opacity(0.05)],
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
@@ -70,7 +71,7 @@ struct DiscoverView: View {
             .accessibilityIdentifier(AccessibilityIdentifier.discoverView)
             .task {
                 await viewModel.loadUsers()
-                VoiceOverAnnouncement.screenChanged(to: "Discover view. \(viewModel.users.count) potential matches available.")
+                VoiceOverAnnouncement.screenChanged(to: "Discover view. \(viewModel.users.count) people to connect with available.")
             }
             .refreshable {
                 HapticManager.shared.impact(.light)
@@ -162,7 +163,7 @@ struct DiscoverView: View {
                         if viewModel.hasActiveFilters {
                             Image(systemName: "line.3.horizontal.decrease.circle.fill")
                                 .font(.caption)
-                                .foregroundColor(.purple)
+                                .foregroundColor(.teal)
                         }
                     }
                 }
@@ -178,12 +179,12 @@ struct DiscoverView: View {
             } label: {
                 Image(systemName: "shuffle")
                     .font(.title3)
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                     .frame(width: 44, height: 44)
             }
             .accessibilityElement(
                 label: "Shuffle users",
-                hint: "Randomly reorder the list of potential matches",
+                hint: "Randomly reorder the list of community members",
                 traits: .isButton,
                 identifier: AccessibilityIdentifier.shuffleButton
             )
@@ -197,7 +198,7 @@ struct DiscoverView: View {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: viewModel.hasActiveFilters ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
                         .font(.title2)
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
 
                     if viewModel.hasActiveFilters {
                         Circle()
@@ -211,7 +212,7 @@ struct DiscoverView: View {
             }
             .accessibilityElement(
                 label: viewModel.hasActiveFilters ? "Filters active" : "Filters",
-                hint: "Show discovery filters to refine your matches",
+                hint: "Show discovery filters to refine who you see",
                 traits: .isButton,
                 identifier: AccessibilityIdentifier.filterButton,
                 value: viewModel.hasActiveFilters ? "Active" : "Inactive"
@@ -268,7 +269,7 @@ struct DiscoverView: View {
                     )
                     .disabled(viewModel.isProcessingAction)
 
-                    // Super Like button
+                    // Priority Connect button
                     SwipeActionButton(
                         icon: "star.fill",
                         iconSize: .title2,
@@ -280,35 +281,35 @@ struct DiscoverView: View {
                     ) {
                         Task {
                             await viewModel.handleSuperLike()
-                            VoiceOverAnnouncement.announce("Super like sent!")
+                            VoiceOverAnnouncement.announce("Priority connection sent!")
                         }
                     }
                     .accessibilityElement(
-                        label: "Super Like",
-                        hint: "Send a super like to stand out and increase your chances of matching",
+                        label: "Priority Connect",
+                        hint: "Send a priority connection to stand out and increase your chances of connecting",
                         traits: .isButton,
                         identifier: AccessibilityIdentifier.superLikeButton
                     )
                     .disabled(viewModel.isProcessingAction)
 
-                    // Like button
+                    // Connect button
                     SwipeActionButton(
-                        icon: "heart.fill",
+                        icon: "person.badge.plus.fill",
                         iconSize: .title,
                         iconWeight: .bold,
                         size: 68,
-                        colors: [Color.green.opacity(0.9), Color.green],
-                        shadowColor: .green.opacity(0.4),
+                        colors: [Color.teal.opacity(0.9), Color.teal],
+                        shadowColor: .teal.opacity(0.4),
                         isProcessing: viewModel.isProcessingAction
                     ) {
                         Task {
                             await viewModel.handleLike()
-                            VoiceOverAnnouncement.announce("Liked! Next profile.")
+                            VoiceOverAnnouncement.announce("Connection request sent! Next profile.")
                         }
                     }
                     .accessibilityElement(
-                        label: "Like",
-                        hint: "Like this profile to potentially match",
+                        label: "Connect",
+                        hint: "Request to connect with this person",
                         traits: .isButton,
                         identifier: AccessibilityIdentifier.likeButton
                     )
@@ -372,7 +373,7 @@ struct DiscoverView: View {
                 .foregroundColor(.white)
                 .background(
                     LinearGradient(
-                        colors: [.purple, .pink],
+                        colors: [.teal, .cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -397,14 +398,14 @@ struct DiscoverView: View {
                 .font(.system(size: 80))
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.purple.opacity(0.6), .pink.opacity(0.4)],
+                        colors: [.teal.opacity(0.6), .cyan.opacity(0.4)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
                 )
 
             VStack(spacing: 12) {
-                Text(viewModel.hasActiveFilters ? "No Matches Found" : "No More Profiles")
+                Text(viewModel.hasActiveFilters ? "No Results Found" : "No More People")
                     .font(.title2)
                     .fontWeight(.bold)
                     .dynamicTypeSize(min: .large, max: .accessibility2)
@@ -412,7 +413,7 @@ struct DiscoverView: View {
 
                 Text(viewModel.hasActiveFilters ?
                      "Try adjusting your filters to see more people" :
-                     "Check back later for new people nearby")
+                     "Check back later for new community members nearby")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -438,7 +439,7 @@ struct DiscoverView: View {
                         .foregroundColor(.white)
                         .background(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -464,7 +465,7 @@ struct DiscoverView: View {
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 16)
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                     .background(Color(.systemGray6))
                     .cornerRadius(16)
                     .contentShape(RoundedRectangle(cornerRadius: 16))
@@ -490,7 +491,7 @@ struct DiscoverView: View {
                     .font(.system(size: 80))
                     .foregroundColor(.yellow)
 
-                Text("It's a Match! 🎉")
+                Text("You're Connected! 🎉")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
@@ -498,7 +499,7 @@ struct DiscoverView: View {
                     .accessibilityAddTraits(.isHeader)
 
                 if let user = viewModel.matchedUser {
-                    Text("You and \(user.fullName) liked each other!")
+                    Text("You and \(user.fullName) want to connect!")
                         .font(.title3)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
@@ -517,17 +518,17 @@ struct DiscoverView: View {
                     viewModel.dismissMatchAnimation()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(.purple)
+                .tint(.teal)
                 .controlSize(.large)
 
-                Button("Keep Swiping") {
+                Button("Keep Exploring") {
                     viewModel.dismissMatchAnimation()
                 }
                 .foregroundColor(.white)
             }
             .task {
                 if let user = viewModel.matchedUser {
-                    VoiceOverAnnouncement.announce("It's a match! You and \(user.fullName) liked each other!")
+                    VoiceOverAnnouncement.announce("You're connected! You and \(user.fullName) want to connect!")
                 }
             }
             .padding(40)
@@ -547,9 +548,9 @@ struct DiscoverView: View {
                 }
             }
             .overlay(alignment: .topTrailing) {
-                // Like indicator
+                // Connect indicator
                 if cardIndex == 0 && viewModel.dragOffset.width > 50 {
-                    swipeIndicator(icon: "heart.fill", color: .green, text: "LIKE")
+                    swipeIndicator(icon: "person.badge.plus.fill", color: .teal, text: "CONNECT")
                         .opacity(min(1.0, Double(viewModel.dragOffset.width) / 100.0))
                 }
             }
@@ -572,13 +573,13 @@ struct DiscoverView: View {
                 isHidden: cardIndex != 0
             )
             .accessibilityActions(cardIndex == 0 ? [
-                AccessibilityCustomAction(name: "Like") {
+                AccessibilityCustomAction(name: "Connect") {
                     Task { await viewModel.handleLike() }
                 },
                 AccessibilityCustomAction(name: "Pass") {
                     Task { await viewModel.handlePass() }
                 },
-                AccessibilityCustomAction(name: "Super Like") {
+                AccessibilityCustomAction(name: "Priority Connect") {
                     Task { await viewModel.handleSuperLike() }
                 },
                 AccessibilityCustomAction(name: "View Profile") {
