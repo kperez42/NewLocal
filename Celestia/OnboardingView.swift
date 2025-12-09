@@ -44,28 +44,30 @@ struct OnboardingView: View {
     @State private var photoImages: [UIImage] = []
     @State private var isUploadingPhotos = false
 
-    // Step 4: Preferences
-    @State private var lookingFor = "Everyone"
+    // Step 4: Relocation Story (NewLocal)
+    @State private var userType: String = "newcomer"  // local, newcomer, transplant
+    @State private var movedFrom: String = ""
+    @State private var movedToDate: Date = Date()
+    @State private var whyMoved: String = ""
     @State private var selectedInterests: [String] = []
     @State private var selectedLanguages: [String] = []
 
-    // Step 6: Additional Details (Optional)
-    @State private var height: Int? = nil
-    @State private var relationshipGoal: String = "Prefer not to say"
-    @State private var ageRangeMin: Int = 18
-    @State private var ageRangeMax: Int = 50
+    // Step 6: NewLocal Details
+    @State private var neighborhood: String = ""
+    @State private var profession: String = ""
+    @State private var whatToExplore: [String] = []
+    @State private var lookingToConnect: [String] = []
     @State private var maxDistance: Int = 50
 
-    // Step 7: Lifestyle (NEW)
+    // Step 7: Professional (Optional)
     @State private var educationLevel: String = ""
-    @State private var religion: String = ""
-    @State private var smoking: String = ""
-    @State private var drinking: String = ""
+    @State private var company: String = ""
+    @State private var industry: String = ""
 
-    // Step 8: More About You (NEW)
-    @State private var exercise: String = ""
+    // Step 8: More About You (Optional)
     @State private var pets: String = ""
-    @State private var diet: String = ""
+    @State private var hasKids: Bool = false
+    @State private var personalNote: String = ""
 
     @State private var isLoading = false
     @State private var showError = false
@@ -74,29 +76,49 @@ struct OnboardingView: View {
     @State private var onboardingStartTime = Date()
     
     let genderOptions = ["Male", "Female", "Non-binary", "Other"]
-    let lookingForOptions = ["Men", "Women", "Everyone"]
     let totalSteps = 8
 
-    // Step 6 options
-    let relationshipGoalOptions = ["Prefer not to say", "Casual Dating", "Long-term Relationship", "Marriage", "Friendship", "Not Sure Yet"]
-    let heightOptions: [Int] = Array(140...220) // cm range
+    // NewLocal - User Type Options
+    let userTypeOptions = [
+        ("local", "I'm a Local", "Been here 2+ years, want to help newcomers"),
+        ("newcomer", "I'm a Newcomer", "Recently moved (< 1 year)"),
+        ("transplant", "I'm a Transplant", "Moved here 1-2 years ago")
+    ]
 
-    // Step 7 & 8 options (Lifestyle)
+    // NewLocal - Why Moved Options
+    let whyMovedOptions = [
+        "Work/Career", "School/Education", "Family", "Partner/Spouse",
+        "Fresh Start", "Weather/Climate", "Cost of Living", "Adventure",
+        "Remote Work Freedom", "Other"
+    ]
+
+    // NewLocal - What to Explore Options
+    let exploreOptions = [
+        "Best Restaurants", "Hidden Gems", "Nightlife", "Outdoor Activities",
+        "Coffee Shops", "Fitness & Gyms", "Art & Culture", "Local Events",
+        "Neighborhoods", "Shopping", "Parks & Nature", "Family Activities",
+        "Pet-Friendly Places", "Professional Networking", "Sports & Recreation"
+    ]
+
+    // NewLocal - Connection Goals
+    let connectionGoalOptions = [
+        "Find Local Guides", "Meet Other Newcomers", "Professional Networking",
+        "Make New Friends", "Find Activity Partners", "Learn About Neighborhoods",
+        "Get Local Recommendations", "Help Newcomers (if local)"
+    ]
+
+    // Professional Options
     let educationOptions = ["", "High School", "Some College", "Associate's Degree", "Bachelor's Degree", "Master's Degree", "Doctorate", "Trade School", "Other"]
-    let religionOptions = ["", "Christian", "Catholic", "Jewish", "Muslim", "Hindu", "Buddhist", "Spiritual", "Agnostic", "Atheist", "Other", "Prefer not to say"]
-    let smokingOptions = ["", "Never", "Sometimes", "Regularly", "Trying to quit", "Prefer not to say"]
-    let drinkingOptions = ["", "Never", "Socially", "Occasionally", "Regularly", "Prefer not to say"]
-    let exerciseOptions = ["", "Daily", "Often (3-4x/week)", "Sometimes (1-2x/week)", "Rarely", "Never"]
-    let petsOptions = ["", "Dog", "Cat", "Both", "Other pets", "No pets", "Want pets", "Allergic"]
-    let dietOptions = ["", "Omnivore", "Vegetarian", "Vegan", "Pescatarian", "Keto", "Halal", "Kosher", "Other"]
-    
+    let industryOptions = ["", "Technology", "Healthcare", "Finance", "Education", "Creative/Arts", "Retail", "Hospitality", "Manufacturing", "Government", "Non-profit", "Other"]
+    let petsOptions = ["", "Dog", "Cat", "Both", "Other pets", "No pets", "Want pets"]
+
     let availableInterests = [
-        "Food & Restaurants", "Nightlife", "Outdoor Activities", "Sports", "Fitness",
+        "Food & Restaurants", "Outdoor Activities", "Sports", "Fitness",
         "Art & Culture", "Music", "Tech & Startups", "Professional Networking", "Travel",
         "Hiking", "Coffee Shops", "Photography", "Local Events", "Gaming",
-        "Cooking", "Reading", "Yoga", "Running", "Volunteering"
+        "Cooking", "Reading", "Yoga", "Running", "Volunteering", "Nightlife"
     ]
-    
+
     let availableLanguages = [
         "English", "Spanish", "French", "German", "Italian",
         "Portuguese", "Chinese", "Japanese", "Korean", "Arabic"
@@ -323,10 +345,10 @@ struct OnboardingView: View {
         case 0: return "Basic Info"
         case 1: return "About You"
         case 2: return "Your Photos"
-        case 3: return "Preferences"
+        case 3: return "Your Story"
         case 4: return "Interests"
-        case 5: return "Better Matches"
-        case 6: return "Your Lifestyle"
+        case 5: return "What to Explore"
+        case 6: return "Connections"
         case 7: return "Final Details"
         default: return ""
         }
@@ -335,12 +357,12 @@ struct OnboardingView: View {
     private var stepSubtitle: String {
         switch currentStep {
         case 0: return "Tell us who you are"
-        case 1: return "Share your story"
-        case 2: return "Show your best self"
-        case 3: return "What you're looking for"
+        case 1: return "Share a bit about yourself"
+        case 2: return "Help others recognize you"
+        case 3: return "Local or newcomer?"
         case 4: return "What makes you unique"
-        case 5: return "Optional • Skip anytime"
-        case 6: return "Your habits & preferences"
+        case 5: return "What do you want to discover?"
+        case 6: return "Who do you want to meet?"
         case 7: return "Almost done!"
         default: return ""
         }
@@ -1114,87 +1136,226 @@ struct OnboardingView: View {
         .padding(.vertical, 4)
     }
     
-    // MARK: - Step 4: Preferences
-    
+    // MARK: - Step 4: Your Story (NewLocal)
+
     private var step4View: some View {
         ScrollView(showsIndicators: false) {
-            VStack(spacing: 30) {
+            VStack(spacing: 24) {
                 // Icon
                 ZStack {
                     Circle()
-                        .fill(Color.purple.opacity(0.15))
+                        .fill(Color.teal.opacity(0.15))
                         .frame(width: 100, height: 100)
-                    
-                    Image(systemName: "heart.fill")
+
+                    Image(systemName: "map.fill")
                         .font(.system(size: 50))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .blue],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
                 }
-                
+
                 VStack(spacing: 8) {
-                    Text("Dating Preferences")
+                    Text("Your Story")
                         .font(.title)
                         .fontWeight(.bold)
-                    
-                    Text("Who are you interested in?")
+
+                    Text("Tell us about your journey")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                
-                VStack(alignment: .leading, spacing: 12) {
-                    Text("Interested in")
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.secondary)
-                    
-                    ForEach(lookingForOptions, id: \.self) { option in
-                        Button {
-                            withAnimation(.spring(response: 0.3)) {
-                                lookingFor = option
-                                HapticManager.shared.selection()
-                            }
-                        } label: {
-                            HStack {
-                                Text(option)
-                                    .fontWeight(.medium)
-                                
-                                Spacer()
-                                
-                                if lookingFor == option {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.purple)
-                                } else {
-                                    Image(systemName: "circle")
-                                        .foregroundColor(.gray.opacity(0.3))
+
+                VStack(spacing: 20) {
+                    // User Type Selection
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Are you a local or newcomer?")
+                            .font(.headline)
+                            .foregroundColor(.primary)
+
+                        ForEach(userTypeOptions, id: \.0) { option in
+                            Button {
+                                withAnimation(.spring(response: 0.3)) {
+                                    userType = option.0
+                                    HapticManager.shared.selection()
                                 }
+                            } label: {
+                                HStack {
+                                    VStack(alignment: .leading, spacing: 4) {
+                                        Text(option.1)
+                                            .fontWeight(.semibold)
+                                        Text(option.2)
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                    }
+
+                                    Spacer()
+
+                                    if userType == option.0 {
+                                        Image(systemName: "checkmark.circle.fill")
+                                            .foregroundColor(.teal)
+                                    } else {
+                                        Image(systemName: "circle")
+                                            .foregroundColor(.gray.opacity(0.3))
+                                    }
+                                }
+                                .padding()
+                                .background(
+                                    userType == option.0 ?
+                                    LinearGradient(
+                                        colors: [Color.teal.opacity(0.1), Color.blue.opacity(0.05)],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ) :
+                                    LinearGradient(colors: [Color.white], startPoint: .leading, endPoint: .trailing)
+                                )
+                                .cornerRadius(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(
+                                            userType == option.0 ? Color.teal.opacity(0.5) : Color.gray.opacity(0.2),
+                                            lineWidth: 1
+                                        )
+                                )
                             }
-                            .padding()
-                            .background(
-                                lookingFor == option ?
-                                LinearGradient(
-                                    colors: [Color.purple.opacity(0.1), Color.pink.opacity(0.05)],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ) :
-                                LinearGradient(colors: [Color.white], startPoint: .leading, endPoint: .trailing)
+                            .foregroundColor(.primary)
+                        }
+                    }
+
+                    // Show relocation questions only for newcomers/transplants
+                    if userType != "local" {
+                        // Where did you move from?
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                Text("Where did you move from?")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(.secondary)
+
+                                Text("*")
+                                    .foregroundColor(.red)
+                                    .font(.subheadline)
+                            }
+
+                            TextField("e.g. Chicago, IL or London, UK", text: $movedFrom)
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(12)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(movedFrom.isEmpty ? Color.red.opacity(0.5) : Color.teal.opacity(0.2), lineWidth: 1)
+                                )
+                        }
+
+                        // When did you move?
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("When did you move here?")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.secondary)
+
+                            DatePicker(
+                                "",
+                                selection: $movedToDate,
+                                in: ...Date(),
+                                displayedComponents: .date
                             )
+                            .datePickerStyle(.compact)
+                            .padding()
+                            .background(Color.white)
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(
-                                        lookingFor == option ? Color.purple.opacity(0.5) : Color.gray.opacity(0.2),
-                                        lineWidth: 1
-                                    )
+                                    .stroke(Color.teal.opacity(0.2), lineWidth: 1)
                             )
                         }
-                        .foregroundColor(.primary)
+
+                        // Why did you move?
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Why did you move?")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                                .foregroundColor(.secondary)
+
+                            FlowLayout3(spacing: 8) {
+                                ForEach(whyMovedOptions, id: \.self) { reason in
+                                    Button {
+                                        withAnimation {
+                                            whyMoved = reason
+                                            HapticManager.shared.selection()
+                                        }
+                                    } label: {
+                                        Text(reason)
+                                            .font(.subheadline)
+                                            .fontWeight(.medium)
+                                            .foregroundColor(whyMoved == reason ? .white : .teal)
+                                            .padding(.horizontal, 14)
+                                            .padding(.vertical, 8)
+                                            .background(
+                                                whyMoved == reason ?
+                                                LinearGradient(
+                                                    colors: [Color.teal, Color.blue],
+                                                    startPoint: .leading,
+                                                    endPoint: .trailing
+                                                ) :
+                                                LinearGradient(colors: [Color.teal.opacity(0.1)], startPoint: .leading, endPoint: .trailing)
+                                            )
+                                            .cornerRadius(20)
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // Neighborhood
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("What neighborhood are you in?")
+                            .font(.subheadline)
+                            .fontWeight(.medium)
+                            .foregroundColor(.secondary)
+
+                        TextField("e.g. Downtown, Westside, etc.", text: $neighborhood)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.teal.opacity(0.2), lineWidth: 1)
+                            )
                     }
                 }
+
+                // Info card
+                HStack(spacing: 12) {
+                    Image(systemName: "person.2.fill")
+                        .font(.title2)
+                        .foregroundColor(.teal)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(userType == "local" ? "Help newcomers!" : "Connect with locals!")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+
+                        Text(userType == "local" ?
+                             "Share your knowledge and help people settle in" :
+                             "Get tips and recommendations from people who know the city")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .padding()
+                .background(
+                    LinearGradient(
+                        colors: [Color.teal.opacity(0.1), Color.blue.opacity(0.05)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(12)
             }
             .padding(20)
             .padding(.top, 20)
@@ -1316,9 +1477,316 @@ struct OnboardingView: View {
         }
     }
 
-    // MARK: - Step 6: Better Matches (Optional)
+    // MARK: - Step 6: What to Explore (NewLocal)
 
     private var step6View: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 24) {
+                // Icon
+                ZStack {
+                    Circle()
+                        .fill(Color.orange.opacity(0.15))
+                        .frame(width: 100, height: 100)
+
+                    Image(systemName: "binoculars.fill")
+                        .font(.system(size: 50))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.orange, .yellow],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                }
+
+                VStack(spacing: 8) {
+                    Text("What to Explore")
+                        .font(.title)
+                        .fontWeight(.bold)
+
+                    Text("What do you want to discover in your city?")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+
+                    // Selection count
+                    HStack(spacing: 6) {
+                        Image(systemName: whatToExplore.count >= 3 ? "checkmark.circle.fill" : "info.circle.fill")
+                            .font(.caption)
+                        Text(whatToExplore.count >= 3 ? "\(whatToExplore.count) selected" : "Select at least 3")
+                            .font(.caption)
+                            .fontWeight(.medium)
+                    }
+                    .foregroundColor(whatToExplore.count >= 3 ? .green : .orange)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(whatToExplore.count >= 3 ? Color.green.opacity(0.1) : Color.orange.opacity(0.1))
+                    .cornerRadius(20)
+                    .padding(.top, 4)
+                }
+
+                // Explore Options
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("I want to find...")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    FlowLayout3(spacing: 10) {
+                        ForEach(exploreOptions, id: \.self) { option in
+                            Button {
+                                withAnimation(.spring(response: 0.3)) {
+                                    if whatToExplore.contains(option) {
+                                        whatToExplore.removeAll { $0 == option }
+                                    } else {
+                                        whatToExplore.append(option)
+                                    }
+                                    HapticManager.shared.selection()
+                                }
+                            } label: {
+                                Text(option)
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                    .foregroundColor(whatToExplore.contains(option) ? .white : .orange)
+                                    .padding(.horizontal, 14)
+                                    .padding(.vertical, 10)
+                                    .background(
+                                        whatToExplore.contains(option) ?
+                                        LinearGradient(
+                                            colors: [Color.orange, Color.yellow.opacity(0.8)],
+                                            startPoint: .leading,
+                                            endPoint: .trailing
+                                        ) :
+                                        LinearGradient(colors: [Color.orange.opacity(0.1)], startPoint: .leading, endPoint: .trailing)
+                                    )
+                                    .cornerRadius(20)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(whatToExplore.contains(option) ? Color.clear : Color.orange.opacity(0.3), lineWidth: 1)
+                                    )
+                            }
+                        }
+                    }
+                }
+
+                // Max Distance for Connections
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "location.circle.fill")
+                            .foregroundColor(.blue)
+                        Text("Discovery Distance")
+                            .font(.headline)
+
+                        Spacer()
+
+                        Text("\(maxDistance) miles")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.blue)
+                    }
+
+                    VStack(alignment: .leading, spacing: 8) {
+                        Slider(
+                            value: Binding(
+                                get: { Double(maxDistance) },
+                                set: { maxDistance = Int($0) }
+                            ),
+                            in: 5...100,
+                            step: 5
+                        )
+                        .tint(.blue)
+
+                        HStack {
+                            Text("5 miles")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                            Spacer()
+                            Text("100 miles")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(12)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                    )
+                }
+
+                // Benefit card
+                HStack(spacing: 12) {
+                    Image(systemName: "sparkles")
+                        .font(.title2)
+                        .foregroundColor(.orange)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Personalized Recommendations")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+
+                        Text("We'll match you with locals who know the best spots for what you want to explore!")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .padding()
+                .background(
+                    LinearGradient(
+                        colors: [Color.orange.opacity(0.1), Color.yellow.opacity(0.05)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(12)
+            }
+            .padding(20)
+            .padding(.top, 20)
+        }
+    }
+
+    // MARK: - Step 7: Connection Goals (NewLocal)
+
+    private var step7View: some View {
+        ScrollView(showsIndicators: false) {
+            VStack(spacing: 24) {
+                // Icon
+                ZStack {
+                    Circle()
+                        .fill(Color.purple.opacity(0.15))
+                        .frame(width: 100, height: 100)
+
+                    Image(systemName: "person.2.fill")
+                        .font(.system(size: 50))
+                        .foregroundStyle(
+                            LinearGradient(
+                                colors: [.purple, .pink],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                }
+
+                VStack(spacing: 8) {
+                    Text("Connection Goals")
+                        .font(.title)
+                        .fontWeight(.bold)
+
+                    Text("What kind of connections are you looking for?")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                }
+
+                // Connection Goal Options
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("I'm looking to...")
+                        .font(.headline)
+                        .foregroundColor(.primary)
+
+                    ForEach(connectionGoalOptions, id: \.self) { goal in
+                        Button {
+                            withAnimation(.spring(response: 0.3)) {
+                                if lookingToConnect.contains(goal) {
+                                    lookingToConnect.removeAll { $0 == goal }
+                                } else {
+                                    lookingToConnect.append(goal)
+                                }
+                                HapticManager.shared.selection()
+                            }
+                        } label: {
+                            HStack {
+                                Text(goal)
+                                    .fontWeight(.medium)
+
+                                Spacer()
+
+                                if lookingToConnect.contains(goal) {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundColor(.purple)
+                                } else {
+                                    Image(systemName: "circle")
+                                        .foregroundColor(.gray.opacity(0.3))
+                                }
+                            }
+                            .padding()
+                            .background(
+                                lookingToConnect.contains(goal) ?
+                                LinearGradient(
+                                    colors: [Color.purple.opacity(0.1), Color.pink.opacity(0.05)],
+                                    startPoint: .leading,
+                                    endPoint: .trailing
+                                ) :
+                                LinearGradient(colors: [Color.white], startPoint: .leading, endPoint: .trailing)
+                            )
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(
+                                        lookingToConnect.contains(goal) ? Color.purple.opacity(0.5) : Color.gray.opacity(0.2),
+                                        lineWidth: 1
+                                    )
+                            )
+                        }
+                        .foregroundColor(.primary)
+                    }
+                }
+
+                // Professional Info (Optional)
+                VStack(alignment: .leading, spacing: 12) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "briefcase.fill")
+                            .foregroundColor(.blue)
+                        Text("Your Profession (Optional)")
+                            .font(.headline)
+                    }
+
+                    TextField("e.g. Software Engineer, Teacher, etc.", text: $profession)
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(12)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 12)
+                                .stroke(Color.blue.opacity(0.2), lineWidth: 1)
+                        )
+
+                    Text("Great for professional networking with others in your field")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+
+                // Info card
+                HStack(spacing: 12) {
+                    Image(systemName: "lightbulb.fill")
+                        .font(.title3)
+                        .foregroundColor(.yellow)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Smart Matching")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+
+                        Text("We'll connect you with people who share your goals and can help you settle in!")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+
+                    Spacer()
+                }
+                .padding()
+                .background(Color.yellow.opacity(0.1))
+                .cornerRadius(12)
+            }
+            .padding(20)
+            .padding(.top, 20)
+        }
+    }
+
+    // MARK: - Step 8: Final Details (NewLocal)
+
+    private var step8View: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 24) {
                 // Icon
@@ -1327,11 +1795,11 @@ struct OnboardingView: View {
                         .fill(Color.green.opacity(0.15))
                         .frame(width: 100, height: 100)
 
-                    Image(systemName: "sparkles")
+                    Image(systemName: "checkmark.seal.fill")
                         .font(.system(size: 50))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.green, .mint],
+                                colors: [.green, .teal],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -1339,11 +1807,11 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 8) {
-                    Text("Get Better Matches")
+                    Text("Almost Done!")
                         .font(.title)
                         .fontWeight(.bold)
 
-                    Text("These details help find your perfect match")
+                    Text("A few optional details to complete your profile")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -1365,319 +1833,6 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 20) {
-                    // Relationship Goal
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "heart.text.square.fill")
-                                .foregroundColor(.pink)
-                            Text("What are you looking for?")
-                                .font(.headline)
-                        }
-
-                        ForEach(relationshipGoalOptions.filter { $0 != "Prefer not to say" }, id: \.self) { goal in
-                            Button {
-                                withAnimation(.spring(response: 0.3)) {
-                                    relationshipGoal = goal
-                                    HapticManager.shared.selection()
-                                }
-                            } label: {
-                                HStack {
-                                    Text(goal)
-                                        .fontWeight(.medium)
-
-                                    Spacer()
-
-                                    if relationshipGoal == goal {
-                                        Image(systemName: "checkmark.circle.fill")
-                                            .foregroundColor(.pink)
-                                    } else {
-                                        Image(systemName: "circle")
-                                            .foregroundColor(.gray.opacity(0.3))
-                                    }
-                                }
-                                .padding()
-                                .background(
-                                    relationshipGoal == goal ?
-                                    LinearGradient(
-                                        colors: [Color.pink.opacity(0.1), Color.purple.opacity(0.05)],
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    ) :
-                                    LinearGradient(colors: [Color.white], startPoint: .leading, endPoint: .trailing)
-                                )
-                                .cornerRadius(12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(
-                                            relationshipGoal == goal ? Color.pink.opacity(0.5) : Color.gray.opacity(0.2),
-                                            lineWidth: 1
-                                        )
-                                )
-                            }
-                            .foregroundColor(.primary)
-                        }
-                    }
-
-                    // Height
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "ruler")
-                                .foregroundColor(.blue)
-                            Text("Your Height")
-                                .font(.headline)
-
-                            Spacer()
-
-                            if let h = height {
-                                Text("\(h) cm (\(heightToFeetInches(h)))")
-                                    .font(.subheadline)
-                                    .fontWeight(.semibold)
-                                    .foregroundColor(.blue)
-                            }
-                        }
-
-                        HStack(spacing: 12) {
-                            // Height picker
-                            Menu {
-                                ForEach(heightOptions, id: \.self) { h in
-                                    Button("\(h) cm (\(heightToFeetInches(h)))") {
-                                        height = h
-                                        HapticManager.shared.selection()
-                                    }
-                                }
-                            } label: {
-                                HStack {
-                                    Text(height != nil ? "\(height!) cm" : "Select Height")
-                                        .foregroundColor(height != nil ? .primary : .gray)
-                                    Spacer()
-                                    Image(systemName: "chevron.down")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                }
-                                .padding()
-                                .background(Color.white)
-                                .cornerRadius(12)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(Color.blue.opacity(0.3), lineWidth: 1)
-                                )
-                            }
-
-                            // Clear button
-                            if height != nil {
-                                Button {
-                                    height = nil
-                                    HapticManager.shared.impact(.light)
-                                } label: {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .font(.title2)
-                                        .foregroundColor(.gray)
-                                }
-                            }
-                        }
-                    }
-
-                    // Age Range Preference
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "person.2.fill")
-                                .foregroundColor(.purple)
-                            Text("Preferred Age Range")
-                                .font(.headline)
-
-                            Spacer()
-
-                            Text("\(ageRangeMin) - \(ageRangeMax)")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.purple)
-                        }
-
-                        VStack(spacing: 16) {
-                            // Min Age
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Minimum: \(ageRangeMin)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-
-                                Slider(
-                                    value: Binding(
-                                        get: { Double(ageRangeMin) },
-                                        set: { ageRangeMin = Int($0) }
-                                    ),
-                                    in: 18...Double(ageRangeMax - 1),
-                                    step: 1
-                                )
-                                .tint(.purple)
-                            }
-
-                            // Max Age
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("Maximum: \(ageRangeMax)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-
-                                Slider(
-                                    value: Binding(
-                                        get: { Double(ageRangeMax) },
-                                        set: { ageRangeMax = Int($0) }
-                                    ),
-                                    in: Double(ageRangeMin + 1)...99,
-                                    step: 1
-                                )
-                                .tint(.purple)
-                            }
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.purple.opacity(0.2), lineWidth: 1)
-                        )
-                    }
-
-                    // Max Distance Preference
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "location.circle.fill")
-                                .foregroundColor(.blue)
-                            Text("Maximum Distance")
-                                .font(.headline)
-
-                            Spacer()
-
-                            Text("\(maxDistance) km")
-                                .font(.subheadline)
-                                .fontWeight(.semibold)
-                                .foregroundColor(.blue)
-                        }
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Slider(
-                                value: Binding(
-                                    get: { Double(maxDistance) },
-                                    set: { maxDistance = Int($0) }
-                                ),
-                                in: 5...200,
-                                step: 5
-                            )
-                            .tint(.blue)
-
-                            HStack {
-                                Text("5 km")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                Text("200 km")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding()
-                        .background(Color.white)
-                        .cornerRadius(12)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 12)
-                                .stroke(Color.blue.opacity(0.2), lineWidth: 1)
-                        )
-                    }
-                }
-
-                // Benefit card
-                HStack(spacing: 12) {
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .font(.title2)
-                        .foregroundColor(.green)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("40% More Matches")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-
-                        Text("Users with complete profiles get significantly more matches")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Spacer()
-                }
-                .padding()
-                .background(
-                    LinearGradient(
-                        colors: [Color.green.opacity(0.1), Color.mint.opacity(0.05)],
-                        startPoint: .leading,
-                        endPoint: .trailing
-                    )
-                )
-                .cornerRadius(12)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 12)
-                        .stroke(Color.green.opacity(0.3), lineWidth: 1)
-                )
-            }
-            .padding(20)
-            .padding(.top, 20)
-        }
-    }
-
-    // Helper to convert cm to feet/inches
-    private func heightToFeetInches(_ cm: Int) -> String {
-        let totalInches = Double(cm) / 2.54
-        let feet = Int(totalInches / 12)
-        let inches = Int(totalInches.truncatingRemainder(dividingBy: 12))
-        return "\(feet)'\(inches)\""
-    }
-
-    // MARK: - Step 7: Lifestyle
-
-    private var step7View: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 24) {
-                // Icon
-                ZStack {
-                    Circle()
-                        .fill(Color.teal.opacity(0.15))
-                        .frame(width: 100, height: 100)
-
-                    Image(systemName: "leaf.fill")
-                        .font(.system(size: 50))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.teal, .green],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                }
-
-                VStack(spacing: 8) {
-                    Text("Your Lifestyle")
-                        .font(.title)
-                        .fontWeight(.bold)
-
-                    Text("Help us find compatible matches")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-
-                    // Optional badge
-                    HStack(spacing: 6) {
-                        Image(systemName: "hand.tap.fill")
-                            .font(.caption)
-                        Text("Optional - Skip anytime")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                    }
-                    .foregroundColor(.teal)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.teal.opacity(0.1))
-                    .cornerRadius(20)
-                    .padding(.top, 4)
-                }
-
-                VStack(spacing: 20) {
                     // Education
                     lifestyleOptionSelector(
                         title: "Education",
@@ -1687,102 +1842,13 @@ struct OnboardingView: View {
                         selection: $educationLevel
                     )
 
-                    // Religion
+                    // Industry
                     lifestyleOptionSelector(
-                        title: "Religion / Spirituality",
-                        icon: "sparkles",
+                        title: "Industry",
+                        icon: "building.2.fill",
                         color: .purple,
-                        options: religionOptions,
-                        selection: $religion
-                    )
-
-                    // Smoking
-                    lifestyleOptionSelector(
-                        title: "Smoking",
-                        icon: "smoke.fill",
-                        color: .gray,
-                        options: smokingOptions,
-                        selection: $smoking
-                    )
-
-                    // Drinking
-                    lifestyleOptionSelector(
-                        title: "Drinking",
-                        icon: "wineglass.fill",
-                        color: .pink,
-                        options: drinkingOptions,
-                        selection: $drinking
-                    )
-                }
-
-                // Info card
-                HStack(spacing: 12) {
-                    Image(systemName: "lightbulb.fill")
-                        .font(.title3)
-                        .foregroundColor(.yellow)
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("Lifestyle Matching")
-                            .font(.subheadline)
-                            .fontWeight(.semibold)
-
-                        Text("Users with similar lifestyles are 60% more likely to match")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                    }
-
-                    Spacer()
-                }
-                .padding()
-                .background(Color.yellow.opacity(0.1))
-                .cornerRadius(12)
-            }
-            .padding(20)
-            .padding(.top, 20)
-        }
-    }
-
-    // MARK: - Step 8: Final Details
-
-    private var step8View: some View {
-        ScrollView(showsIndicators: false) {
-            VStack(spacing: 24) {
-                // Icon
-                ZStack {
-                    Circle()
-                        .fill(Color.orange.opacity(0.15))
-                        .frame(width: 100, height: 100)
-
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.system(size: 50))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [.orange, .red],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                }
-
-                VStack(spacing: 8) {
-                    Text("Final Touches")
-                        .font(.title)
-                        .fontWeight(.bold)
-
-                    Text("Just a few more details to complete your profile")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                }
-
-                VStack(spacing: 20) {
-                    // Exercise
-                    lifestyleOptionSelector(
-                        title: "Exercise",
-                        icon: "figure.run",
-                        color: .orange,
-                        options: exerciseOptions,
-                        selection: $exercise
+                        options: industryOptions,
+                        selection: $industry
                     )
 
                     // Pets
@@ -1794,24 +1860,34 @@ struct OnboardingView: View {
                         selection: $pets
                     )
 
-                    // Diet
-                    lifestyleOptionSelector(
-                        title: "Diet",
-                        icon: "fork.knife",
-                        color: .green,
-                        options: dietOptions,
-                        selection: $diet
-                    )
+                    // Personal Note (optional fun fact)
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack(spacing: 8) {
+                            Image(systemName: "quote.bubble.fill")
+                                .foregroundColor(.orange)
+                            Text("Fun Fact (Optional)")
+                                .font(.headline)
+                        }
+
+                        TextField("Something interesting about you...", text: $personalNote)
+                            .padding()
+                            .background(Color.white)
+                            .cornerRadius(12)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 12)
+                                    .stroke(Color.orange.opacity(0.2), lineWidth: 1)
+                            )
+                    }
                 }
 
                 // Completion stats
                 VStack(spacing: 16) {
                     HStack(spacing: 16) {
-                        statBadge(icon: "chart.line.uptrend.xyaxis", value: "3x", label: "More Matches", color: .green)
-                        statBadge(icon: "heart.fill", value: "85%", label: "Better Compatibility", color: .pink)
+                        statBadge(icon: "person.2.fill", value: "3x", label: "More Connections", color: .teal)
+                        statBadge(icon: "map.fill", value: "Better", label: "Recommendations", color: .orange)
                     }
 
-                    Text("Complete profiles get significantly more attention!")
+                    Text("Complete profiles help you connect with the right people!")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -1819,7 +1895,7 @@ struct OnboardingView: View {
                 .padding()
                 .background(
                     LinearGradient(
-                        colors: [Color.green.opacity(0.1), Color.pink.opacity(0.05)],
+                        colors: [Color.teal.opacity(0.1), Color.orange.opacity(0.05)],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -1984,15 +2060,19 @@ struct OnboardingView: View {
         case 2:
             return photoImages.count >= 2
         case 3:
+            // NewLocal: user type is required, and if not local, movedFrom is required
+            if userType != "local" {
+                return !movedFrom.isEmpty
+            }
             return true
         case 4:
-            return true
+            return true // Interests are optional
         case 5:
-            return true // Step 6 is optional, always allow proceeding
+            return true // What to explore is optional
         case 6:
-            return true // Step 7 (Lifestyle) is optional
+            return true // Connection goals are optional
         case 7:
-            return true // Step 8 (Final Details) is optional
+            return true // Final details are optional
         default:
             return false
         }
@@ -2046,36 +2126,37 @@ struct OnboardingView: View {
                     return indexedURLs.sorted { $0.0 < $1.0 }.map { $0.1 }
                 }
 
-                // Update user
+                // Update user - Basic Info
                 user.fullName = fullName
                 user.age = calculateAge(from: birthday)
                 user.gender = gender
                 user.bio = bio
                 user.location = location
                 user.country = country
-                user.lookingFor = lookingFor
                 user.photos = photoURLs
                 user.profileImageURL = photoURLs.first ?? ""
                 user.interests = selectedInterests
                 user.languages = selectedLanguages
 
-                // Step 6 optional fields
-                user.height = height
-                user.relationshipGoal = (relationshipGoal == "Prefer not to say") ? nil : relationshipGoal
-                user.ageRangeMin = ageRangeMin
-                user.ageRangeMax = ageRangeMax
+                // NewLocal - Relocation Info (Step 4)
+                user.userType = userType
+                if userType != "local" {
+                    user.movedFrom = movedFrom
+                    user.movedToDate = movedToDate
+                    user.whyMoved = whyMoved.isEmpty ? nil : whyMoved
+                }
+                user.neighborhood = neighborhood.isEmpty ? nil : neighborhood
 
-                // Step 6 - maxDistance
+                // NewLocal - What to Explore & Connection Goals (Steps 6-7)
+                user.whatToExplore = whatToExplore
+                user.lookingToConnect = lookingToConnect
                 user.maxDistance = maxDistance
 
-                // Step 7 & 8 lifestyle fields
+                // NewLocal - Professional & Additional (Steps 7-8)
+                user.profession = profession.isEmpty ? nil : profession
                 if !educationLevel.isEmpty { user.educationLevel = educationLevel }
-                if !religion.isEmpty { user.religion = religion }
-                if !smoking.isEmpty { user.smoking = smoking }
-                if !drinking.isEmpty { user.drinking = drinking }
-                if !exercise.isEmpty { user.exercise = exercise }
+                if !industry.isEmpty { user.industry = industry }
                 if !pets.isEmpty { user.pets = pets }
-                if !diet.isEmpty { user.diet = diet }
 
                 try await authService.updateUser(user)
 
@@ -2133,26 +2214,29 @@ struct OnboardingView: View {
             location = user.location ?? ""
             country = user.country ?? ""
 
-            // Step 4: Preferences
-            lookingFor = user.lookingFor ?? "Everyone"
+            // Step 4: NewLocal - Relocation Info
+            userType = user.userType ?? "newcomer"
+            movedFrom = user.movedFrom ?? ""
+            movedToDate = user.movedToDate ?? Date()
+            whyMoved = user.whyMoved ?? ""
+            neighborhood = user.neighborhood ?? ""
+
+            // Step 5: Interests & Languages
             selectedInterests = user.interests ?? []
             selectedLanguages = user.languages ?? []
 
-            // Step 6: Better Matches
-            height = user.height
-            relationshipGoal = user.relationshipGoal ?? "Prefer not to say"
-            ageRangeMin = user.ageRangeMin ?? 18
-            ageRangeMax = user.ageRangeMax ?? 50
+            // Step 6: What to Explore
+            whatToExplore = user.whatToExplore ?? []
             maxDistance = user.maxDistance ?? 50
 
-            // Step 7 & 8: Lifestyle
+            // Step 7: Connection Goals
+            lookingToConnect = user.lookingToConnect ?? []
+            profession = user.profession ?? ""
+
+            // Step 8: Additional Info
             educationLevel = user.educationLevel ?? ""
-            religion = user.religion ?? ""
-            smoking = user.smoking ?? ""
-            drinking = user.drinking ?? ""
-            exercise = user.exercise ?? ""
+            industry = user.industry ?? ""
             pets = user.pets ?? ""
-            diet = user.diet ?? ""
 
             // Store existing photo URLs to avoid re-uploading unchanged photos
             existingPhotoURLs = user.photos ?? []
@@ -2285,26 +2369,26 @@ struct CompletionCelebrationView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [.purple.opacity(0.2), .pink.opacity(0.1)],
+                                colors: [.teal.opacity(0.2), .blue.opacity(0.1)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
                         .frame(width: 120, height: 120)
 
-                    Text("🎉")
+                    Text("🏡")
                         .font(.system(size: 60))
                 }
                 .scaleEffect(scale)
                 .opacity(opacity)
 
                 VStack(spacing: 12) {
-                    Text("Profile Complete!")
+                    Text("Welcome to NewLocal!")
                         .font(.title)
                         .fontWeight(.bold)
                         .multilineTextAlignment(.center)
 
-                    Text("Your profile is looking great!")
+                    Text("You're ready to connect with your community!")
                         .font(.body)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -2320,7 +2404,7 @@ struct CompletionCelebrationView: View {
                                 .trim(from: 0, to: CGFloat(profileScore) / 100)
                                 .stroke(
                                     LinearGradient(
-                                        colors: [.purple, .pink],
+                                        colors: [.teal, .blue],
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     ),
@@ -2380,14 +2464,14 @@ struct CompletionCelebrationView: View {
                 Button {
                     onDismiss()
                 } label: {
-                    Text("Start Exploring!")
+                    Text("Start Connecting!")
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .blue],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )

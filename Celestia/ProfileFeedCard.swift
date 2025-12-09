@@ -1,8 +1,8 @@
 //
 //  ProfileFeedCard.swift
-//  Celestia
+//  NewLocal
 //
-//  Feed-style profile card for vertical scrolling discovery
+//  Feed-style profile card for discovering locals and newcomers
 //
 
 import SwiftUI
@@ -57,11 +57,17 @@ struct ProfileFeedCard: View {
                 // Name and Verification
                 nameRow
 
+                // NewLocal: User type and time in city
+                relocationInfoRow
+
                 // Age and Location
                 locationRow
 
-                // Seeking preferences
-                seekingRow
+                // NewLocal: Where they moved from / Local status
+                movedFromRow
+
+                // NewLocal: Profession for networking
+                professionRow
 
                 // Last active
                 lastActiveRow
@@ -215,17 +221,70 @@ struct ProfileFeedCard: View {
         }
     }
 
-    private var seekingRow: some View {
-        HStack(spacing: 4) {
-            Image(systemName: "person.2.fill")
-                .font(.caption)
-                .foregroundColor(.pink)
+    // NewLocal: Show user type badge and relocation info
+    private var relocationInfoRow: some View {
+        HStack(spacing: 8) {
+            // User type badge
+            UserTypeBadge(userType: user.userType)
 
-            Text("Seeking \(user.lookingFor), \(user.ageRangeMin)-\(user.ageRangeMax)")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
+            // Time in city (for newcomers/transplants)
+            if user.userType != "local" {
+                TimeInCityBadge(movedDate: user.movedToDate)
+            }
 
             Spacer()
+        }
+    }
+
+    // NewLocal: Show where they moved from
+    private var movedFromRow: some View {
+        Group {
+            if !user.movedFrom.isEmpty && user.userType != "local" {
+                HStack(spacing: 4) {
+                    Image(systemName: "airplane.departure")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+
+                    Text("From \(user.movedFrom)")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+
+                    Spacer()
+                }
+            } else if user.userType == "local" {
+                HStack(spacing: 4) {
+                    Image(systemName: "house.fill")
+                        .font(.caption)
+                        .foregroundColor(.green)
+
+                    Text("Local resident")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+
+                    Spacer()
+                }
+            }
+        }
+    }
+
+    // NewLocal: Show profession for networking
+    private var professionRow: some View {
+        Group {
+            if !user.profession.isEmpty {
+                HStack(spacing: 4) {
+                    Image(systemName: "briefcase.fill")
+                        .font(.caption)
+                        .foregroundColor(.orange)
+
+                    Text(user.profession)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                        .lineLimit(1)
+
+                    Spacer()
+                }
+            }
         }
     }
 
@@ -260,11 +319,11 @@ struct ProfileFeedCard: View {
 
     private var actionButtons: some View {
         HStack(spacing: 12) {
-            // Like/Heart button (toggle)
+            // Connect button (toggle) - NewLocal: replaces "Like" with "Connect"
             ActionButton(
-                icon: isLiked ? "heart.fill" : "heart",
-                color: .pink,
-                label: isLiked ? "Liked" : "Like",
+                icon: isLiked ? "person.badge.plus.fill" : "person.badge.plus",
+                color: .green,
+                label: isLiked ? "Connected" : "Connect",
                 isProcessing: isProcessingLike,
                 action: {
                     guard !isProcessingLike else { return }
@@ -272,26 +331,22 @@ struct ProfileFeedCard: View {
                     isProcessingLike = true
 
                     if isLiked {
-                        // Unlike
+                        // Disconnect
                         let previousState = isLiked
                         isLiked = false  // Optimistic update
                         onUnlike { success in
-                            // BUGFIX: Only reset processing after async operation completes
                             isProcessingLike = false
                             if !success {
-                                // Revert optimistic update on failure
                                 isLiked = previousState
                             }
                         }
                     } else {
-                        // Like
+                        // Connect
                         let previousState = isLiked
                         isLiked = true  // Optimistic update
                         onLike { success in
-                            // BUGFIX: Only reset processing after async operation completes
                             isProcessingLike = false
                             if !success {
-                                // Revert optimistic update on failure
                                 isLiked = previousState
                             }
                         }
@@ -299,15 +354,14 @@ struct ProfileFeedCard: View {
                 }
             )
 
-            // Favorite button with enhanced feedback
+            // Save button with enhanced feedback
             ActionButton(
-                icon: isFavorited ? "star.fill" : "star",
+                icon: isFavorited ? "bookmark.fill" : "bookmark",
                 color: .orange,
                 label: isFavorited ? "Saved" : "Save",
                 isProcessing: isProcessingSave,
                 action: {
                     guard !isProcessingSave else { return }
-                    // Enhanced haptic feedback for save action
                     if !isFavorited {
                         HapticManager.shared.notification(.success)
                     } else {
@@ -316,7 +370,6 @@ struct ProfileFeedCard: View {
                     isProcessingSave = true
                     isFavorited.toggle()
                     onFavorite()
-                    // Reset processing state after delay
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
                         isProcessingSave = false
                     }
@@ -327,7 +380,7 @@ struct ProfileFeedCard: View {
             ActionButton(
                 icon: "message.fill",
                 color: .blue,
-                label: "Message",
+                label: "Chat",
                 isProcessing: false,
                 action: {
                     HapticManager.shared.impact(.medium)
@@ -335,15 +388,15 @@ struct ProfileFeedCard: View {
                 }
             )
 
-            // View photos button
+            // View profile button (replaces photos-only)
             ActionButton(
-                icon: "camera.fill",
+                icon: "person.circle.fill",
                 color: .purple,
-                label: "Photos",
+                label: "Profile",
                 isProcessing: false,
                 action: {
                     HapticManager.shared.impact(.light)
-                    onViewPhotos()
+                    onViewProfile()
                 }
             )
         }

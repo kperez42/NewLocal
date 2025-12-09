@@ -1,6 +1,6 @@
 //
 //  FeatureFlagManager.swift
-//  Celestia
+//  NewLocal
 //
 //  Feature flags system for A/B testing and gradual rollouts
 //  Supports remote configuration via Firebase Remote Config
@@ -235,17 +235,18 @@ enum FeatureFlag: String, CaseIterable {
     // MARK: - User Features
 
     case enablePremiumFeatures = "enable_premium_features"
-    case enableSuperLike = "enable_super_like"
-    case enableRewind = "enable_rewind"
-    case enableBoost = "enable_boost"
+    case enablePriorityConnections = "enable_priority_connections"  // Connect with locals faster
+    case enableBoost = "enable_boost"  // Boost profile visibility
     case enableReadReceipts = "enable_read_receipts"
 
-    // MARK: - Discovery
+    // MARK: - Discovery (NewLocal)
 
-    case enableSmartMatching = "enable_smart_matching"
-    case maxDailyLikes = "max_daily_likes"
-    case maxDailySuperLikes = "max_daily_super_likes"
+    case enableSmartMatching = "enable_smart_matching"  // AI-powered newcomer-local matching
+    case maxDailyConnections = "max_daily_connections"  // Daily connection limit
     case discoveryRadius = "discovery_radius_km"
+    case enableNeighborhoodDiscovery = "enable_neighborhood_discovery"
+    case enableProfessionNetworking = "enable_profession_networking"
+    case enableHometownConnections = "enable_hometown_connections"  // Connect with people from same city
 
     // MARK: - Social
 
@@ -253,6 +254,7 @@ enum FeatureFlag: String, CaseIterable {
     case enableVoiceNotes = "enable_voice_notes"
     case enableGiphy = "enable_giphy"
     case enableStickers = "enable_stickers"
+    case enableGroupEvents = "enable_group_events"  // NewLocal meetup events
 
     // MARK: - Safety & Moderation
 
@@ -272,6 +274,12 @@ enum FeatureFlag: String, CaseIterable {
     case premiumYearlyPrice = "premium_yearly_price"
     case enableInAppPurchases = "enable_in_app_purchases"
     case showAds = "show_ads"
+
+    // MARK: - NewLocal Specific
+
+    case enableCityGuides = "enable_city_guides"  // Local recommendations
+    case enableNeighborhoodInsights = "enable_neighborhood_insights"  // Premium neighborhood info
+    case enableLocalEvents = "enable_local_events"  // Community events
 
     // MARK: - Experimental
 
@@ -296,15 +304,18 @@ enum FeatureFlag: String, CaseIterable {
         switch self {
         // Boolean flags
         case .enablePremiumFeatures: return true
-        case .enableSuperLike: return true
-        case .enableRewind: return false
+        case .enablePriorityConnections: return true
         case .enableBoost: return true
         case .enableReadReceipts: return true
         case .enableSmartMatching: return true
+        case .enableNeighborhoodDiscovery: return true
+        case .enableProfessionNetworking: return true
+        case .enableHometownConnections: return true
         case .enableVideoChat: return false
-        case .enableVoiceNotes: return false  // Not implemented yet - disabled until voice recording UI is complete
-        case .enableGiphy: return false  // Not implemented yet - requires Giphy SDK integration
-        case .enableStickers: return false  // Not implemented yet - requires sticker pack integration
+        case .enableVoiceNotes: return false  // Not implemented yet
+        case .enableGiphy: return false  // Not implemented yet
+        case .enableStickers: return false  // Not implemented yet
+        case .enableGroupEvents: return false  // Coming soon
         case .enableContentModeration: return true
         case .enableProfileReview: return true
         case .autoModerateMessages: return true
@@ -312,6 +323,9 @@ enum FeatureFlag: String, CaseIterable {
         case .enableSocialSharing: return true
         case .enableInAppPurchases: return true
         case .showAds: return false
+        case .enableCityGuides: return true
+        case .enableNeighborhoodInsights: return true  // Premium feature
+        case .enableLocalEvents: return false  // Coming soon
         case .enableNewMatchAlgorithm: return false
         case .enableDarkMode: return true
         case .enableHapticFeedback: return true
@@ -320,11 +334,10 @@ enum FeatureFlag: String, CaseIterable {
         case .enableOfflineMode: return false
 
         // Numeric flags
-        case .maxDailyLikes: return 100
-        case .maxDailySuperLikes: return 5
+        case .maxDailyConnections: return 20  // Free users get 20 connections/day
         case .discoveryRadius: return 50
         case .referralRewardCredits: return 10
-        case .premiumMonthlyPrice: return 9.99
+        case .premiumMonthlyPrice: return 7.99
         case .premiumYearlyPrice: return 59.99
         case .maxCacheSize: return 100
         }
@@ -332,33 +345,55 @@ enum FeatureFlag: String, CaseIterable {
 
     var description: String {
         switch self {
+        // User Features
         case .enablePremiumFeatures: return "Enable premium features"
-        case .enableSuperLike: return "Enable super like feature"
-        case .enableRewind: return "Enable rewind last swipe"
-        case .enableBoost: return "Enable profile boost"
+        case .enablePriorityConnections: return "Connect with locals faster"
+        case .enableBoost: return "Boost profile visibility"
         case .enableReadReceipts: return "Enable message read receipts"
-        case .enableSmartMatching: return "Enable smart matching algorithm"
-        case .maxDailyLikes: return "Maximum daily likes"
-        case .maxDailySuperLikes: return "Maximum daily super likes"
+
+        // Discovery (NewLocal)
+        case .enableSmartMatching: return "AI-powered newcomer-local matching"
+        case .maxDailyConnections: return "Maximum daily connections"
         case .discoveryRadius: return "Discovery radius in kilometers"
+        case .enableNeighborhoodDiscovery: return "Enable neighborhood-based discovery"
+        case .enableProfessionNetworking: return "Enable profession-based networking"
+        case .enableHometownConnections: return "Connect with people from same hometown"
+
+        // Social
         case .enableVideoChat: return "Enable video chat"
         case .enableVoiceNotes: return "Enable voice notes"
         case .enableGiphy: return "Enable Giphy integration"
         case .enableStickers: return "Enable stickers"
+        case .enableGroupEvents: return "Enable NewLocal meetup events"
+
+        // Safety & Moderation
         case .enableContentModeration: return "Enable content moderation"
         case .enableProfileReview: return "Enable profile review"
         case .autoModerateMessages: return "Auto moderate messages"
+
+        // Referral & Growth
         case .enableReferralProgram: return "Enable referral program"
         case .referralRewardCredits: return "Referral reward credits"
         case .enableSocialSharing: return "Enable social sharing"
+
+        // Monetization
         case .premiumMonthlyPrice: return "Premium monthly price"
         case .premiumYearlyPrice: return "Premium yearly price"
         case .enableInAppPurchases: return "Enable in-app purchases"
         case .showAds: return "Show advertisements"
+
+        // NewLocal Specific
+        case .enableCityGuides: return "Enable local city guides and recommendations"
+        case .enableNeighborhoodInsights: return "Enable premium neighborhood insights"
+        case .enableLocalEvents: return "Enable community events discovery"
+
+        // Experimental
         case .enableNewMatchAlgorithm: return "Enable new match algorithm (experimental)"
         case .enableDarkMode: return "Enable dark mode"
         case .enableHapticFeedback: return "Enable haptic feedback"
         case .enableAnimations: return "Enable animations"
+
+        // Performance
         case .enableImageCaching: return "Enable image caching"
         case .maxCacheSize: return "Maximum cache size (MB)"
         case .enableOfflineMode: return "Enable offline mode"

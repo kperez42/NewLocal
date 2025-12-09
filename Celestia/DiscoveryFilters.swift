@@ -1,8 +1,8 @@
 //
 //  DiscoveryFilters.swift
-//  Celestia
+//  NewLocal
 //
-//  Discovery filter preferences
+//  Discovery filter preferences for relocation community app
 //
 
 import Foundation
@@ -11,24 +11,28 @@ import Foundation
 class DiscoveryFilters: ObservableObject {
     static let shared = DiscoveryFilters()
 
+    // Basic Filters
     @Published var maxDistance: Double = 50 // miles
     @Published var minAge: Int = 18
     @Published var maxAge: Int = 65
     @Published var showVerifiedOnly: Bool = false
     @Published var selectedInterests: Set<String> = []
-    @Published var dealBreakers: Set<String> = []
 
-    // Advanced Filters
+    // NewLocal Filters
+    @Published var userTypes: Set<String> = []  // "local", "newcomer", "transplant"
+    @Published var neighborhoods: Set<String> = []
+    @Published var professions: Set<String> = []
+    @Published var movedFromCities: Set<String> = []  // Connect with people from same hometown
+    @Published var whatToExplore: Set<String> = []  // Filter by exploration interests
+    @Published var connectionGoals: Set<String> = []  // "Find local guides", "Meet newcomers", etc.
+
+    // Time in City Filter
+    @Published var showNewArrivals: Bool = false  // Less than 3 months
+    @Published var showRecentMovers: Bool = false  // 3-12 months
+    @Published var showEstablished: Bool = false  // 1+ years
+
+    // Education (kept for professional networking)
     @Published var educationLevels: Set<String> = []
-    @Published var minHeight: Int? = nil // cm
-    @Published var maxHeight: Int? = nil // cm
-    @Published var religions: Set<String> = []
-    @Published var relationshipGoals: Set<String> = []
-    @Published var smokingPreferences: Set<String> = []
-    @Published var drinkingPreferences: Set<String> = []
-    @Published var petPreferences: Set<String> = []
-    @Published var exercisePreferences: Set<String> = []
-    @Published var dietPreferences: Set<String> = []
 
     private init() {
         loadFromUserDefaults()
@@ -74,97 +78,86 @@ class DiscoveryFilters: ObservableObject {
             }
         }
 
+        // User type filter (local, newcomer, transplant)
+        if !userTypes.isEmpty {
+            if !userTypes.contains(user.userType) {
+                return false
+            }
+        }
+
+        // Neighborhood filter
+        if !neighborhoods.isEmpty {
+            if !neighborhoods.contains(where: { user.neighborhood.lowercased().contains($0.lowercased()) }) {
+                return false
+            }
+        }
+
+        // Profession filter
+        if !professions.isEmpty {
+            if !professions.contains(where: { user.profession.lowercased().contains($0.lowercased()) }) {
+                return false
+            }
+        }
+
+        // Moved from filter (connect with people from same hometown)
+        if !movedFromCities.isEmpty {
+            if !movedFromCities.contains(where: { user.movedFrom.lowercased().contains($0.lowercased()) }) {
+                return false
+            }
+        }
+
+        // What to explore filter
+        if !whatToExplore.isEmpty {
+            let userExplore = Set(user.whatToExplore)
+            if whatToExplore.intersection(userExplore).isEmpty {
+                return false
+            }
+        }
+
+        // Connection goals filter
+        if !connectionGoals.isEmpty {
+            let userGoals = Set(user.lookingToConnect)
+            if connectionGoals.intersection(userGoals).isEmpty {
+                return false
+            }
+        }
+
+        // Time in city filter
+        if showNewArrivals || showRecentMovers || showEstablished {
+            guard let movedDate = user.movedToDate else {
+                // If user type is "local", they don't have a moved date
+                if user.userType == "local" {
+                    if !showEstablished {
+                        return false
+                    }
+                } else {
+                    return false
+                }
+            }
+
+            if let movedDate = user.movedToDate {
+                let months = Calendar.current.dateComponents([.month], from: movedDate, to: Date()).month ?? 0
+
+                if showNewArrivals && months < 3 {
+                    // Pass - new arrival
+                } else if showRecentMovers && months >= 3 && months < 12 {
+                    // Pass - recent mover
+                } else if showEstablished && months >= 12 {
+                    // Pass - established
+                } else if !showNewArrivals && !showRecentMovers && !showEstablished {
+                    // No time filter active, pass
+                } else {
+                    return false
+                }
+            }
+        }
+
         // Education level filter
         if !educationLevels.isEmpty {
             guard let userEducation = user.educationLevel else {
                 return false
             }
             if !educationLevels.contains(userEducation) {
-                return false
-            }
-        }
-
-        // Height filter
-        if let userHeight = user.height {
-            if let min = minHeight, userHeight < min {
-                return false
-            }
-            if let max = maxHeight, userHeight > max {
-                return false
-            }
-        } else {
-            // If user hasn't set height and we have height filters, exclude them
-            if minHeight != nil || maxHeight != nil {
-                return false
-            }
-        }
-
-        // Religion filter
-        if !religions.isEmpty {
-            guard let userReligion = user.religion else {
-                return false
-            }
-            if !religions.contains(userReligion) {
-                return false
-            }
-        }
-
-        // Relationship goal filter
-        if !relationshipGoals.isEmpty {
-            guard let userGoal = user.relationshipGoal else {
-                return false
-            }
-            if !relationshipGoals.contains(userGoal) {
-                return false
-            }
-        }
-
-        // Smoking preference filter
-        if !smokingPreferences.isEmpty {
-            guard let userSmoking = user.smoking else {
-                return false
-            }
-            if !smokingPreferences.contains(userSmoking) {
-                return false
-            }
-        }
-
-        // Drinking preference filter
-        if !drinkingPreferences.isEmpty {
-            guard let userDrinking = user.drinking else {
-                return false
-            }
-            if !drinkingPreferences.contains(userDrinking) {
-                return false
-            }
-        }
-
-        // Pet preference filter
-        if !petPreferences.isEmpty {
-            guard let userPets = user.pets else {
-                return false
-            }
-            if !petPreferences.contains(userPets) {
-                return false
-            }
-        }
-
-        // Exercise preference filter
-        if !exercisePreferences.isEmpty {
-            guard let userExercise = user.exercise else {
-                return false
-            }
-            if !exercisePreferences.contains(userExercise) {
-                return false
-            }
-        }
-
-        // Diet preference filter
-        if !dietPreferences.isEmpty {
-            guard let userDiet = user.diet else {
-                return false
-            }
-            if !dietPreferences.contains(userDiet) {
                 return false
             }
         }
@@ -221,17 +214,17 @@ class DiscoveryFilters: ObservableObject {
         UserDefaults.standard.set(showVerifiedOnly, forKey: "showVerifiedOnly")
         UserDefaults.standard.set(Array(selectedInterests), forKey: "selectedInterests")
 
-        // Advanced Filters
+        // NewLocal Filters
+        UserDefaults.standard.set(Array(userTypes), forKey: "userTypes")
+        UserDefaults.standard.set(Array(neighborhoods), forKey: "neighborhoods")
+        UserDefaults.standard.set(Array(professions), forKey: "professions")
+        UserDefaults.standard.set(Array(movedFromCities), forKey: "movedFromCities")
+        UserDefaults.standard.set(Array(whatToExplore), forKey: "whatToExplore")
+        UserDefaults.standard.set(Array(connectionGoals), forKey: "connectionGoals")
+        UserDefaults.standard.set(showNewArrivals, forKey: "showNewArrivals")
+        UserDefaults.standard.set(showRecentMovers, forKey: "showRecentMovers")
+        UserDefaults.standard.set(showEstablished, forKey: "showEstablished")
         UserDefaults.standard.set(Array(educationLevels), forKey: "educationLevels")
-        UserDefaults.standard.set(minHeight, forKey: "minHeight")
-        UserDefaults.standard.set(maxHeight, forKey: "maxHeight")
-        UserDefaults.standard.set(Array(religions), forKey: "religions")
-        UserDefaults.standard.set(Array(relationshipGoals), forKey: "relationshipGoals")
-        UserDefaults.standard.set(Array(smokingPreferences), forKey: "smokingPreferences")
-        UserDefaults.standard.set(Array(drinkingPreferences), forKey: "drinkingPreferences")
-        UserDefaults.standard.set(Array(petPreferences), forKey: "petPreferences")
-        UserDefaults.standard.set(Array(exercisePreferences), forKey: "exercisePreferences")
-        UserDefaults.standard.set(Array(dietPreferences), forKey: "dietPreferences")
     }
 
     private func loadFromUserDefaults() {
@@ -249,32 +242,30 @@ class DiscoveryFilters: ObservableObject {
             selectedInterests = Set(interests)
         }
 
-        // Advanced Filters
+        // NewLocal Filters
+        if let types = UserDefaults.standard.array(forKey: "userTypes") as? [String] {
+            userTypes = Set(types)
+        }
+        if let neighborhoods = UserDefaults.standard.array(forKey: "neighborhoods") as? [String] {
+            self.neighborhoods = Set(neighborhoods)
+        }
+        if let professions = UserDefaults.standard.array(forKey: "professions") as? [String] {
+            self.professions = Set(professions)
+        }
+        if let cities = UserDefaults.standard.array(forKey: "movedFromCities") as? [String] {
+            movedFromCities = Set(cities)
+        }
+        if let explore = UserDefaults.standard.array(forKey: "whatToExplore") as? [String] {
+            whatToExplore = Set(explore)
+        }
+        if let goals = UserDefaults.standard.array(forKey: "connectionGoals") as? [String] {
+            connectionGoals = Set(goals)
+        }
+        showNewArrivals = UserDefaults.standard.bool(forKey: "showNewArrivals")
+        showRecentMovers = UserDefaults.standard.bool(forKey: "showRecentMovers")
+        showEstablished = UserDefaults.standard.bool(forKey: "showEstablished")
         if let education = UserDefaults.standard.array(forKey: "educationLevels") as? [String] {
             educationLevels = Set(education)
-        }
-        minHeight = UserDefaults.standard.object(forKey: "minHeight") as? Int
-        maxHeight = UserDefaults.standard.object(forKey: "maxHeight") as? Int
-        if let religionArray = UserDefaults.standard.array(forKey: "religions") as? [String] {
-            religions = Set(religionArray)
-        }
-        if let goals = UserDefaults.standard.array(forKey: "relationshipGoals") as? [String] {
-            relationshipGoals = Set(goals)
-        }
-        if let smoking = UserDefaults.standard.array(forKey: "smokingPreferences") as? [String] {
-            smokingPreferences = Set(smoking)
-        }
-        if let drinking = UserDefaults.standard.array(forKey: "drinkingPreferences") as? [String] {
-            drinkingPreferences = Set(drinking)
-        }
-        if let pets = UserDefaults.standard.array(forKey: "petPreferences") as? [String] {
-            petPreferences = Set(pets)
-        }
-        if let exercise = UserDefaults.standard.array(forKey: "exercisePreferences") as? [String] {
-            exercisePreferences = Set(exercise)
-        }
-        if let diet = UserDefaults.standard.array(forKey: "dietPreferences") as? [String] {
-            dietPreferences = Set(diet)
         }
     }
 
@@ -285,27 +276,64 @@ class DiscoveryFilters: ObservableObject {
         showVerifiedOnly = false
         selectedInterests.removeAll()
 
-        // Reset Advanced Filters
+        // Reset NewLocal Filters
+        userTypes.removeAll()
+        neighborhoods.removeAll()
+        professions.removeAll()
+        movedFromCities.removeAll()
+        whatToExplore.removeAll()
+        connectionGoals.removeAll()
+        showNewArrivals = false
+        showRecentMovers = false
+        showEstablished = false
         educationLevels.removeAll()
-        minHeight = nil
-        maxHeight = nil
-        religions.removeAll()
-        relationshipGoals.removeAll()
-        smokingPreferences.removeAll()
-        drinkingPreferences.removeAll()
-        petPreferences.removeAll()
-        exercisePreferences.removeAll()
-        dietPreferences.removeAll()
 
         saveToUserDefaults()
     }
 
     var hasActiveFilters: Bool {
-        // Removed distance from active filters check - not using location-based filtering
         return minAge > 18 || maxAge < 65 || showVerifiedOnly || !selectedInterests.isEmpty ||
-               !educationLevels.isEmpty || minHeight != nil || maxHeight != nil ||
-               !religions.isEmpty || !relationshipGoals.isEmpty ||
-               !smokingPreferences.isEmpty || !drinkingPreferences.isEmpty ||
-               !petPreferences.isEmpty || !exercisePreferences.isEmpty || !dietPreferences.isEmpty
+               !userTypes.isEmpty || !neighborhoods.isEmpty || !professions.isEmpty ||
+               !movedFromCities.isEmpty || !whatToExplore.isEmpty || !connectionGoals.isEmpty ||
+               showNewArrivals || showRecentMovers || showEstablished || !educationLevels.isEmpty
+    }
+
+    // MARK: - Quick Filter Presets
+
+    /// Show only locals who can help newcomers
+    func showLocalsOnly() {
+        resetFilters()
+        userTypes = ["local"]
+        saveToUserDefaults()
+    }
+
+    /// Show only newcomers (less than 6 months)
+    func showNewcomersOnly() {
+        resetFilters()
+        userTypes = ["newcomer"]
+        showNewArrivals = true
+        showRecentMovers = true
+        saveToUserDefaults()
+    }
+
+    /// Show people from same hometown
+    func showSameHometown(_ hometown: String) {
+        resetFilters()
+        movedFromCities = [hometown]
+        saveToUserDefaults()
+    }
+
+    /// Show people in same neighborhood
+    func showSameNeighborhood(_ neighborhood: String) {
+        resetFilters()
+        neighborhoods = [neighborhood]
+        saveToUserDefaults()
+    }
+
+    /// Show people with same profession for networking
+    func showSameProfession(_ profession: String) {
+        resetFilters()
+        professions = [profession]
+        saveToUserDefaults()
     }
 }
