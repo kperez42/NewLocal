@@ -1,8 +1,8 @@
 //
-//  MatchesView.swift
-//  Celestia
+//  ConnectionsView.swift
+//  NewLocal
 //
-//  ELITE MATCHES VIEW - Premium Dating Experience
+//  CONNECTIONS VIEW - Your Community Network
 //  ACCESSIBILITY: Full VoiceOver support, Dynamic Type, Reduce Motion, and WCAG 2.1 AA compliant
 //
 
@@ -37,7 +37,7 @@ struct MatchesView: View {
         case recent = "Most Recent"
         case unread = "Unread First"
         case alphabetical = "A-Z"
-        case newMatches = "New Matches"
+        case newMatches = "New Connections"
     }
 
     // PERFORMANCE: Use cached value, update only when dependencies change
@@ -143,14 +143,14 @@ struct MatchesView: View {
             .task {
                 await loadMatches()
                 updateFilteredMatches()
-                VoiceOverAnnouncement.screenChanged(to: "Matches view. \(matchService.matches.count) matches available.")
+                VoiceOverAnnouncement.screenChanged(to: "Connections view. \(matchService.matches.count) connections available.")
             }
             .refreshable {
                 HapticManager.shared.impact(.light)
                 await loadMatches()
                 updateFilteredMatches()
                 HapticManager.shared.notification(.success)
-                VoiceOverAnnouncement.announce("Matches refreshed. \(matchService.matches.count) matches available.")
+                VoiceOverAnnouncement.announce("Connections refreshed. \(matchService.matches.count) connections available.")
             }
             // PERFORMANCE: Update cached matches only when dependencies change
             .onChange(of: matchService.matches.count) { _, _ in
@@ -186,34 +186,34 @@ struct MatchesView: View {
     }
     
     // MARK: - Header
-    
+
     private var headerView: some View {
         ZStack {
-            // Gradient background
+            // Gradient background - NewLocal teal theme
             LinearGradient(
                 colors: [
-                    Color.purple.opacity(0.9),
-                    Color.purple.opacity(0.7),
-                    Color.blue.opacity(0.5)
+                    Color.teal.opacity(0.9),
+                    Color.teal.opacity(0.7),
+                    Color.cyan.opacity(0.5)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            
+
             VStack(spacing: 12) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Matches")
+                        Text("Connections")
                             .font(.largeTitle.weight(.bold))
                             .foregroundColor(.white)
                             .dynamicTypeSize(min: .large, max: .accessibility2)
                             .accessibilityAddTraits(.isHeader)
-                        
+
                         if !matchService.matches.isEmpty {
                             HStack(spacing: 8) {
-                                // Match count
+                                // Connection count
                                 HStack(spacing: 4) {
-                                    Image(systemName: "heart.fill")
+                                    Image(systemName: "person.2.fill")
                                         .font(.caption)
                                     Text("\(matchService.matches.count)")
                                         .fontWeight(.semibold)
@@ -299,19 +299,19 @@ struct MatchesView: View {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.white.opacity(0.8))
             
-            TextField("Search matches...", text: $searchText)
+            TextField("Search connections...", text: $searchText)
                 .foregroundColor(.white)
                 .accentColor(.white)
                 .placeholder(when: searchText.isEmpty) {
-                    Text("Search matches...")
+                    Text("Search connections...")
                         .foregroundColor(.white.opacity(0.6))
                 }
                 .onChange(of: searchText) { _, newValue in
                     searchDebouncer.search(newValue)
                 }
                 .accessibilityElement(
-                    label: "Search matches",
-                    hint: "Type to search your matches by name or location",
+                    label: "Search connections",
+                    hint: "Type to search your connections by name or location",
                     identifier: AccessibilityIdentifier.searchField
                 )
             
@@ -351,9 +351,9 @@ struct MatchesView: View {
                         HapticManager.shared.selection()
                     }
                 }
-                
+
                 Spacer()
-                
+
                 // Sort menu
                 Menu {
                     ForEach(SortOption.allCases, id: \.self) { option in
@@ -381,14 +381,14 @@ struct MatchesView: View {
                         Image(systemName: "chevron.down")
                             .font(.caption2)
                     }
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
-                    .background(Color.purple.opacity(0.1))
+                    .background(Color.teal.opacity(0.1))
                     .cornerRadius(20)
                 }
-                .accessibilityLabel("Sort matches by \(sortOption.rawValue)")
-                .accessibilityHint("Choose how to sort your matches")
+                .accessibilityLabel("Sort connections by \(sortOption.rawValue)")
+                .accessibilityHint("Choose how to sort your connections")
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
@@ -417,21 +417,21 @@ struct MatchesView: View {
                         .clipShape(Capsule())
                 }
             }
-            .foregroundColor(isActive ? .white : .purple)
+            .foregroundColor(isActive ? .white : .teal)
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
             .background(
                 isActive ?
                 LinearGradient(
-                    colors: [Color.purple, Color.blue],
+                    colors: [Color.teal, Color.cyan],
                     startPoint: .leading,
                     endPoint: .trailing
                 ) :
-                LinearGradient(colors: [Color.purple.opacity(0.1)], startPoint: .leading, endPoint: .trailing)
+                LinearGradient(colors: [Color.teal.opacity(0.1)], startPoint: .leading, endPoint: .trailing)
             )
             .cornerRadius(20)
         }
-        .accessibilityLabel("\(title) filter, \(count) matches")
+        .accessibilityLabel("\(title) filter, \(count) connections")
         .accessibilityHint(isActive ? "Active. Tap to deactivate" : "Tap to activate")
     }
     
@@ -463,7 +463,7 @@ struct MatchesView: View {
                         .onTapGesture {
                             HapticManager.shared.impact(.medium)
                             selectedMatch = match
-                            VoiceOverAnnouncement.announce("Opening chat with \(user.fullName)")
+                            VoiceOverAnnouncement.announce("Opening conversation with \(user.fullName)")
                         }
                     }
                 }
@@ -491,42 +491,42 @@ struct MatchesView: View {
     }
     
     // MARK: - Empty State
-    
+
     private var emptyStateView: some View {
         VStack(spacing: 24) {
             Spacer()
-            
+
             // Icon
             ZStack {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [Color.purple.opacity(0.2), Color.blue.opacity(0.1)],
+                            colors: [Color.teal.opacity(0.2), Color.cyan.opacity(0.1)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .frame(width: 140, height: 140)
-                
-                Image(systemName: "heart.circle.fill")
+
+                Image(systemName: "person.2.circle.fill")
                     .font(.system(size: 70))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .blue],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
             }
-            
+
             VStack(spacing: 12) {
-                Text("No Matches Yet")
+                Text("No Connections Yet")
                     .font(.title2)
                     .fontWeight(.bold)
                     .dynamicTypeSize(min: .large, max: .accessibility2)
                     .accessibilityAddTraits(.isHeader)
 
-                Text("Head to the Discover tab to start swiping and finding your perfect match!")
+                Text("Head to the Discover tab to start exploring and connecting with locals and fellow newcomers!")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -548,7 +548,7 @@ struct MatchesView: View {
                 .foregroundColor(.white)
                 .background(
                     LinearGradient(
-                        colors: [.purple, .pink],
+                        colors: [.teal, .cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -556,7 +556,7 @@ struct MatchesView: View {
                 .cornerRadius(16)
                 .contentShape(RoundedRectangle(cornerRadius: 16))
 
-                Text("Tap the first tab to start swiping")
+                Text("Tap the first tab to start exploring")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -565,8 +565,8 @@ struct MatchesView: View {
             // Tips
             VStack(spacing: 12) {
                 tipRow(icon: "photo.fill", text: "Add more photos to your profile")
-                tipRow(icon: "text.alignleft", text: "Write an interesting bio")
-                tipRow(icon: "heart.fill", text: "Be active and swipe regularly")
+                tipRow(icon: "text.alignleft", text: "Share your story and why you moved")
+                tipRow(icon: "person.badge.plus.fill", text: "Be active and connect regularly")
             }
             .padding(20)
             .background(Color.white)
@@ -585,19 +585,19 @@ struct MatchesView: View {
                 .font(.callout)
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.purple, .blue],
+                        colors: [.teal, .cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
                 )
                 .frame(width: 36, height: 36)
-                .background(Color.purple.opacity(0.1))
+                .background(Color.teal.opacity(0.1))
                 .cornerRadius(8)
-            
+
             Text(text)
                 .font(.subheadline)
                 .foregroundColor(.primary)
-            
+
             Spacer()
         }
     }
@@ -646,7 +646,7 @@ struct MatchesView: View {
                 .padding(.vertical, 14)
                 .background(
                     LinearGradient(
-                        colors: [.purple, .pink],
+                        colors: [.teal, .cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -715,7 +715,7 @@ struct MatchesView: View {
 
 // MARK: - Match Card Row
 
-// MARK: - Match Profile Card
+// MARK: - Connection Profile Card
 
 struct MatchProfileCard: View {
     let match: Match
@@ -723,14 +723,14 @@ struct MatchProfileCard: View {
     let currentUserId: String
     var onInfoTap: (() -> Void)? = nil
 
-    private var isNewMatch: Bool {
+    private var isNewConnection: Bool {
         match.lastMessage == nil
     }
 
     private var unreadCount: Int {
         match.unreadCount[currentUserId] ?? 0
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             // Profile image with badges
@@ -754,11 +754,11 @@ struct MatchProfileCard: View {
                         .padding(.leading, 8)
                 }
 
-                // New match or unread badge - Top Right
+                // New connection or unread badge - Top Right
                 VStack {
                     HStack {
                         Spacer()
-                        if isNewMatch {
+                        if isNewConnection {
                             HStack(spacing: 4) {
                                 Image(systemName: "sparkles")
                                     .font(.system(size: 10))
@@ -770,7 +770,7 @@ struct MatchProfileCard: View {
                             .padding(.vertical, 6)
                             .background(
                                 LinearGradient(
-                                    colors: [Color.purple, Color.pink],
+                                    colors: [Color.teal, Color.cyan],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -814,7 +814,7 @@ struct MatchProfileCard: View {
                 HStack(spacing: 4) {
                     Image(systemName: "mappin.circle.fill")
                         .font(.system(size: 12))
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
                     Text(user.location)
                         .font(.system(size: 13))
                         .foregroundColor(.secondary)
@@ -831,7 +831,7 @@ struct MatchProfileCard: View {
                         .padding(.vertical, 4)
                         .background(
                             LinearGradient(
-                                colors: [Color.purple.opacity(0.8), Color.pink.opacity(0.8)],
+                                colors: [Color.teal.opacity(0.8), Color.cyan.opacity(0.8)],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -848,9 +848,9 @@ struct MatchProfileCard: View {
         .overlay(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
-                    isNewMatch ?
+                    isNewConnection ?
                     LinearGradient(
-                        colors: [Color.purple.opacity(0.4), Color.pink.opacity(0.4)],
+                        colors: [Color.teal.opacity(0.4), Color.cyan.opacity(0.4)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ) :
@@ -869,7 +869,7 @@ struct MatchProfileCard: View {
                         .font(.system(size: 20))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -901,11 +901,11 @@ struct MatchProfileCard: View {
     private var placeholderImage: some View {
         ZStack {
             LinearGradient(
-                colors: [Color.purple.opacity(0.7), Color.blue.opacity(0.5)],
+                colors: [Color.teal.opacity(0.7), Color.cyan.opacity(0.5)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-            
+
             Text(user.fullName.prefix(1))
                 .font(.system(size: 28, weight: .bold))
                 .foregroundColor(.white)

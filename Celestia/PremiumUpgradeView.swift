@@ -1,8 +1,8 @@
 //
 //  PremiumUpgradeView.swift
-//  Celestia
+//  NewLocal
 //
-//  PREMIUM UPGRADE - Immersive Conversion Experience
+//  PREMIUM UPGRADE - Connect with your new community faster
 //
 
 import SwiftUI
@@ -37,18 +37,18 @@ struct PremiumUpgradeView: View {
     // Timer for showcase rotation
     let showcaseTimer = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
 
-    // Light background colors
-    private let lightBackground = Color(red: 0.98, green: 0.98, blue: 1.0)
+    // Light background colors - NewLocal teal theme
+    private let lightBackground = Color(red: 0.96, green: 0.99, blue: 0.99)
     private let cardBackground = Color.white
-    private let softPurple = Color(red: 0.95, green: 0.94, blue: 1.0)
+    private let softTeal = Color(red: 0.93, green: 0.98, blue: 0.98)
 
     var body: some View {
         ZStack {
-            // Full screen light background with subtle gradient
+            // Full screen light background with subtle gradient - NewLocal teal
             LinearGradient(
                 colors: [
-                    Color(red: 0.95, green: 0.94, blue: 1.0),
-                    Color(red: 1.0, green: 0.98, blue: 0.98),
+                    Color(red: 0.93, green: 0.98, blue: 0.98),
+                    Color(red: 0.96, green: 0.99, blue: 0.99),
                     Color.white
                 ],
                 startPoint: .top,
@@ -78,8 +78,8 @@ struct PremiumUpgradeView: View {
                                     limitedTimeBanner
                                 }
 
-                                // Who liked you preview (FOMO section)
-                                whoLikedYouPreview
+                                // Who wants to connect preview (FOMO section)
+                                whoWantsToConnectPreview
 
                                 // Live feature showcase
                                 liveFeatureShowcase
@@ -139,15 +139,15 @@ struct PremiumUpgradeView: View {
                             restorePurchases()
                         }
                         .font(.subheadline.weight(.medium))
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
                     }
                 }
                 .alert("Welcome to Premium!", isPresented: $showPurchaseSuccess) {
-                    Button("Start Discovering") {
+                    Button("Start Exploring") {
                         dismiss()
                     }
                 } message: {
-                    Text("You now have unlimited access to all premium features. Your feed just got a whole lot better!")
+                    Text("You now have unlimited access to all premium features. Connect with your new community faster!")
                 }
                 .alert("Error", isPresented: $showError) {
                     Button("OK", role: .cancel) {}
@@ -191,11 +191,11 @@ struct PremiumUpgradeView: View {
 
     private var immersiveHero: some View {
         ZStack {
-            // Soft gradient background for hero
+            // Soft gradient background for hero - NewLocal teal
             LinearGradient(
                 colors: [
-                    Color.purple.opacity(0.15),
-                    Color.pink.opacity(0.1),
+                    Color.teal.opacity(0.15),
+                    Color.cyan.opacity(0.1),
                     Color.clear
                 ],
                 startPoint: .top,
@@ -205,14 +205,14 @@ struct PremiumUpgradeView: View {
             VStack(spacing: 20) {
                 Spacer().frame(height: 20)
 
-                // Animated crown with glow
+                // Animated star with glow
                 ZStack {
                     // Soft glow rings
                     ForEach(0..<3) { i in
                         Circle()
                             .fill(
                                 RadialGradient(
-                                    colors: [.purple.opacity(0.15), .clear],
+                                    colors: [.teal.opacity(0.15), .clear],
                                     center: .center,
                                     startRadius: 20,
                                     endRadius: CGFloat(60 + i * 20)
@@ -229,28 +229,28 @@ struct PremiumUpgradeView: View {
                             )
                     }
 
-                    // Crown background circle
+                    // Star background circle
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color.purple.opacity(0.2), Color.pink.opacity(0.15)],
+                                colors: [Color.teal.opacity(0.2), Color.cyan.opacity(0.15)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
                         .frame(width: 100, height: 100)
 
-                    // Crown icon
-                    Image(systemName: "crown.fill")
+                    // Star icon for community
+                    Image(systemName: "star.circle.fill")
                         .font(.system(size: 50))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.orange, .yellow, .orange],
+                                colors: [.teal, .cyan, .teal],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
-                        .shadow(color: .orange.opacity(0.4), radius: 10)
+                        .shadow(color: .teal.opacity(0.4), radius: 10)
                         .scaleEffect(animateHero ? 1 : 0.5)
                         .rotationEffect(.degrees(animateHero ? 0 : -20))
                 }
@@ -262,7 +262,7 @@ struct PremiumUpgradeView: View {
                         .font(.system(size: 38, weight: .bold, design: .rounded))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -270,7 +270,7 @@ struct PremiumUpgradeView: View {
                         .opacity(animateHero ? 1 : 0)
                         .offset(y: animateHero ? 0 : 20)
 
-                    Text("Discover more people who match your vibe")
+                    Text("Connect with more locals and fellow newcomers")
                         .font(.body.weight(.medium))
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -331,46 +331,46 @@ struct PremiumUpgradeView: View {
 
     private func previewCardColors(for index: Int) -> [Color] {
         switch index {
-        case 0: return [.purple, .purple.opacity(0.7)]
-        case 1: return [.pink, .pink.opacity(0.7)]
-        case 2: return [.orange, .orange.opacity(0.7)]
-        default: return [.cyan, .cyan.opacity(0.7)]
+        case 0: return [.teal, .teal.opacity(0.7)]
+        case 1: return [.cyan, .cyan.opacity(0.7)]
+        case 2: return [.blue, .blue.opacity(0.7)]
+        default: return [.indigo, .indigo.opacity(0.7)]
         }
     }
 
     private func previewCardIcon(for index: Int) -> String {
         switch index {
         case 0: return "infinity"
-        case 1: return "eye.fill"
+        case 1: return "person.2.fill"
         case 2: return "message.fill"
-        default: return "star.fill"
+        default: return "map.fill"
         }
     }
 
     private func previewCardLabel(for index: Int) -> String {
         switch index {
         case 0: return "Unlimited"
-        case 1: return "See Likes"
+        case 1: return "Connections"
         case 2: return "Message"
-        default: return "Premium"
+        default: return "City Guide"
         }
     }
 
-    // MARK: - Context Banner (Like Limit / Super Like Limit)
+    // MARK: - Context Banner (Connection Limit)
 
     private var contextBanner: some View {
         HStack(spacing: 14) {
             // Icon
             ZStack {
                 Circle()
-                    .fill(Color.purple.opacity(0.15))
+                    .fill(Color.teal.opacity(0.15))
                     .frame(width: 44, height: 44)
 
-                Image(systemName: "heart.slash.fill")
+                Image(systemName: "person.crop.circle.badge.exclamationmark.fill")
                     .font(.title3)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -393,7 +393,7 @@ struct PremiumUpgradeView: View {
         .padding(16)
         .background(
             LinearGradient(
-                colors: [Color.purple.opacity(0.1), Color.pink.opacity(0.06)],
+                colors: [Color.teal.opacity(0.1), Color.cyan.opacity(0.06)],
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -404,14 +404,14 @@ struct PremiumUpgradeView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
                     LinearGradient(
-                        colors: [.purple.opacity(0.3), .pink.opacity(0.2)],
+                        colors: [.teal.opacity(0.3), .cyan.opacity(0.2)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
                     lineWidth: 1.5
                 )
         )
-        .shadow(color: .purple.opacity(0.15), radius: 10, y: 5)
+        .shadow(color: .teal.opacity(0.15), radius: 10, y: 5)
     }
 
     // MARK: - Limited Time Banner
@@ -508,15 +508,15 @@ struct PremiumUpgradeView: View {
         .shadow(color: .orange.opacity(0.1), radius: 8, y: 4)
     }
 
-    // MARK: - Who Liked You Preview (FOMO Section)
+    // MARK: - Who Wants to Connect Preview (FOMO Section)
 
-    private var whoLikedYouPreview: some View {
+    private var whoWantsToConnectPreview: some View {
         VStack(spacing: 16) {
             // Header
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 8) {
-                        Text("People Who Like You")
+                        Text("People Who Want to Connect")
                             .font(.title3.weight(.bold))
                             .foregroundColor(.primary)
 
@@ -526,11 +526,11 @@ struct PremiumUpgradeView: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
-                            .background(Color.pink)
+                            .background(Color.teal)
                             .clipShape(Capsule())
                     }
 
-                    Text("Unlock to see who's interested in you")
+                    Text("Unlock to see who wants to meet you")
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -595,9 +595,9 @@ struct PremiumUpgradeView: View {
                 // Scroll to pricing
             } label: {
                 HStack {
-                    Image(systemName: "eye.fill")
+                    Image(systemName: "person.2.fill")
                         .font(.subheadline)
-                    Text("See Who Likes You")
+                    Text("See Who Wants to Connect")
                         .font(.subheadline.weight(.semibold))
                 }
                 .foregroundColor(.white)
@@ -605,7 +605,7 @@ struct PremiumUpgradeView: View {
                 .padding(.vertical, 14)
                 .background(
                     LinearGradient(
-                        colors: [.pink, .purple],
+                        colors: [.teal, .cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -616,13 +616,13 @@ struct PremiumUpgradeView: View {
         .padding(20)
         .background(Color.white)
         .cornerRadius(20)
-        .shadow(color: .pink.opacity(0.15), radius: 15, y: 8)
+        .shadow(color: .teal.opacity(0.15), radius: 15, y: 8)
     }
 
     private func blurredAvatarColors(for index: Int) -> [Color] {
         let colorSets: [[Color]] = [
-            [.pink, .purple],
-            [.blue, .cyan],
+            [.teal, .cyan],
+            [.blue, .indigo],
             [.orange, .yellow],
             [.green, .mint],
             [.purple, .indigo]
@@ -639,7 +639,7 @@ struct PremiumUpgradeView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [.purple.opacity(0.2), .pink.opacity(0.15)],
+                            colors: [.teal.opacity(0.2), .cyan.opacity(0.15)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -651,7 +651,7 @@ struct PremiumUpgradeView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -662,7 +662,7 @@ struct PremiumUpgradeView: View {
                         .font(.title2)
                         .foregroundColor(.white)
                 }
-                .shadow(color: .purple.opacity(0.4), radius: 8, y: 4)
+                .shadow(color: .teal.opacity(0.4), radius: 8, y: 4)
             }
 
             VStack(alignment: .leading, spacing: 6) {
@@ -670,7 +670,7 @@ struct PremiumUpgradeView: View {
                     .font(.subheadline.weight(.bold))
                     .foregroundColor(.primary)
 
-                Text("Stand out with a verified premium badge on your profile. Members with badges get 2.5x more matches!")
+                Text("Stand out with a verified premium badge on your profile. Members with badges get 2.5x more connections!")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .lineLimit(3)
@@ -679,17 +679,17 @@ struct PremiumUpgradeView: View {
                 HStack(spacing: 4) {
                     Image(systemName: "person.2.fill")
                         .font(.caption2)
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
                     Text("1,247 members upgraded today")
                         .font(.caption2)
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
                 }
             }
         }
         .padding(18)
         .background(
             LinearGradient(
-                colors: [Color.purple.opacity(0.08), Color.pink.opacity(0.05)],
+                colors: [Color.teal.opacity(0.08), Color.cyan.opacity(0.05)],
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -700,14 +700,14 @@ struct PremiumUpgradeView: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
                     LinearGradient(
-                        colors: [.purple.opacity(0.3), .pink.opacity(0.2)],
+                        colors: [.teal.opacity(0.3), .cyan.opacity(0.2)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),
                     lineWidth: 1
                 )
         )
-        .shadow(color: .purple.opacity(0.1), radius: 10, y: 5)
+        .shadow(color: .teal.opacity(0.1), radius: 10, y: 5)
     }
 
     // MARK: - Live Feature Showcase
@@ -746,10 +746,10 @@ struct PremiumUpgradeView: View {
 
     private var showcaseCard: some View {
         let showcases = [
-            ("23 people liked you today", "heart.circle.fill", Color.pink, "See who they are with Premium"),
-            ("You're missing 15+ profiles", "eye.slash.fill", Color.purple, "Get unlimited browsing"),
-            ("Unlimited likes available", "heart.fill", Color.red, "Like as many profiles as you want"),
-            ("Send unlimited messages", "message.circle.fill", Color.blue, "Connect with anyone you like")
+            ("23 people want to connect today", "person.2.circle.fill", Color.teal, "See who they are with Premium"),
+            ("You're missing 15+ profiles", "eye.slash.fill", Color.cyan, "Get unlimited browsing"),
+            ("Unlimited connection requests", "person.badge.plus.fill", Color.blue, "Connect with anyone you want"),
+            ("Send unlimited messages", "message.circle.fill", Color.indigo, "Start conversations with your community")
         ]
 
         let current = showcases[currentShowcaseIndex]
@@ -796,13 +796,13 @@ struct PremiumUpgradeView: View {
 
     private var impactStats: some View {
         HStack(spacing: 0) {
-            impactStat(value: "3x", label: "More Matches", icon: "heart.fill", color: .pink)
+            impactStat(value: "3x", label: "More Connections", icon: "person.2.fill", color: .teal)
 
             Rectangle()
                 .fill(Color.gray.opacity(0.15))
                 .frame(width: 1, height: 45)
 
-            impactStat(value: "10x", label: "More Views", icon: "eye.fill", color: .purple)
+            impactStat(value: "10x", label: "More Views", icon: "eye.fill", color: .cyan)
 
             Rectangle()
                 .fill(Color.gray.opacity(0.15))
@@ -865,8 +865,8 @@ struct PremiumUpgradeView: View {
 
                 VStack(spacing: 0) {
                     comparisonRow(feature: "Send Messages", free: "10/day", premium: "Unlimited", icon: "message.fill")
-                    comparisonRow(feature: "Daily Likes", free: "10/day", premium: "Unlimited", icon: "heart.fill")
-                    comparisonRow(feature: "See Who Likes You", free: "Hidden", premium: "Full Access", icon: "eye.fill")
+                    comparisonRow(feature: "Daily Connections", free: "10/day", premium: "Unlimited", icon: "person.badge.plus.fill")
+                    comparisonRow(feature: "See Who Wants to Connect", free: "Hidden", premium: "Full Access", icon: "eye.fill")
                     comparisonRow(feature: "Advanced Filters", free: "Basic", premium: "All Filters", icon: "slider.horizontal.3")
                     comparisonRow(feature: "Read Receipts", free: "No", premium: "Yes", icon: "checkmark.message.fill")
                     comparisonRow(feature: "Priority in Feed", free: "Standard", premium: "Top Priority", icon: "arrow.up.circle.fill")
@@ -884,7 +884,7 @@ struct PremiumUpgradeView: View {
         HStack(spacing: 8) {
             Image(systemName: icon)
                 .font(.caption)
-                .foregroundColor(.purple)
+                .foregroundColor(.teal)
                 .frame(width: 20)
 
             Text(feature)
@@ -956,22 +956,22 @@ struct PremiumUpgradeView: View {
                 successStoryCard(
                     initials: "JM",
                     name: "Jake M.",
-                    story: "Found my match within 2 weeks! The 'See Who Likes You' feature was a game changer.",
-                    color: .purple
+                    story: "Found my community within 2 weeks! The 'See Who Wants to Connect' feature helped me meet locals fast.",
+                    color: .teal
                 )
 
                 successStoryCard(
                     initials: "SE",
                     name: "Sarah E.",
-                    story: "So many more quality matches since upgrading. Unlimited likes means I never miss someone.",
-                    color: .pink
+                    story: "So many more quality connections since upgrading. Met amazing people who showed me around my new city.",
+                    color: .cyan
                 )
 
                 successStoryCard(
                     initials: "AT",
                     name: "Alex T.",
-                    story: "Profile boost got me 3x the views. Met amazing people I would have missed.",
-                    color: .orange
+                    story: "Profile boost got me 3x the views. Met fellow transplants I would have missed otherwise.",
+                    color: .blue
                 )
             }
         }
@@ -1085,8 +1085,8 @@ struct PremiumUpgradeView: View {
                 )
 
                 FAQItem(
-                    question: "Do I keep my matches if I cancel?",
-                    answer: "Absolutely! All your matches and conversations are yours to keep. You just won't have access to premium features."
+                    question: "Do I keep my connections if I cancel?",
+                    answer: "Absolutely! All your connections and conversations are yours to keep. You just won't have access to premium features."
                 )
 
                 FAQItem(
@@ -1106,7 +1106,7 @@ struct PremiumUpgradeView: View {
                 purchasePremium()
             } label: {
                 HStack(spacing: 10) {
-                    Image(systemName: "crown.fill")
+                    Image(systemName: "star.circle.fill")
                         .font(.body)
                         .foregroundColor(.yellow)
 
@@ -1127,13 +1127,13 @@ struct PremiumUpgradeView: View {
                 .padding(.vertical, 16)
                 .background(
                     LinearGradient(
-                        colors: [Color.purple, Color.pink],
+                        colors: [Color.teal, Color.cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
                 )
                 .cornerRadius(16)
-                .shadow(color: .purple.opacity(0.3), radius: 12, y: 6)
+                .shadow(color: .teal.opacity(0.3), radius: 12, y: 6)
             }
             .disabled(isProcessing)
 
@@ -1182,7 +1182,7 @@ struct PremiumUpgradeView: View {
                         .trim(from: 0, to: 0.7)
                         .stroke(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             ),
@@ -1327,14 +1327,14 @@ struct PremiumPlanCard: View {
                 // Selection indicator
                 ZStack {
                     Circle()
-                        .stroke(isSelected ? Color.purple : Color.gray.opacity(0.3), lineWidth: 2)
+                        .stroke(isSelected ? Color.teal : Color.gray.opacity(0.3), lineWidth: 2)
                         .frame(width: 24, height: 24)
 
                     if isSelected {
                         Circle()
                             .fill(
                                 LinearGradient(
-                                    colors: [.purple, .pink],
+                                    colors: [.teal, .cyan],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
@@ -1411,7 +1411,7 @@ struct PremiumPlanCard: View {
                 RoundedRectangle(cornerRadius: 16)
                     .fill(isSelected ?
                         LinearGradient(
-                            colors: [Color.purple.opacity(0.08), Color.pink.opacity(0.05)],
+                            colors: [Color.teal.opacity(0.08), Color.cyan.opacity(0.05)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ) :

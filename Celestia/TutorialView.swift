@@ -1,9 +1,9 @@
 //
 //  TutorialView.swift
-//  Celestia
+//  NewLocal
 //
 //  Interactive tutorials for core features
-//  Guides new users through swiping, matching, and messaging
+//  Guides new users through discovering locals, connecting, and messaging
 //
 
 import SwiftUI
@@ -24,9 +24,9 @@ struct TutorialView: View {
 
     var body: some View {
         ZStack {
-            // Background gradient
+            // Background gradient - NewLocal teal theme
             LinearGradient(
-                colors: [Color.purple.opacity(0.1), Color.pink.opacity(0.05)],
+                colors: [Color.teal.opacity(0.1), Color.cyan.opacity(0.05)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -43,7 +43,7 @@ struct TutorialView: View {
                         Text("Skip")
                             .font(.subheadline)
                             .fontWeight(.medium)
-                            .foregroundColor(.purple)
+                            .foregroundColor(.teal)
                     }
                     .padding()
                 }
@@ -70,14 +70,14 @@ struct TutorialView: View {
                                 Text("Back")
                             }
                             .fontWeight(.semibold)
-                            .foregroundColor(.purple)
+                            .foregroundColor(.teal)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 16)
                             .background(Color.white)
                             .cornerRadius(16)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 16)
-                                    .stroke(Color.purple, lineWidth: 2)
+                                    .stroke(Color.teal, lineWidth: 2)
                             )
                         }
                     }
@@ -102,13 +102,13 @@ struct TutorialView: View {
                         .padding(.vertical, 16)
                         .background(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
                         )
                         .cornerRadius(16)
-                        .shadow(color: .purple.opacity(0.3), radius: 10, y: 5)
+                        .shadow(color: .teal.opacity(0.3), radius: 10, y: 5)
                     }
                 }
                 .padding(.horizontal, 24)
@@ -299,26 +299,26 @@ class TutorialManager: ObservableObject {
         return [
             Tutorial(
                 id: "welcome",
-                title: "Welcome to Celestia! 🌟",
-                description: "Your journey to meaningful connections starts here. Let's show you around!",
-                icon: "star.fill",
-                accentColor: .purple,
+                title: "Welcome to NewLocal!",
+                description: "Your journey to connecting with your new community starts here. Let's show you around!",
+                icon: "house.circle.fill",
+                accentColor: .teal,
                 tips: [
-                    "Be authentic and genuine",
+                    "Share your story and why you moved",
                     "Add photos that show your personality",
-                    "Write a bio that sparks conversation"
+                    "Write a bio about your interests and goals"
                 ]
             ),
 
             Tutorial(
                 id: "scrolling",
-                title: "Discover & Scroll",
-                description: "Scroll through profiles one by one. Tap the heart to like or tap the profile card for more details!",
+                title: "Discover Your Community",
+                description: "Browse through locals and fellow newcomers. Tap the connect button to reach out!",
                 icon: "arrow.up.arrow.down",
-                accentColor: .pink,
+                accentColor: .cyan,
                 tips: [
-                    "Scroll up and down to browse profiles",
-                    "Tap the heart button to like someone",
+                    "Scroll through profiles in your area",
+                    "Tap the connect button to reach out",
                     "Tap the star to save profiles for later"
                 ],
                 interactiveDemo: AnyView(ScrollBrowseDemo())
@@ -326,27 +326,27 @@ class TutorialManager: ObservableObject {
 
             Tutorial(
                 id: "matching",
-                title: "Make Matches",
-                description: "When someone you liked also likes you back, you'll both be notified and can start chatting!",
-                icon: "heart.fill",
-                accentColor: .red,
+                title: "Make Connections",
+                description: "When someone you reached out to connects back, you'll both be notified and can start chatting!",
+                icon: "person.2.fill",
+                accentColor: .blue,
                 tips: [
-                    "Matches appear in your Matches tab",
+                    "Connections appear in your Connections tab",
                     "Send the first message to break the ice",
-                    "Be respectful and genuine"
+                    "Ask about their neighborhood recommendations"
                 ]
             ),
 
             Tutorial(
                 id: "messaging",
                 title: "Start Conversations",
-                description: "Once matched, send a message to start getting to know each other better.",
+                description: "Once connected, send a message to get to know each other and share local tips!",
                 icon: "message.fill",
-                accentColor: .blue,
+                accentColor: .indigo,
                 tips: [
-                    "Ask about their interests",
+                    "Ask about their favorite local spots",
                     "Reference something from their profile",
-                    "Be yourself and have fun!"
+                    "Share your own experiences!"
                 ],
                 interactiveDemo: AnyView(MessageDemo())
             ),
@@ -354,20 +354,20 @@ class TutorialManager: ObservableObject {
             Tutorial(
                 id: "profile_quality",
                 title: "Complete Your Profile",
-                description: "High-quality profiles get 5x more matches. Add photos, write a bio, and share your interests!",
+                description: "Great profiles get 5x more connections. Share your story, add photos, and list your interests!",
                 icon: "person.crop.circle.fill.badge.checkmark",
                 accentColor: .green,
                 tips: [
                     "Add 4-6 clear photos",
-                    "Write a bio that shows your personality",
-                    "Select at least 5 interests"
+                    "Share why you moved and what you're looking for",
+                    "Select your interests and things to explore"
                 ]
             ),
 
             Tutorial(
                 id: "safety",
                 title: "Stay Safe",
-                description: "Your safety is our priority. Report inappropriate behavior and never share personal info too soon.",
+                description: "Your safety is our priority. Report inappropriate behavior and meet in public places.",
                 icon: "shield.checkered",
                 accentColor: .orange,
                 tips: [
@@ -382,17 +382,17 @@ class TutorialManager: ObservableObject {
 
     static func getFeatureTutorial(feature: String) -> Tutorial? {
         switch feature {
-        case "super_like":
+        case "priority_connection":
             return Tutorial(
-                id: "super_like",
-                title: "Super Like ⭐",
-                description: "Stand out from the crowd! Super Likes show you're really interested.",
+                id: "priority_connection",
+                title: "Priority Connection ⭐",
+                description: "Stand out from the crowd! Priority connections show you're really interested in connecting.",
                 icon: "star.circle.fill",
-                accentColor: .blue,
+                accentColor: .teal,
                 tips: [
-                    "You get 1 free Super Like per day",
+                    "You get 1 free Priority Connection per day",
                     "Premium users get 5 per day",
-                    "Use them on profiles you really like!"
+                    "Use them on profiles you really want to connect with!"
                 ]
             )
 
@@ -400,7 +400,7 @@ class TutorialManager: ObservableObject {
             return Tutorial(
                 id: "boost",
                 title: "Profile Boost 🚀",
-                description: "Get 10x more profile views for 30 minutes. Perfect for busy times!",
+                description: "Get 10x more profile views for 30 minutes. Perfect for meeting more people!",
                 icon: "flame.fill",
                 accentColor: .orange,
                 tips: [
@@ -420,17 +420,17 @@ class TutorialManager: ObservableObject {
 
 struct ScrollBrowseDemo: View {
     @State private var scrollOffset: CGFloat = 0
-    @State private var isLiked: [Bool] = [false, false, false]
+    @State private var isConnected: [Bool] = [false, false, false]
 
     private let demoProfiles = [
-        ("Sarah", "person.fill"),
-        ("Mike", "person.fill"),
-        ("Emma", "person.fill")
+        ("Sarah - Local", "person.fill"),
+        ("Mike - Newcomer", "person.fill"),
+        ("Emma - Transplant", "person.fill")
     ]
 
     var body: some View {
         VStack(spacing: 12) {
-            Text("Try it! Scroll through profiles")
+            Text("Try it! Browse your community")
                 .font(.caption)
                 .foregroundColor(.secondary)
 
@@ -463,17 +463,17 @@ struct ScrollBrowseDemo: View {
 
                             Spacer()
 
-                            // Like button
+                            // Connect button
                             Button {
                                 HapticManager.shared.impact(.light)
                                 withAnimation(.spring(response: 0.3)) {
-                                    isLiked[index].toggle()
+                                    isConnected[index].toggle()
                                 }
                             } label: {
-                                Image(systemName: isLiked[index] ? "heart.fill" : "heart")
+                                Image(systemName: isConnected[index] ? "person.badge.plus.fill" : "person.badge.plus")
                                     .font(.title3)
-                                    .foregroundColor(isLiked[index] ? .pink : .gray)
-                                    .scaleEffect(isLiked[index] ? 1.2 : 1.0)
+                                    .foregroundColor(isConnected[index] ? .teal : .gray)
+                                    .scaleEffect(isConnected[index] ? 1.2 : 1.0)
                             }
                         }
                         .padding(12)
@@ -597,9 +597,9 @@ struct MessageDemo: View {
                 // Sample message bubble
                 HStack {
                     Spacer()
-                    Text("Hey! Nice to match with you 👋")
+                    Text("Hey! Excited to connect with you 👋")
                         .padding(12)
-                        .background(Color.purple.opacity(0.2))
+                        .background(Color.teal.opacity(0.2))
                         .cornerRadius(16)
                 }
 
@@ -617,7 +617,7 @@ struct MessageDemo: View {
                     } label: {
                         Image(systemName: "arrow.up.circle.fill")
                             .font(.title2)
-                            .foregroundColor(message.isEmpty ? .gray : .purple)
+                            .foregroundColor(message.isEmpty ? .gray : .teal)
                     }
                 }
             }
