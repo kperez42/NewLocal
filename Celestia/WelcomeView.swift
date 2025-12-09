@@ -1,6 +1,6 @@
 //
 //  WelcomeView.swift - IMPROVED VERSION
-//  Celestia
+//  NewLocal
 //
 //  ✨ Enhanced with:
 //  - Animated gradient background
@@ -26,9 +26,9 @@ struct WelcomeView: View {
     @State private var showPrivacyPolicy = false
 
     let features = [
-        Feature(icon: "heart.circle.fill", title: "Find Your Match", description: "Meet amazing people near you"),
-        Feature(icon: "heart.text.square.fill", title: "Smart Matching", description: "AI-powered compatibility algorithm"),
-        Feature(icon: "message.fill", title: "Real-Time Chat", description: "Instant messaging with your matches")
+        Feature(icon: "person.2.circle.fill", title: "Connect Locally", description: "Meet locals and fellow newcomers"),
+        Feature(icon: "map.circle.fill", title: "Discover Your City", description: "Get insider tips and recommendations"),
+        Feature(icon: "message.fill", title: "Build Community", description: "Chat and share experiences together")
     ]
     
     var body: some View {
@@ -155,32 +155,32 @@ struct WelcomeView: View {
     
     private var logoSection: some View {
         VStack(spacing: 20) {
-            // Animated star icon
+            // Animated house/location icon
             ZStack {
                 Circle()
                     .fill(Color.white.opacity(0.2))
                     .frame(width: 140, height: 140)
                     .blur(radius: 20)
-                
-                Image(systemName: "star.circle.fill")
+
+                Image(systemName: "house.circle.fill")
                     .font(.system(size: 100))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.white, .yellow.opacity(0.9)],
+                            colors: [.white, .teal.opacity(0.9)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .shadow(color: .white.opacity(0.5), radius: 20)
             }
-            
+
             VStack(spacing: 8) {
-                Text("Celestia")
+                Text("NewLocal")
                     .font(.system(size: 52, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .shadow(color: .black.opacity(0.2), radius: 5)
-                
-                Text("Find friends, dates, and meaningful connections")
+
+                Text("Connect with locals and fellow newcomers")
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.95))
                     .multilineTextAlignment(.center)
@@ -261,7 +261,7 @@ struct WelcomeView: View {
                 .shadow(color: .white.opacity(0.5), radius: 15, y: 5)
             }
             .accessibilityLabel("Create Account")
-            .accessibilityHint("Start creating your Celestia account")
+            .accessibilityHint("Start creating your NewLocal account")
             .accessibilityIdentifier(AccessibilityIdentifier.signUpButton)
             .scaleButton()
 
@@ -442,7 +442,7 @@ struct WelcomeAwarenessSlidesView: View {
     let slides: [AwarenessSlide] = [
         AwarenessSlide(
             icon: "star.circle.fill",
-            title: "Welcome to Celestia!",
+            title: "Welcome to NewLocal!",
             description: "Your journey to meaningful connections starts here. Let us show you how it works!",
             color: .purple,
             tips: [
@@ -498,7 +498,7 @@ struct WelcomeAwarenessSlidesView: View {
         AwarenessSlide(
             icon: "checklist",
             title: "What We Review",
-            description: "All profiles are reviewed before going live. Here's what our team checks to keep Celestia safe and authentic:",
+            description: "All profiles are reviewed before going live. Here's what our team checks to keep NewLocal safe and authentic:",
             color: .blue,
             tips: [
                 "Profile Photos - Clear, appropriate photos that show you",

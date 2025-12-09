@@ -1,8 +1,8 @@
 //
 //  SafeDatingTipsView.swift
-//  Celestia
+//  NewLocal
 //
-//  Safety tips and resources for dating
+//  Safety tips and resources for meeting new people in your community
 //
 
 import SwiftUI
@@ -25,7 +25,7 @@ struct SafeDatingTipsView: View {
                 .padding()
             }
         }
-        .navigationTitle("Safe Dating Tips")
+        .navigationTitle("Safe Meetup Tips")
         .navigationBarTitleDisplayMode(.inline)
     }
 
