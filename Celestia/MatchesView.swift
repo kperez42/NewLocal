@@ -1,8 +1,8 @@
 //
 //  MatchesView.swift
-//  Celestia
+//  NewLocal
 //
-//  ELITE MATCHES VIEW - Premium Dating Experience
+//  CONNECTIONS VIEW - Local Community Connections
 //  ACCESSIBILITY: Full VoiceOver support, Dynamic Type, Reduce Motion, and WCAG 2.1 AA compliant
 //
 
@@ -37,7 +37,7 @@ struct MatchesView: View {
         case recent = "Most Recent"
         case unread = "Unread First"
         case alphabetical = "A-Z"
-        case newMatches = "New Matches"
+        case newMatches = "New Connections"
     }
 
     // PERFORMANCE: Use cached value, update only when dependencies change
@@ -143,7 +143,7 @@ struct MatchesView: View {
             .task {
                 await loadMatches()
                 updateFilteredMatches()
-                VoiceOverAnnouncement.screenChanged(to: "Matches view. \(matchService.matches.count) matches available.")
+                VoiceOverAnnouncement.screenChanged(to: "Connections view. \(matchService.matches.count) connections available.")
             }
             .refreshable {
                 HapticManager.shared.impact(.light)
@@ -203,27 +203,27 @@ struct MatchesView: View {
             VStack(spacing: 12) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Matches")
+                        Text("Connections")
                             .font(.largeTitle.weight(.bold))
                             .foregroundColor(.white)
                             .dynamicTypeSize(min: .large, max: .accessibility2)
                             .accessibilityAddTraits(.isHeader)
-                        
+
                         if !matchService.matches.isEmpty {
                             HStack(spacing: 8) {
-                                // Match count
+                                // Connection count
                                 HStack(spacing: 4) {
-                                    Image(systemName: "heart.fill")
+                                    Image(systemName: "person.2.fill")
                                         .font(.caption)
                                     Text("\(matchService.matches.count)")
                                         .fontWeight(.semibold)
                                 }
-                                
+
                                 // Separator
                                 Circle()
                                     .fill(Color.white.opacity(0.5))
                                     .frame(width: 4, height: 4)
-                                
+
                                 // Unread count
                                 if unreadCount > 0 {
                                     HStack(spacing: 4) {
@@ -233,13 +233,13 @@ struct MatchesView: View {
                                             .fontWeight(.semibold)
                                     }
                                 }
-                                
-                                // New matches
+
+                                // New connections
                                 if newMatchesCount > 0 {
                                     Circle()
                                         .fill(Color.white.opacity(0.5))
                                         .frame(width: 4, height: 4)
-                                    
+
                                     HStack(spacing: 4) {
                                         Image(systemName: "sparkles")
                                             .font(.caption)
@@ -508,25 +508,25 @@ struct MatchesView: View {
                     )
                     .frame(width: 140, height: 140)
                 
-                Image(systemName: "heart.circle.fill")
+                Image(systemName: "person.2.circle.fill")
                     .font(.system(size: 70))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .blue],
+                            colors: [.teal, .blue],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
             }
-            
+
             VStack(spacing: 12) {
-                Text("No Matches Yet")
+                Text("No Connections Yet")
                     .font(.title2)
                     .fontWeight(.bold)
                     .dynamicTypeSize(min: .large, max: .accessibility2)
                     .accessibilityAddTraits(.isHeader)
 
-                Text("Head to the Discover tab to start swiping and finding your perfect match!")
+                Text("Head to the Discover tab to start meeting people in your new city!")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -540,7 +540,7 @@ struct MatchesView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "sparkles")
                         .font(.body)
-                    Text("Go to Discover Tab")
+                    Text("Explore Your City")
                         .font(.headline)
                 }
                 .frame(maxWidth: .infinity)
@@ -548,7 +548,7 @@ struct MatchesView: View {
                 .foregroundColor(.white)
                 .background(
                     LinearGradient(
-                        colors: [.purple, .pink],
+                        colors: [.teal, .blue],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -556,7 +556,7 @@ struct MatchesView: View {
                 .cornerRadius(16)
                 .contentShape(RoundedRectangle(cornerRadius: 16))
 
-                Text("Tap the first tab to start swiping")
+                Text("Tap the first tab to start connecting")
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -565,8 +565,8 @@ struct MatchesView: View {
             // Tips
             VStack(spacing: 12) {
                 tipRow(icon: "photo.fill", text: "Add more photos to your profile")
-                tipRow(icon: "text.alignleft", text: "Write an interesting bio")
-                tipRow(icon: "heart.fill", text: "Be active and swipe regularly")
+                tipRow(icon: "text.alignleft", text: "Share what you want to explore")
+                tipRow(icon: "person.2.fill", text: "Be active and connect with locals")
             }
             .padding(20)
             .background(Color.white)

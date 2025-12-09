@@ -1,6 +1,6 @@
 //
 //  SplashView.swift
-//  Celestia
+//  NewLocal
 //
 //  Professional splash screen with brand animation
 //
@@ -20,9 +20,9 @@ struct SplashView: View {
             // Animated gradient background matching WelcomeView
             LinearGradient(
                 colors: [
-                    Color(red: 0.6, green: 0.2, blue: 0.8),  // Purple
-                    Color(red: 0.9, green: 0.3, blue: 0.6),  // Pink
-                    Color(red: 0.4, green: 0.5, blue: 0.9)   // Blue
+                    Color(red: 0.2, green: 0.6, blue: 0.6),  // Teal
+                    Color(red: 0.3, green: 0.7, blue: 0.5),  // Green
+                    Color(red: 0.2, green: 0.5, blue: 0.8)   // Blue
                 ],
                 startPoint: animateGradient ? .topLeading : .bottomLeading,
                 endPoint: animateGradient ? .bottomTrailing : .topTrailing
@@ -63,7 +63,7 @@ struct SplashView: View {
                 .opacity(logoOpacity)
 
                 // App name
-                Text("Celestia")
+                Text("NewLocal")
                     .font(.system(size: 48, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .opacity(logoOpacity)

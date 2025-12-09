@@ -1,8 +1,8 @@
 //
 //  LikeActivityView.swift
-//  Celestia
+//  NewLocal
 //
-//  Timeline of like activity (received and sent)
+//  Timeline of connection activity (received and sent)
 //
 
 import SwiftUI
@@ -27,7 +27,7 @@ struct LikeActivityView: View {
                     activityList
                 }
             }
-            .navigationTitle("Like Activity")
+            .navigationTitle("Connection Activity")
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -103,7 +103,7 @@ struct LikeActivityView: View {
                     .font(.title2)
                     .fontWeight(.bold)
 
-                Text("Your like activity will appear here")
+                Text("Your connection activity will appear here")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -200,8 +200,8 @@ struct LikeActivity: Identifiable {
 
         var color: Color {
             switch self {
-            case .received: return .pink
-            case .sent: return .purple
+            case .received: return .teal
+            case .sent: return .blue
             case .mutual: return .orange
             case .matched: return .green
             }
@@ -210,13 +210,13 @@ struct LikeActivity: Identifiable {
         var description: String {
             switch self {
             case .received(let isSuperLike):
-                return isSuperLike ? "Super liked you" : "Liked you"
+                return isSuperLike ? "Super interested in you" : "Wants to connect"
             case .sent(let isSuperLike):
-                return isSuperLike ? "You super liked" : "You liked"
+                return isSuperLike ? "You're super interested" : "You want to connect"
             case .mutual:
-                return "Mutual like!"
+                return "Mutual interest!"
             case .matched:
-                return "It's a match!"
+                return "You're connected!"
             }
         }
     }
@@ -331,7 +331,7 @@ class LikeActivityViewModel: ObservableObject {
             // New approach: Batch fetch all unique users = ~13 queries (10 users per batch)
             await fetchUsersForActivities(allActivity)
 
-            Logger.shared.info("Loaded like activity - today: \(todayActivity.count), week: \(weekActivity.count)", category: .matching)
+            Logger.shared.info("Loaded connection activity - today: \(todayActivity.count), week: \(weekActivity.count)", category: .matching)
         } catch {
             Logger.shared.error("Error loading like activity", category: .matching, error: error)
         }

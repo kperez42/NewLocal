@@ -1,21 +1,21 @@
 //
 //  PersonalizedOnboardingManager.swift
-//  Celestia
+//  NewLocal
 //
-//  Manages personalized onboarding paths based on user goals and preferences
-//  Adapts the onboarding experience to match user intentions
+//  Manages personalized onboarding paths based on newcomer goals and preferences
+//  Adapts the onboarding experience for people relocating to a new city
 //
 
 import Foundation
 import SwiftUI
 
-/// Manages personalized onboarding experiences based on user goals
+/// Manages personalized onboarding experiences based on newcomer goals
 @MainActor
 class PersonalizedOnboardingManager: ObservableObject {
 
     static let shared = PersonalizedOnboardingManager()
 
-    @Published var selectedGoal: DatingGoal?
+    @Published var selectedGoal: NewcomerGoal?
     @Published var recommendedPath: OnboardingPath?
     @Published var customizations: [String: Any] = [:]
 
@@ -23,61 +23,61 @@ class PersonalizedOnboardingManager: ObservableObject {
 
     // MARK: - Models
 
-    enum DatingGoal: String, Codable, CaseIterable {
-        case seriousRelationship = "serious_relationship"
-        case casualDating = "casual_dating"
-        case newFriends = "new_friends"
-        case networking = "networking"
-        case figureItOut = "figure_it_out"
+    enum NewcomerGoal: String, Codable, CaseIterable {
+        case findLocalFriends = "find_local_friends"
+        case exploreCity = "explore_city"
+        case findExpats = "find_expats"
+        case networking = "professional_networking"
+        case settleIn = "settle_in"
 
         var displayName: String {
             switch self {
-            case .seriousRelationship: return "Long-term relationship"
-            case .casualDating: return "Casual dating"
-            case .newFriends: return "New friends"
+            case .findLocalFriends: return "Find local friends"
+            case .exploreCity: return "Explore the city"
+            case .findExpats: return "Connect with fellow newcomers"
             case .networking: return "Professional networking"
-            case .figureItOut: return "Open to see what happens"
+            case .settleIn: return "Get settled in my new home"
             }
         }
 
         var icon: String {
             switch self {
-            case .seriousRelationship: return "heart.fill"
-            case .casualDating: return "sparkles"
-            case .newFriends: return "person.2.fill"
+            case .findLocalFriends: return "person.2.fill"
+            case .exploreCity: return "map.fill"
+            case .findExpats: return "globe"
             case .networking: return "briefcase.fill"
-            case .figureItOut: return "star.fill"
+            case .settleIn: return "house.fill"
             }
         }
 
         var description: String {
             switch self {
-            case .seriousRelationship:
-                return "Looking for something meaningful and long-lasting"
-            case .casualDating:
-                return "Enjoying the journey, keeping it light"
-            case .newFriends:
-                return "Expanding your social circle"
+            case .findLocalFriends:
+                return "Meet locals who can show you around"
+            case .exploreCity:
+                return "Discover hidden gems and local favorites"
+            case .findExpats:
+                return "Connect with others who recently moved here"
             case .networking:
-                return "Building professional connections"
-            case .figureItOut:
-                return "Exploring options and seeing where things go"
+                return "Build your professional network in the city"
+            case .settleIn:
+                return "Find roommates, tips, and community support"
             }
         }
 
         var color: Color {
             switch self {
-            case .seriousRelationship: return .red
-            case .casualDating: return .orange
-            case .newFriends: return .blue
+            case .findLocalFriends: return .blue
+            case .exploreCity: return .orange
+            case .findExpats: return .teal
             case .networking: return .purple
-            case .figureItOut: return .green
+            case .settleIn: return .green
             }
         }
     }
 
     struct OnboardingPath {
-        let goal: DatingGoal
+        let goal: NewcomerGoal
         let steps: [OnboardingPathStep]
         let focusAreas: [FocusArea]
         let recommendedFeatures: [String]
@@ -90,6 +90,8 @@ class PersonalizedOnboardingManager: ObservableObject {
             case interestMatching = "interest_matching"
             case locationAccuracy = "location_accuracy"
             case verificationTrust = "verification_trust"
+            case neighborhoodInfo = "neighborhood_info"
+            case relocationDetails = "relocation_details"
         }
     }
 
@@ -115,7 +117,7 @@ class PersonalizedOnboardingManager: ObservableObject {
 
     // MARK: - Goal Selection
 
-    func selectGoal(_ goal: DatingGoal) {
+    func selectGoal(_ goal: NewcomerGoal) {
         selectedGoal = goal
         recommendedPath = generatePath(for: goal)
         saveGoal()
@@ -132,128 +134,128 @@ class PersonalizedOnboardingManager: ObservableObject {
 
     // MARK: - Path Generation
 
-    private func generatePath(for goal: DatingGoal) -> OnboardingPath {
+    private func generatePath(for goal: NewcomerGoal) -> OnboardingPath {
         switch goal {
-        case .seriousRelationship:
-            return createSeriousRelationshipPath()
-        case .casualDating:
-            return createCasualDatingPath()
-        case .newFriends:
-            return createNewFriendsPath()
+        case .findLocalFriends:
+            return createFindLocalFriendsPath()
+        case .exploreCity:
+            return createExploreCityPath()
+        case .findExpats:
+            return createFindExpatsPath()
         case .networking:
             return createNetworkingPath()
-        case .figureItOut:
-            return createOpenPath()
+        case .settleIn:
+            return createSettleInPath()
         }
     }
 
-    private func createSeriousRelationshipPath() -> OnboardingPath {
+    private func createFindLocalFriendsPath() -> OnboardingPath {
         OnboardingPath(
-            goal: .seriousRelationship,
+            goal: .findLocalFriends,
             steps: [
                 OnboardingPathStep(
-                    id: "detailed_profile",
-                    title: "Create a Detailed Profile",
-                    description: "Share your values, interests, and what you're looking for",
+                    id: "friendly_profile",
+                    title: "Create Your Local Profile",
+                    description: "Show locals who you are and what you're looking for",
                     importance: .critical,
                     tips: [
-                        "Write a thoughtful bio about your personality and values",
-                        "Add 4-6 high-quality photos showing different aspects of your life",
-                        "Share your long-term goals and what matters to you"
+                        "Share where you moved from and when",
+                        "Highlight activities you want to try in the city",
+                        "Mention your neighborhood or area"
+                    ]
+                ),
+                OnboardingPathStep(
+                    id: "interests_activities",
+                    title: "Share Your Interests",
+                    description: "Connect with locals who share your hobbies",
+                    importance: .critical,
+                    tips: [
+                        "Select activities you want to explore",
+                        "Mention places you want to discover",
+                        "Be genuine about your interests"
                     ]
                 ),
                 OnboardingPathStep(
                     id: "verify_profile",
                     title: "Verify Your Profile",
-                    description: "Build trust with verified photos",
-                    importance: .critical,
+                    description: "Build trust in your new community",
+                    importance: .recommended,
                     tips: [
-                        "Verified profiles get 2x more meaningful matches",
-                        "Shows you're serious and authentic",
+                        "Verified profiles get 2x more connections",
+                        "Shows you're authentic",
                         "Takes less than 2 minutes"
                     ]
-                ),
-                OnboardingPathStep(
-                    id: "interests_values",
-                    title: "Share Your Interests & Values",
-                    description: "Help us find compatible matches",
-                    importance: .recommended,
-                    tips: [
-                        "Select interests that truly represent you",
-                        "Be specific about what you're looking for",
-                        "Authenticity attracts the right people"
-                    ]
                 )
             ],
-            focusAreas: [.profileDepth, .verificationTrust, .bioOptimization, .interestMatching],
-            recommendedFeatures: ["Video Prompts", "Voice Messages", "Verified Matches"],
-            tutorialPriority: ["profile_quality", "matching", "messaging", "safety", "scrolling"]
+            focusAreas: [.interestMatching, .locationAccuracy, .neighborhoodInfo, .bioOptimization],
+            recommendedFeatures: ["Ask a Local", "Neighborhood Guide", "Local Events"],
+            tutorialPriority: ["welcome", "discovery", "connecting", "messaging", "profile_quality"]
         )
     }
 
-    private func createCasualDatingPath() -> OnboardingPath {
+    private func createExploreCityPath() -> OnboardingPath {
         OnboardingPath(
-            goal: .casualDating,
+            goal: .exploreCity,
             steps: [
                 OnboardingPathStep(
-                    id: "fun_profile",
-                    title: "Create a Fun Profile",
-                    description: "Show your personality and what makes you interesting",
+                    id: "explorer_profile",
+                    title: "Create Your Explorer Profile",
+                    description: "Show what you want to discover in your new city",
                     importance: .critical,
                     tips: [
-                        "Add photos that show you having fun",
-                        "Keep your bio light and engaging",
-                        "Show different sides of your personality"
+                        "Add photos that show your adventurous side",
+                        "List places and activities you want to try",
+                        "Mention your favorite things to explore"
                     ]
                 ),
                 OnboardingPathStep(
-                    id: "interests",
-                    title: "Share Your Interests",
-                    description: "Find people with shared hobbies",
-                    importance: .recommended,
+                    id: "exploration_interests",
+                    title: "What Do You Want to Explore?",
+                    description: "Find people to explore the city with",
+                    importance: .critical,
                     tips: [
-                        "Select activities you enjoy",
-                        "Be open to new experiences",
-                        "Show what makes you unique"
+                        "Select activities like food, nightlife, culture",
+                        "Be specific about neighborhoods to explore",
+                        "Show your enthusiasm for the city"
                     ]
                 )
             ],
-            focusAreas: [.photoQuality, .interestMatching, .locationAccuracy],
-            recommendedFeatures: ["Quick Match", "Nearby Matches", "Icebreakers"],
-            tutorialPriority: ["scrolling", "matching", "messaging", "profile_quality"]
+            focusAreas: [.interestMatching, .locationAccuracy, .photoQuality],
+            recommendedFeatures: ["Explore Together", "Local Tips", "Hidden Gems"],
+            tutorialPriority: ["discovery", "connecting", "messaging", "profile_quality"]
         )
     }
 
-    private func createNewFriendsPath() -> OnboardingPath {
+    private func createFindExpatsPath() -> OnboardingPath {
         OnboardingPath(
-            goal: .newFriends,
+            goal: .findExpats,
             steps: [
                 OnboardingPathStep(
-                    id: "friendly_profile",
-                    title: "Create a Friendly Profile",
-                    description: "Show what kind of friend you'd be",
+                    id: "newcomer_profile",
+                    title: "Share Your Story",
+                    description: "Connect with others who understand the newcomer experience",
                     importance: .critical,
                     tips: [
-                        "Highlight your hobbies and interests",
-                        "Share what activities you enjoy",
-                        "Be genuine and approachable"
+                        "Share where you moved from",
+                        "Explain why you moved to this city",
+                        "Mention how long you've been here"
                     ]
                 ),
                 OnboardingPathStep(
-                    id: "location_interests",
-                    title: "Share Location & Interests",
-                    description: "Find friends with shared activities nearby",
+                    id: "newcomer_challenges",
+                    title: "What Are You Looking For?",
+                    description: "Find support from fellow newcomers",
                     importance: .critical,
                     tips: [
-                        "Add your city for local connections",
-                        "Select group activities you enjoy",
-                        "Be specific about your interests"
+                        "Share challenges you're facing",
+                        "Mention what tips you need",
+                        "Connect over shared experiences"
                     ]
                 )
             ],
-            focusAreas: [.interestMatching, .locationAccuracy, .bioOptimization],
-            recommendedFeatures: ["Group Activities", "Interest Groups", "Events"],
-            tutorialPriority: ["scrolling", "matching", "messaging", "profile_quality"]
+            focusAreas: [.relocationDetails, .bioOptimization, .interestMatching],
+            recommendedFeatures: ["Newcomer Events", "Expat Groups", "Moving Tips"],
+            tutorialPriority: ["welcome", "discovery", "connecting", "messaging"]
         )
     }
 
@@ -264,11 +266,11 @@ class PersonalizedOnboardingManager: ObservableObject {
                 OnboardingPathStep(
                     id: "professional_profile",
                     title: "Create a Professional Profile",
-                    description: "Highlight your professional interests and goals",
+                    description: "Build your network in your new city",
                     importance: .critical,
                     tips: [
                         "Share your professional background",
-                        "Mention industries or fields of interest",
+                        "Mention your industry and interests",
                         "Keep photos professional yet approachable"
                     ]
                 ),
@@ -285,41 +287,41 @@ class PersonalizedOnboardingManager: ObservableObject {
                 )
             ],
             focusAreas: [.profileDepth, .verificationTrust, .locationAccuracy],
-            recommendedFeatures: ["Professional Mode", "Industry Tags", "LinkedIn Integration"],
-            tutorialPriority: ["profile_quality", "matching", "messaging"]
+            recommendedFeatures: ["Professional Meetups", "Industry Connections", "Career Events"],
+            tutorialPriority: ["profile_quality", "connecting", "messaging"]
         )
     }
 
-    private func createOpenPath() -> OnboardingPath {
+    private func createSettleInPath() -> OnboardingPath {
         OnboardingPath(
-            goal: .figureItOut,
+            goal: .settleIn,
             steps: [
                 OnboardingPathStep(
-                    id: "basic_profile",
-                    title: "Create Your Profile",
-                    description: "Start with the basics and explore from there",
+                    id: "settling_profile",
+                    title: "Tell Us About Your Move",
+                    description: "Get help settling into your new city",
                     importance: .critical,
                     tips: [
-                        "Add a few good photos",
-                        "Write a brief bio about yourself",
-                        "Select some interests you enjoy"
+                        "Share when you arrived",
+                        "Mention what you need help with",
+                        "Be specific about your neighborhood"
                     ]
                 ),
                 OnboardingPathStep(
-                    id: "explore",
-                    title: "Start Exploring",
-                    description: "See who's out there and what feels right",
-                    importance: .recommended,
+                    id: "needs_assessment",
+                    title: "What Do You Need?",
+                    description: "Find people who can help you settle in",
+                    importance: .critical,
                     tips: [
-                        "Try swiping to see different people",
-                        "You can always update your preferences",
-                        "Take your time finding what you're looking for"
+                        "Looking for a roommate? Mention it!",
+                        "Need local tips? Ask the community",
+                        "Want to find services? Connect with locals"
                     ]
                 )
             ],
-            focusAreas: [.photoQuality, .bioOptimization, .interestMatching],
-            recommendedFeatures: ["Discovery", "Filters", "Profile Insights"],
-            tutorialPriority: ["welcome", "scrolling", "matching", "messaging", "profile_quality"]
+            focusAreas: [.relocationDetails, .neighborhoodInfo, .locationAccuracy],
+            recommendedFeatures: ["Roommate Finder", "Local Services", "Neighborhood Guide"],
+            tutorialPriority: ["welcome", "discovery", "connecting", "messaging", "profile_quality"]
         )
     }
 
@@ -357,7 +359,7 @@ class PersonalizedOnboardingManager: ObservableObject {
 
     private func loadSavedGoal() {
         if let data = UserDefaults.standard.data(forKey: userDefaultsKey),
-           let goal = try? JSONDecoder().decode(DatingGoal.self, from: data) {
+           let goal = try? JSONDecoder().decode(NewcomerGoal.self, from: data) {
             selectedGoal = goal
             recommendedPath = generatePath(for: goal)
         }
@@ -370,17 +372,17 @@ struct OnboardingGoalSelectionView: View {
     @ObservedObject var manager = PersonalizedOnboardingManager.shared
     @Environment(\.dismiss) var dismiss
 
-    let onGoalSelected: (PersonalizedOnboardingManager.DatingGoal) -> Void
+    let onGoalSelected: (PersonalizedOnboardingManager.NewcomerGoal) -> Void
 
     var body: some View {
         VStack(spacing: 0) {
             // Header
             VStack(spacing: 12) {
-                Text("What brings you here?")
+                Text("Welcome to Your New City!")
                     .font(.title)
                     .fontWeight(.bold)
 
-                Text("This helps us personalize your experience")
+                Text("What are you hoping to find here?")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -391,7 +393,7 @@ struct OnboardingGoalSelectionView: View {
             // Goal Options
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 16) {
-                    ForEach(PersonalizedOnboardingManager.DatingGoal.allCases, id: \.self) { goal in
+                    ForEach(PersonalizedOnboardingManager.NewcomerGoal.allCases, id: \.self) { goal in
                         GoalCard(goal: goal, isSelected: manager.selectedGoal == goal) {
                             withAnimation(.spring(response: 0.3)) {
                                 manager.selectGoal(goal)
@@ -412,7 +414,7 @@ struct OnboardingGoalSelectionView: View {
                     dismiss()
                 } label: {
                     HStack {
-                        Text("Continue")
+                        Text("Let's Get Started")
                             .fontWeight(.semibold)
 
                         Image(systemName: "arrow.right")
@@ -422,13 +424,13 @@ struct OnboardingGoalSelectionView: View {
                     .padding(.vertical, 16)
                     .background(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .blue],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
                     .cornerRadius(16)
-                    .shadow(color: .purple.opacity(0.3), radius: 10, y: 5)
+                    .shadow(color: .teal.opacity(0.3), radius: 10, y: 5)
                 }
                 .padding(.horizontal, 24)
                 .padding(.bottom, 32)
@@ -437,7 +439,7 @@ struct OnboardingGoalSelectionView: View {
         }
         .background(
             LinearGradient(
-                colors: [Color.purple.opacity(0.05), Color.pink.opacity(0.03)],
+                colors: [Color.teal.opacity(0.05), Color.blue.opacity(0.03)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -447,7 +449,7 @@ struct OnboardingGoalSelectionView: View {
 }
 
 struct GoalCard: View {
-    let goal: PersonalizedOnboardingManager.DatingGoal
+    let goal: PersonalizedOnboardingManager.NewcomerGoal
     let isSelected: Bool
     let onTap: () -> Void
 

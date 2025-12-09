@@ -2,7 +2,7 @@
 //  Constants.swift
 //  NewLocal
 //
-//  Centralized constants for the app
+//  Centralized constants for the relocation community app
 //
 
 import Foundation
@@ -11,7 +11,8 @@ import SwiftUI
 enum AppConstants {
     // MARK: - App Identity
     static let appName = "NewLocal"
-    static let appTagline = "Connect with your new city"
+    static let appTagline = "Your Community When You're New in Town"
+    static let appStoreCategory = "Lifestyle"  // or "Social Networking"
 
     // MARK: - API Configuration
     enum API {

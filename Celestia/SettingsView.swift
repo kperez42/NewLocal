@@ -149,11 +149,11 @@ struct SettingsView: View {
                         showSeeWhoLikesYou = true
                     } label: {
                         HStack {
-                            Image(systemName: "heart.fill")
-                                .foregroundColor(.pink)
+                            Image(systemName: "person.badge.plus.fill")
+                                .foregroundColor(.teal)
                             VStack(alignment: .leading, spacing: 2) {
                                 HStack(spacing: 6) {
-                                    Text("See Who Likes You")
+                                    Text("See Who's Interested")
                                         .foregroundColor(.primary)
                                     if !(authService.currentUser?.isPremium ?? false) {
                                         Image(systemName: "crown.fill")
@@ -291,7 +291,7 @@ struct SettingsView: View {
                         HStack {
                             Image(systemName: "shield.checkered")
                                 .foregroundColor(.orange)
-                            Text("Dating Safety Tips")
+                            Text("Community Safety Tips")
                                 .foregroundColor(.primary)
                             Spacer()
                             Image(systemName: "chevron.right")

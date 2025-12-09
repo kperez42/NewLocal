@@ -1,8 +1,8 @@
 //
-//  SafeDatingTipsView.swift
-//  Celestia
+//  CommunitySafetyTipsView.swift
+//  NewLocal
 //
-//  Safety tips and resources for dating
+//  Safety tips and resources for meeting new people in your city
 //
 
 import SwiftUI
@@ -25,7 +25,7 @@ struct SafeDatingTipsView: View {
                 .padding()
             }
         }
-        .navigationTitle("Safe Dating Tips")
+        .navigationTitle("Community Safety Tips")
         .navigationBarTitleDisplayMode(.inline)
     }
 
@@ -74,7 +74,7 @@ struct CategoryTab: View {
             .background(
                 isSelected ?
                 LinearGradient(
-                    colors: [.blue, .purple],
+                    colors: [.teal, .blue],
                     startPoint: .leading,
                     endPoint: .trailing
                 ) :
@@ -158,7 +158,7 @@ struct SafetyTipCard: View {
 
 enum TipCategory: CaseIterable {
     case beforeMeeting
-    case firstDate
+    case firstMeetup
     case ongoingSafety
     case redFlags
     case resources
@@ -166,7 +166,7 @@ enum TipCategory: CaseIterable {
     var title: String {
         switch self {
         case .beforeMeeting: return "Before"
-        case .firstDate: return "First Date"
+        case .firstMeetup: return "First Meetup"
         case .ongoingSafety: return "Ongoing"
         case .redFlags: return "Red Flags"
         case .resources: return "Resources"
@@ -176,7 +176,7 @@ enum TipCategory: CaseIterable {
     var icon: String {
         switch self {
         case .beforeMeeting: return "calendar.badge.clock"
-        case .firstDate: return "hand.wave.fill"
+        case .firstMeetup: return "hand.wave.fill"
         case .ongoingSafety: return "shield.checkered"
         case .redFlags: return "exclamationmark.triangle.fill"
         case .resources: return "link"
@@ -238,8 +238,8 @@ struct SafetyTip: Identifiable {
                     description: "Always tell a friend or family member where you're going and who you're meeting.",
                     priority: .critical,
                     actionItems: [
-                        "Share date location and time",
-                        "Send match's profile info",
+                        "Share meetup location and time",
+                        "Send their profile info",
                         "Set up check-in times"
                     ]
                 ),
@@ -256,12 +256,12 @@ struct SafetyTip: Identifiable {
                 )
             ]
 
-        case .firstDate:
+        case .firstMeetup:
             return [
                 SafetyTip(
                     icon: "building.2.fill",
                     title: "Meet in Public",
-                    description: "Always choose a busy, public place for first dates. Never go to their home or invite them to yours.",
+                    description: "Always choose a busy, public place for first meetups. Never go to their home or invite them to yours.",
                     priority: .critical,
                     actionItems: [
                         "Choose a busy cafe or restaurant",
@@ -342,7 +342,7 @@ struct SafetyTip: Identifiable {
                 SafetyTip(
                     icon: "clock.fill",
                     title: "Take It Slow",
-                    description: "There's no rush. Take time to build trust before increasing intimacy or sharing more.",
+                    description: "There's no rush. Take time to build trust before sharing more personal details.",
                     priority: .helpful,
                     actionItems: [
                         "Set your own pace",
@@ -400,8 +400,8 @@ struct SafetyTip: Identifiable {
                 ),
                 SafetyTip(
                     icon: "hourglass",
-                    title: "Rushes Intimacy",
-                    description: "Be wary of anyone who rushes physical or emotional intimacy or tries to isolate you from friends.",
+                    title: "Rushes Closeness",
+                    description: "Be wary of anyone who rushes intimacy or tries to isolate you from friends and family.",
                     priority: .important,
                     actionItems: [
                         "Maintain your pace",
@@ -449,7 +449,7 @@ struct SafetyTip: Identifiable {
                 SafetyTip(
                     icon: "house.fill",
                     title: "Domestic Violence Hotline",
-                    description: "National Domestic Violence Hotline: 1-800-799-SAFE (7233). Help for abusive relationships.",
+                    description: "National Domestic Violence Hotline: 1-800-799-SAFE (7233). Help for abusive situations.",
                     priority: .important,
                     actionItems: [
                         "Call 1-800-799-7233",
@@ -471,10 +471,10 @@ struct SafetyTip: Identifiable {
                 SafetyTip(
                     icon: "network",
                     title: "Online Resources",
-                    description: "Visit these websites for more information on staying safe while dating online.",
+                    description: "Visit these websites for more information on staying safe while meeting new people.",
                     priority: .helpful,
                     actionItems: [
-                        "love is respect.org",
+                        "loveisrespect.org",
                         "cybercivilrights.org",
                         "ncvc.org (National Center for Victims of Crime)"
                     ]

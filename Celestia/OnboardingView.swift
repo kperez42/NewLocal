@@ -78,7 +78,7 @@ struct OnboardingView: View {
     let totalSteps = 8
 
     // Step 6 options
-    let relationshipGoalOptions = ["Prefer not to say", "Casual Dating", "Long-term Relationship", "Marriage", "Friendship", "Not Sure Yet"]
+    let relationshipGoalOptions = ["Prefer not to say", "Find Local Friends", "Activity Buddies", "Professional Network", "Roommate Search", "Explore the City", "Not Sure Yet"]
     let heightOptions: [Int] = Array(140...220) // cm range
 
     // Step 7 & 8 options (Lifestyle)
@@ -321,11 +321,11 @@ struct OnboardingView: View {
     private var stepTitle: String {
         switch currentStep {
         case 0: return "Basic Info"
-        case 1: return "About You"
+        case 1: return "Your Story"
         case 2: return "Your Photos"
-        case 3: return "Preferences"
-        case 4: return "Interests"
-        case 5: return "Better Matches"
+        case 3: return "Connection Preferences"
+        case 4: return "Your Interests"
+        case 5: return "Better Connections"
         case 6: return "Your Lifestyle"
         case 7: return "Final Details"
         default: return ""
@@ -335,12 +335,12 @@ struct OnboardingView: View {
     private var stepSubtitle: String {
         switch currentStep {
         case 0: return "Tell us who you are"
-        case 1: return "Share your story"
-        case 2: return "Show your best self"
-        case 3: return "What you're looking for"
+        case 1: return "Share about your move"
+        case 2: return "Show your personality"
+        case 3: return "Who you want to meet"
         case 4: return "What makes you unique"
         case 5: return "Optional • Skip anytime"
-        case 6: return "Your habits & preferences"
+        case 6: return "Help locals know you"
         case 7: return "Almost done!"
         default: return ""
         }
@@ -688,11 +688,11 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 8) {
-                    Text("Show Your Best Self")
+                    Text("Show Your Personality")
                         .font(.title)
                         .fontWeight(.bold)
 
-                    Text("Great photos get 10x more matches")
+                    Text("Great photos get 10x more connections")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -748,7 +748,7 @@ struct OnboardingView: View {
 
                             Text(photoImages.count == 0 ? "Add photos to get started" :
                                  photoImages.count < 2 ? "Add \(2 - photoImages.count) more to continue" :
-                                 photoImages.count < 6 ? "Add more for better matches" : "Maximum photos reached!")
+                                 photoImages.count < 6 ? "Add more to stand out" : "Maximum photos reached!")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                         }
@@ -1114,40 +1114,40 @@ struct OnboardingView: View {
         .padding(.vertical, 4)
     }
     
-    // MARK: - Step 4: Preferences
-    
+    // MARK: - Step 4: Connection Preferences
+
     private var step4View: some View {
         ScrollView(showsIndicators: false) {
             VStack(spacing: 30) {
                 // Icon
                 ZStack {
                     Circle()
-                        .fill(Color.purple.opacity(0.15))
+                        .fill(Color.teal.opacity(0.15))
                         .frame(width: 100, height: 100)
-                    
-                    Image(systemName: "heart.fill")
+
+                    Image(systemName: "person.2.fill")
                         .font(.system(size: 50))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .blue],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
                         )
                 }
-                
+
                 VStack(spacing: 8) {
-                    Text("Dating Preferences")
+                    Text("Connection Preferences")
                         .font(.title)
                         .fontWeight(.bold)
-                    
-                    Text("Who are you interested in?")
+
+                    Text("Who do you want to connect with?")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Interested in")
+                    Text("I want to meet")
                         .font(.subheadline)
                         .fontWeight(.medium)
                         .foregroundColor(.secondary)
@@ -1316,7 +1316,7 @@ struct OnboardingView: View {
         }
     }
 
-    // MARK: - Step 6: Better Matches (Optional)
+    // MARK: - Step 6: Better Connections (Optional)
 
     private var step6View: some View {
         ScrollView(showsIndicators: false) {
@@ -1339,11 +1339,11 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 8) {
-                    Text("Get Better Matches")
+                    Text("Better Connections")
                         .font(.title)
                         .fontWeight(.bold)
 
-                    Text("These details help find your perfect match")
+                    Text("These details help find the right people")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -1365,12 +1365,12 @@ struct OnboardingView: View {
                 }
 
                 VStack(spacing: 20) {
-                    // Relationship Goal
+                    // Connection Goal
                     VStack(alignment: .leading, spacing: 12) {
                         HStack(spacing: 8) {
-                            Image(systemName: "heart.text.square.fill")
-                                .foregroundColor(.pink)
-                            Text("What are you looking for?")
+                            Image(systemName: "person.2.fill")
+                                .foregroundColor(.teal)
+                            Text("What are you hoping to find?")
                                 .font(.headline)
                         }
 
@@ -1591,11 +1591,11 @@ struct OnboardingView: View {
                         .foregroundColor(.green)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("40% More Matches")
+                        Text("40% More Connections")
                             .font(.subheadline)
                             .fontWeight(.semibold)
 
-                        Text("Users with complete profiles get significantly more matches")
+                        Text("Complete profiles get significantly more local connections")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -1656,7 +1656,7 @@ struct OnboardingView: View {
                         .font(.title)
                         .fontWeight(.bold)
 
-                    Text("Help us find compatible matches")
+                    Text("Help people find common ground with you")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -1722,11 +1722,11 @@ struct OnboardingView: View {
                         .foregroundColor(.yellow)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text("Lifestyle Matching")
+                        Text("Community Matching")
                             .font(.subheadline)
                             .fontWeight(.semibold)
 
-                        Text("Users with similar lifestyles are 60% more likely to match")
+                        Text("People with similar lifestyles connect more easily")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
@@ -1807,11 +1807,11 @@ struct OnboardingView: View {
                 // Completion stats
                 VStack(spacing: 16) {
                     HStack(spacing: 16) {
-                        statBadge(icon: "chart.line.uptrend.xyaxis", value: "3x", label: "More Matches", color: .green)
-                        statBadge(icon: "heart.fill", value: "85%", label: "Better Compatibility", color: .pink)
+                        statBadge(icon: "chart.line.uptrend.xyaxis", value: "3x", label: "More Connections", color: .green)
+                        statBadge(icon: "person.2.fill", value: "85%", label: "Better Matches", color: .teal)
                     }
 
-                    Text("Complete profiles get significantly more attention!")
+                    Text("Complete profiles get significantly more local connections!")
                         .font(.caption)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
@@ -2380,14 +2380,14 @@ struct CompletionCelebrationView: View {
                 Button {
                     onDismiss()
                 } label: {
-                    Text("Start Exploring!")
+                    Text("Explore Your New City!")
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding()
                         .background(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .blue],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )

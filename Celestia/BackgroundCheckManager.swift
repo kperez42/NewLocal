@@ -146,7 +146,7 @@ class BackgroundCheckManager {
         return BackgroundCheckConsent(
             title: "Background Check Authorization",
             description: """
-            By authorizing this background check, you agree to allow Celestia to conduct a comprehensive background check including:
+            By authorizing this background check, you agree to allow NewLocal to conduct a comprehensive background check including:
 
             • Criminal record search
             • Sex offender registry check

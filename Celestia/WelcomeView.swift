@@ -175,12 +175,12 @@ struct WelcomeView: View {
             }
             
             VStack(spacing: 8) {
-                Text("Celestia")
+                Text("NewLocal")
                     .font(.system(size: 52, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .shadow(color: .black.opacity(0.2), radius: 5)
-                
-                Text("Find friends, dates, and meaningful connections")
+
+                Text("Your Community When You're New in Town")
                     .font(.headline)
                     .foregroundColor(.white.opacity(0.95))
                     .multilineTextAlignment(.center)
@@ -261,7 +261,7 @@ struct WelcomeView: View {
                 .shadow(color: .white.opacity(0.5), radius: 15, y: 5)
             }
             .accessibilityLabel("Create Account")
-            .accessibilityHint("Start creating your Celestia account")
+            .accessibilityHint("Start creating your NewLocal account")
             .accessibilityIdentifier(AccessibilityIdentifier.signUpButton)
             .scaleButton()
 
@@ -442,9 +442,9 @@ struct WelcomeAwarenessSlidesView: View {
     let slides: [AwarenessSlide] = [
         AwarenessSlide(
             icon: "star.circle.fill",
-            title: "Welcome to Celestia!",
-            description: "Your journey to meaningful connections starts here. Let us show you how it works!",
-            color: .purple,
+            title: "Welcome to NewLocal!",
+            description: "Your journey to building community starts here. Let us show you how it works!",
+            color: .teal,
             tips: [
                 "Be authentic and genuine in your profile",
                 "Add photos that show your personality",
@@ -454,29 +454,29 @@ struct WelcomeAwarenessSlidesView: View {
         AwarenessSlide(
             icon: "scroll.fill",
             title: "Browse & Discover",
-            description: "Scroll through profiles in your feed. Tap the heart to like someone, or keep scrolling to see more!",
-            color: .pink,
+            description: "Scroll through profiles in your feed. Tap connect to show interest, or keep scrolling to see more!",
+            color: .blue,
             tips: [
                 "Scroll up and down to browse profiles",
                 "Tap any card to view full profile details",
-                "Like profiles that interest you"
+                "Connect with people who interest you"
             ]
         ),
         AwarenessSlide(
-            icon: "heart.fill",
-            title: "Likes & Matches",
-            description: "Tap the heart on profiles you like. When they like you back, it's a match and you can start chatting!",
-            color: .red,
+            icon: "person.2.fill",
+            title: "Connect & Network",
+            description: "Tap connect on profiles you'd like to meet. When they connect back, you can start chatting!",
+            color: .green,
             tips: [
-                "Your matches appear in the Matches tab",
-                "Send a message to start the conversation",
+                "Your connections appear in the Connections tab",
+                "Send a message to introduce yourself",
                 "Be genuine and respectful"
             ]
         ),
         AwarenessSlide(
             icon: "message.fill",
             title: "Start Conversations",
-            description: "Once matched, send a message to start getting to know each other better.",
+            description: "Once connected, send a message to start getting to know each other better.",
             color: .blue,
             tips: [
                 "Ask about their interests",
@@ -487,7 +487,7 @@ struct WelcomeAwarenessSlidesView: View {
         AwarenessSlide(
             icon: "person.crop.circle.fill.badge.checkmark",
             title: "Complete Your Profile",
-            description: "High-quality profiles get 5x more matches. Add photos, write a bio, and share your interests!",
+            description: "High-quality profiles get 5x more connections. Add photos, write a bio, and share your interests!",
             color: .green,
             tips: [
                 "Add 4-6 clear photos of yourself",
@@ -498,7 +498,7 @@ struct WelcomeAwarenessSlidesView: View {
         AwarenessSlide(
             icon: "checklist",
             title: "What We Review",
-            description: "All profiles are reviewed before going live. Here's what our team checks to keep Celestia safe and authentic:",
+            description: "All profiles are reviewed before going live. Here's what our team checks to keep NewLocal safe and authentic:",
             color: .blue,
             tips: [
                 "Profile Photos - Clear, appropriate photos that show you",
@@ -512,7 +512,7 @@ struct WelcomeAwarenessSlidesView: View {
             description: "Your safety is our priority. We review all profiles and provide tools to report inappropriate behavior.",
             color: .orange,
             tips: [
-                "Meet in public places for first dates",
+                "Meet in public places for first meetups",
                 "Tell a friend about your plans",
                 "Trust your instincts always",
                 "Report and block suspicious accounts"

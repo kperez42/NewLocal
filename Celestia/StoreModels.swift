@@ -201,11 +201,11 @@ enum SubscriptionFeature: Equatable {
     var displayName: String {
         switch self {
         case .unlimitedMatches(let enabled):
-            return enabled ? "Unlimited Matches" : "Limited Matches"
+            return enabled ? "Unlimited Connections" : "Limited Connections"
         case .unlimitedLikes(let enabled):
-            return enabled ? "Unlimited Likes" : "10 Likes per day"
+            return enabled ? "Unlimited Connects" : "10 Connects per day"
         case .seeWhoLikesYou(let enabled):
-            return enabled ? "See Who Likes You" : "Hidden Likes"
+            return enabled ? "See Who's Interested" : "Hidden Interest"
         case .boosts(let count):
             return count > 0 ? "\(count) Boost\(count == 1 ? "" : "s") per month" : "No Boosts"
         case .advancedFilters(let enabled):
@@ -213,7 +213,7 @@ enum SubscriptionFeature: Equatable {
         case .readReceipts(let enabled):
             return enabled ? "Read Receipts" : "No Read Receipts"
         case .priorityLikes(let enabled):
-            return enabled ? "Priority Likes" : "Standard Queue"
+            return enabled ? "Priority Connects" : "Standard Queue"
         case .noAds(let enabled):
             return enabled ? "Ad-Free Experience" : "Includes Ads"
         case .profileBoost(let enabled):

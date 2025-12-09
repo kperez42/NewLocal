@@ -396,7 +396,7 @@ extension Bundle {
     
     /// Get app name
     var appName: String {
-        infoDictionary?["CFBundleName"] as? String ?? "Celestia"
+        infoDictionary?["CFBundleName"] as? String ?? "NewLocal"
     }
 }
 

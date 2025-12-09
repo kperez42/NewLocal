@@ -1,6 +1,6 @@
 //
 //  DiscoverView.swift
-//  Celestia
+//  NewLocal
 //
 //  ACCESSIBILITY: Full VoiceOver support, Dynamic Type, Reduce Motion, and WCAG 2.1 AA compliant
 //
@@ -70,7 +70,7 @@ struct DiscoverView: View {
             .accessibilityIdentifier(AccessibilityIdentifier.discoverView)
             .task {
                 await viewModel.loadUsers()
-                VoiceOverAnnouncement.screenChanged(to: "Discover view. \(viewModel.users.count) potential matches available.")
+                VoiceOverAnnouncement.screenChanged(to: "Discover view. \(viewModel.users.count) people nearby.")
             }
             .refreshable {
                 HapticManager.shared.impact(.light)
@@ -183,7 +183,7 @@ struct DiscoverView: View {
             }
             .accessibilityElement(
                 label: "Shuffle users",
-                hint: "Randomly reorder the list of potential matches",
+                hint: "Randomly reorder the list of people",
                 traits: .isButton,
                 identifier: AccessibilityIdentifier.shuffleButton
             )
@@ -211,7 +211,7 @@ struct DiscoverView: View {
             }
             .accessibilityElement(
                 label: viewModel.hasActiveFilters ? "Filters active" : "Filters",
-                hint: "Show discovery filters to refine your matches",
+                hint: "Show discovery filters to refine who you see",
                 traits: .isButton,
                 identifier: AccessibilityIdentifier.filterButton,
                 value: viewModel.hasActiveFilters ? "Active" : "Inactive"
@@ -268,7 +268,7 @@ struct DiscoverView: View {
                     )
                     .disabled(viewModel.isProcessingAction)
 
-                    // Super Like button
+                    // Super Connect button
                     SwipeActionButton(
                         icon: "star.fill",
                         iconSize: .title2,
@@ -280,20 +280,20 @@ struct DiscoverView: View {
                     ) {
                         Task {
                             await viewModel.handleSuperLike()
-                            VoiceOverAnnouncement.announce("Super like sent!")
+                            VoiceOverAnnouncement.announce("Super connect sent!")
                         }
                     }
                     .accessibilityElement(
-                        label: "Super Like",
-                        hint: "Send a super like to stand out and increase your chances of matching",
+                        label: "Super Connect",
+                        hint: "Send a super connect to stand out and increase your chances of connecting",
                         traits: .isButton,
                         identifier: AccessibilityIdentifier.superLikeButton
                     )
                     .disabled(viewModel.isProcessingAction)
 
-                    // Like button
+                    // Connect button
                     SwipeActionButton(
-                        icon: "heart.fill",
+                        icon: "person.badge.plus",
                         iconSize: .title,
                         iconWeight: .bold,
                         size: 68,
@@ -303,12 +303,12 @@ struct DiscoverView: View {
                     ) {
                         Task {
                             await viewModel.handleLike()
-                            VoiceOverAnnouncement.announce("Liked! Next profile.")
+                            VoiceOverAnnouncement.announce("Connect request sent! Next profile.")
                         }
                     }
                     .accessibilityElement(
-                        label: "Like",
-                        hint: "Like this profile to potentially match",
+                        label: "Connect",
+                        hint: "Request to connect with this person",
                         traits: .isButton,
                         identifier: AccessibilityIdentifier.likeButton
                     )
@@ -478,19 +478,19 @@ struct DiscoverView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
-    // MARK: - Match Animation
-    
+    // MARK: - Connection Animation
+
     private var matchCelebrationView: some View {
         ZStack {
             Color.black.opacity(0.8)
                 .ignoresSafeArea()
 
             VStack(spacing: 30) {
-                Image(systemName: "sparkles")
+                Image(systemName: "person.2.fill")
                     .font(.system(size: 80))
-                    .foregroundColor(.yellow)
+                    .foregroundColor(.teal)
 
-                Text("It's a Match! 🎉")
+                Text("New Connection!")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.white)
@@ -498,7 +498,7 @@ struct DiscoverView: View {
                     .accessibilityAddTraits(.isHeader)
 
                 if let user = viewModel.matchedUser {
-                    Text("You and \(user.fullName) liked each other!")
+                    Text("You and \(user.fullName) want to connect!")
                         .font(.title3)
                         .foregroundColor(.white)
                         .multilineTextAlignment(.center)
@@ -517,17 +517,17 @@ struct DiscoverView: View {
                     viewModel.dismissMatchAnimation()
                 }
                 .buttonStyle(.borderedProminent)
-                .tint(.purple)
+                .tint(.teal)
                 .controlSize(.large)
 
-                Button("Keep Swiping") {
+                Button("Keep Exploring") {
                     viewModel.dismissMatchAnimation()
                 }
                 .foregroundColor(.white)
             }
             .task {
                 if let user = viewModel.matchedUser {
-                    VoiceOverAnnouncement.announce("It's a match! You and \(user.fullName) liked each other!")
+                    VoiceOverAnnouncement.announce("New connection! You and \(user.fullName) want to connect!")
                 }
             }
             .padding(40)
@@ -547,9 +547,9 @@ struct DiscoverView: View {
                 }
             }
             .overlay(alignment: .topTrailing) {
-                // Like indicator
+                // Connect indicator
                 if cardIndex == 0 && viewModel.dragOffset.width > 50 {
-                    swipeIndicator(icon: "heart.fill", color: .green, text: "LIKE")
+                    swipeIndicator(icon: "person.badge.plus", color: .green, text: "CONNECT")
                         .opacity(min(1.0, Double(viewModel.dragOffset.width) / 100.0))
                 }
             }
@@ -566,19 +566,19 @@ struct DiscoverView: View {
             .contentShape(Rectangle()) // Define tappable area
             .accessibilityElement(
                 label: cardIndex == 0 ? "\(user.fullName), \(user.age) years old, from \(user.location)" : "",
-                hint: cardIndex == 0 ? "Swipe right to like, left to pass, or tap for full profile. Use the action buttons below for more options" : "",
+                hint: cardIndex == 0 ? "Swipe right to connect, left to pass, or tap for full profile. Use the action buttons below for more options" : "",
                 traits: cardIndex == 0 ? .isButton : [],
                 identifier: cardIndex == 0 ? AccessibilityIdentifier.userCard : nil,
                 isHidden: cardIndex != 0
             )
             .accessibilityActions(cardIndex == 0 ? [
-                AccessibilityCustomAction(name: "Like") {
+                AccessibilityCustomAction(name: "Connect") {
                     Task { await viewModel.handleLike() }
                 },
                 AccessibilityCustomAction(name: "Pass") {
                     Task { await viewModel.handlePass() }
                 },
-                AccessibilityCustomAction(name: "Super Like") {
+                AccessibilityCustomAction(name: "Super Connect") {
                     Task { await viewModel.handleSuperLike() }
                 },
                 AccessibilityCustomAction(name: "View Profile") {

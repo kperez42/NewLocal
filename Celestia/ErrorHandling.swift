@@ -148,7 +148,7 @@ enum CelestiaError: LocalizedError, Identifiable {
         case .invalidProfileData:
             return "Some profile information is invalid. Please check and try again."
         case .ageRestriction:
-            return "You must be 18 or older to use Celestia."
+            return "You must be 18 or older to use NewLocal."
         case .validationError(let field, let reason):
             return "Validation error for \(field): \(reason)"
 
@@ -223,7 +223,7 @@ enum CelestiaError: LocalizedError, Identifiable {
 
         // Premium
         case .premiumRequired:
-            return "This feature requires Celestia Premium."
+            return "This feature requires NewLocal Premium."
         case .subscriptionExpired:
             return "Your premium subscription has expired."
         case .purchaseFailed:

@@ -581,7 +581,7 @@ struct SignUpView: View {
                             HStack(spacing: 6) {
                                 Image(systemName: "exclamationmark.circle.fill")
                                     .foregroundColor(.red)
-                                Text("You must be 18 or older to use Celestia")
+                                Text("You must be 18 or older to use NewLocal")
                                     .font(.caption)
                                     .foregroundColor(.red)
                             }

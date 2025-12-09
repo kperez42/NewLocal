@@ -621,7 +621,7 @@ struct FeedDiscoverView: View {
                         )
                     )
 
-                Text("Welcome to Celestia!")
+                Text("Welcome to NewLocal!")
                     .font(.title2)
                     .fontWeight(.bold)
 

@@ -1,6 +1,6 @@
 //
 //  ChatView.swift
-//  Celestia
+//  NewLocal
 //
 //  Chat view with real-time messaging
 //  ACCESSIBILITY: Full VoiceOver support, Dynamic Type, Reduce Motion, and WCAG 2.1 AA compliant
@@ -27,7 +27,7 @@ struct ChatView: View {
 
     @State private var messageText = ""
     @FocusState private var isInputFocused: Bool
-    @State private var showingUnmatchConfirmation = false
+    @State private var showingDisconnectConfirmation = false
     @State private var showingBlockConfirmation = false
     @State private var showingUserProfile = false
     @State private var showingReportSheet = false
@@ -167,8 +167,8 @@ struct ChatView: View {
                 }
             }
         }
-        .confirmationDialog("Unmatch with \(otherUser.fullName)?", isPresented: $showingUnmatchConfirmation, titleVisibility: .visible) {
-            Button("Unmatch", role: .destructive) {
+        .confirmationDialog("Disconnect from \(otherUser.fullName)?", isPresented: $showingDisconnectConfirmation, titleVisibility: .visible) {
+            Button("Disconnect", role: .destructive) {
                 HapticManager.shared.notification(.warning)
                 Task {
                     do {
@@ -178,7 +178,7 @@ struct ChatView: View {
                             dismiss()
                         }
                     } catch {
-                        Logger.shared.error("Error unmatching", category: .matching, error: error)
+                        Logger.shared.error("Error disconnecting", category: .matching, error: error)
                     }
                 }
             }
@@ -186,7 +186,7 @@ struct ChatView: View {
                 HapticManager.shared.impact(.light)
             }
         } message: {
-            Text("You won't be able to message each other anymore, and this match will be removed from your list.")
+            Text("You won't be able to message each other anymore, and this connection will be removed from your list.")
         }
         .alert("Block \(otherUser.fullName)?", isPresented: $showingBlockConfirmation) {
             Button("Cancel", role: .cancel) {
@@ -303,7 +303,7 @@ struct ChatView: View {
                     Circle()
                         .fill(
                             LinearGradient(
-                                colors: [Color.purple.opacity(0.7), Color.pink.opacity(0.6)],
+                                colors: [Color.teal.opacity(0.7), Color.blue.opacity(0.6)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -337,7 +337,7 @@ struct ChatView: View {
                         .font(.caption)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .blue],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -392,9 +392,9 @@ struct ChatView: View {
                 }
 
                 Button(role: .destructive) {
-                    showingUnmatchConfirmation = true
+                    showingDisconnectConfirmation = true
                 } label: {
-                    Label("Unmatch", systemImage: "xmark.circle")
+                    Label("Disconnect", systemImage: "xmark.circle")
                 }
             } label: {
                 Image(systemName: "ellipsis.circle")
@@ -482,7 +482,7 @@ struct ChatView: View {
                                     }
                                 }
                                 .buttonStyle(.borderedProminent)
-                                .tint(.purple)
+                                .tint(.teal)
                             }
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding(.top, 100)
@@ -546,7 +546,7 @@ struct ChatView: View {
                                         .padding(.vertical, 10)
                                         .background(
                                             LinearGradient(
-                                                colors: [Color.purple.opacity(0.7), Color.pink.opacity(0.7)],
+                                                colors: [Color.teal.opacity(0.7), Color.blue.opacity(0.7)],
                                                 startPoint: .topLeading,
                                                 endPoint: .bottomTrailing
                                             )
@@ -636,7 +636,7 @@ struct ChatView: View {
                     .font(.system(size: 40))
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .blue],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -663,7 +663,7 @@ struct ChatView: View {
                         HStack(spacing: 12) {
                             Image(systemName: starter.icon)
                                 .font(.title3)
-                                .foregroundColor(.purple)
+                                .foregroundColor(.teal)
                                 .frame(width: 32)
 
                             Text(starter.text)

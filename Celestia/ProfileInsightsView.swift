@@ -1,6 +1,6 @@
 //
 //  ProfileInsightsView.swift
-//  Celestia
+//  NewLocal
 //
 //  Comprehensive profile analytics and insights dashboard
 //
@@ -149,7 +149,7 @@ struct ProfileInsightsView: View {
         case 40...59:
             return "Fair - Check suggestions below to improve your profile 💡"
         default:
-            return "Let's improve your profile to get more matches! 🚀"
+            return "Let's improve your profile to make more connections! 🚀"
         }
     }
 
@@ -272,17 +272,17 @@ struct ProfileInsightsView: View {
                 )
 
                 achievementBadge(
-                    icon: "heart.fill",
-                    title: "Heartthrob",
-                    subtitle: "50+ likes",
+                    icon: "person.badge.plus.fill",
+                    title: "Popular",
+                    subtitle: "50+ interests",
                     isUnlocked: insights.likesReceived >= 50,
-                    color: .pink
+                    color: .teal
                 )
 
                 achievementBadge(
                     icon: "message.fill",
-                    title: "Socialite",
-                    subtitle: "10+ chats",
+                    title: "Connector",
+                    subtitle: "10+ connections",
                     isUnlocked: insights.matchCount >= 10,
                     color: .blue
                 )
@@ -402,7 +402,7 @@ struct ProfileInsightsView: View {
                 // Quick stats
                 VStack(alignment: .leading, spacing: 12) {
                     rankingStat(icon: "eye.fill", label: "Views today", value: "\(Int.random(in: 5...20))", color: .blue)
-                    rankingStat(icon: "heart.fill", label: "Likes today", value: "\(Int.random(in: 2...10))", color: .pink)
+                    rankingStat(icon: "person.badge.plus.fill", label: "Interests today", value: "\(Int.random(in: 2...10))", color: .teal)
                     rankingStat(icon: "message.fill", label: "Messages", value: "\(Int.random(in: 1...5))", color: .green)
                 }
                 .frame(maxWidth: .infinity)
@@ -539,10 +539,10 @@ struct ProfileInsightsView: View {
 
             HStack(spacing: 20) {
                 statBox(
-                    title: "Likes",
+                    title: "Interested",
                     value: "\(insights.likesReceived)",
-                    color: .pink,
-                    icon: "heart.fill"
+                    color: .teal,
+                    icon: "person.badge.plus.fill"
                 )
 
                 statBox(
@@ -553,17 +553,17 @@ struct ProfileInsightsView: View {
                 )
             }
 
-            // Like rate progress bar
+            // Interest rate progress bar
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
-                    Text("Like Rate")
+                    Text("Interest Rate")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                     Spacer()
                     Text("\(Int(insights.likeRate * 100))%")
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.pink)
+                        .foregroundColor(.teal)
                 }
 
                 GeometryReader { geometry in
@@ -634,7 +634,7 @@ struct ProfileInsightsView: View {
             }
 
             VStack(spacing: 12) {
-                engagementRow(title: "Match Rate", value: "\(Int(insights.matchRate * 100))%", color: .green)
+                engagementRow(title: "Connection Rate", value: "\(Int(insights.matchRate * 100))%", color: .green)
                 Divider()
                 engagementRow(title: "Response Rate", value: "\(Int(insights.responseRate * 100))%", color: .blue)
                 Divider()
@@ -1164,7 +1164,7 @@ struct ProfileInsightsView: View {
             suggestions.append(ProfileSuggestion(
                 id: UUID().uuidString,
                 title: "Add More Photos",
-                description: "Profiles with 4+ photos get 3x more matches. Show different sides of your personality!",
+                description: "Profiles with 4+ photos get 3x more connections. Show different sides of your personality!",
                 priority: .high,
                 category: .photos,
                 actionType: .addPhotos
@@ -1186,7 +1186,7 @@ struct ProfileInsightsView: View {
             suggestions.append(ProfileSuggestion(
                 id: UUID().uuidString,
                 title: "Add Profile Prompts",
-                description: "Answer personality prompts to stand out! Profiles with prompts get 2x more matches.",
+                description: "Answer personality prompts to stand out! Profiles with prompts get 2x more connections.",
                 priority: .high,
                 category: .bio,
                 actionType: .improveBio
@@ -1197,7 +1197,7 @@ struct ProfileInsightsView: View {
             suggestions.append(ProfileSuggestion(
                 id: UUID().uuidString,
                 title: "Add More Interests",
-                description: "Add at least 5 interests to help find better matches with shared passions.",
+                description: "Add at least 5 interests to help find people with shared passions.",
                 priority: .medium,
                 category: .interests,
                 actionType: .addInterests
@@ -1208,7 +1208,7 @@ struct ProfileInsightsView: View {
             suggestions.append(ProfileSuggestion(
                 id: UUID().uuidString,
                 title: "Get Verified",
-                description: "Verified profiles are trusted and get 3x more matches!",
+                description: "Verified profiles are trusted and get 3x more connections!",
                 priority: .high,
                 category: .verification,
                 actionType: .getVerified

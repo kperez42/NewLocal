@@ -1,6 +1,6 @@
 //
 //  DiscoverFiltersView.swift
-//  Celestia
+//  NewLocal
 //
 //  Professional filter settings for discovery
 //
@@ -39,8 +39,8 @@ struct DiscoverFiltersView: View {
     ]
 
     let relationshipGoalOptions = [
-        "Casual Dating", "Long-term Relationship", "Marriage",
-        "Friendship", "Not Sure Yet"
+        "Find Local Friends", "Activity Buddies", "Professional Network",
+        "Roommate Search", "Explore the City", "Not Sure Yet"
     ]
 
     let smokingOptions = ["Never", "Socially", "Regularly", "Trying to Quit"]

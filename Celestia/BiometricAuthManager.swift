@@ -82,7 +82,7 @@ class BiometricAuthManager: ObservableObject {
     /// Authenticate user with biometrics
     /// - Parameter reason: Reason shown to user in prompt
     /// - Returns: True if authentication succeeded
-    func authenticate(reason: String = "Authenticate to access Celestia") async throws -> Bool {
+    func authenticate(reason: String = "Authenticate to access NewLocal") async throws -> Bool {
         let context = LAContext()
 
         var error: NSError?
@@ -112,7 +112,7 @@ class BiometricAuthManager: ObservableObject {
     /// Authenticate with fallback to passcode
     /// - Parameter reason: Reason shown to user
     /// - Returns: True if authentication succeeded
-    func authenticateWithPasscode(reason: String = "Authenticate to access Celestia") async throws -> Bool {
+    func authenticateWithPasscode(reason: String = "Authenticate to access NewLocal") async throws -> Bool {
         let context = LAContext()
         context.localizedFallbackTitle = "Use Passcode"
 
@@ -142,7 +142,7 @@ class BiometricAuthManager: ObservableObject {
         }
 
         // Verify user can authenticate before enabling
-        let success = try await authenticate(reason: "Enable \(biometricTypeString) for Celestia")
+        let success = try await authenticate(reason: "Enable \(biometricTypeString) for NewLocal")
 
         if success {
             isEnabled = true
