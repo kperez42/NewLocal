@@ -143,11 +143,11 @@ struct StarterCard: View {
     private var gradientColor: Color {
         switch starter.category {
         case .sharedInterest:
-            return .purple
+            return .teal
         case .location:
             return .blue
         case .bio:
-            return .pink
+            return .cyan
         case .generic:
             return .green
         }
@@ -191,7 +191,7 @@ struct CompactConversationStartersView: View {
         .padding(16)
         .background(
             LinearGradient(
-                colors: [Color.purple.opacity(0.05), Color.pink.opacity(0.03)],
+                colors: [Color.teal.opacity(0.05), Color.cyan.opacity(0.03)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -226,13 +226,13 @@ struct CompactStarterButton: View {
                     .font(.body)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .frame(width: 32, height: 32)
-                    .background(Color.purple.opacity(0.1))
+                    .background(Color.teal.opacity(0.1))
                     .cornerRadius(8)
 
                 Text(starter.text)
@@ -247,7 +247,7 @@ struct CompactStarterButton: View {
                     .font(.title3)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
