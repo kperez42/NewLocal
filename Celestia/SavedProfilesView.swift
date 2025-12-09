@@ -230,8 +230,8 @@ struct SavedProfilesView: View {
             LinearGradient(
                 colors: [
                     Color.orange.opacity(0.9),
-                    Color.pink.opacity(0.7),
-                    Color.purple.opacity(0.6)
+                    Color.teal.opacity(0.7),
+                    Color.cyan.opacity(0.6)
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -846,7 +846,7 @@ struct SavedProfileCard: View {
                                 .frame(height: imageHeight)
                         } else {
                             LinearGradient(
-                                colors: [.purple.opacity(0.7), .pink.opacity(0.6)],
+                                colors: [.teal.opacity(0.7), .cyan.opacity(0.6)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -1043,7 +1043,7 @@ struct EnhancedSavedProfileCard: View {
                                 .frame(height: imageHeight)
                         } else {
                             LinearGradient(
-                                colors: [.purple.opacity(0.7), .pink.opacity(0.6)],
+                                colors: [.teal.opacity(0.7), .cyan.opacity(0.6)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -1272,7 +1272,7 @@ struct SavedYouCard: View {
                             .frame(height: imageHeight)
                     } else {
                         LinearGradient(
-                            colors: [.purple.opacity(0.7), .pink.opacity(0.6)],
+                            colors: [.teal.opacity(0.7), .cyan.opacity(0.6)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -1350,7 +1350,7 @@ struct ViewedProfileCard: View {
                             .frame(height: imageHeight)
                     } else {
                         LinearGradient(
-                            colors: [.purple.opacity(0.7), .pink.opacity(0.6)],
+                            colors: [.teal.opacity(0.7), .cyan.opacity(0.6)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
