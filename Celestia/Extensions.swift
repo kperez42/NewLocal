@@ -492,3 +492,216 @@ extension URL {
     }
 }
 
+// MARK: - Safe Error Handling Extensions
+
+/// Error handling result type for operations that might fail
+enum SafeResult<T> {
+    case success(T)
+    case failure(Error)
+
+    var value: T? {
+        switch self {
+        case .success(let value): return value
+        case .failure: return nil
+        }
+    }
+
+    var error: Error? {
+        switch self {
+        case .success: return nil
+        case .failure(let error): return error
+        }
+    }
+
+    var isSuccess: Bool {
+        switch self {
+        case .success: return true
+        case .failure: return false
+        }
+    }
+}
+
+extension JSONEncoder {
+    /// Encode with logging on failure
+    func safeEncode<T: Encodable>(
+        _ value: T,
+        context: String = #function,
+        logCategory: Logger.Category = .general
+    ) -> Data? {
+        do {
+            return try encode(value)
+        } catch {
+            Logger.shared.warning(
+                "JSON encoding failed in \(context): \(error.localizedDescription)",
+                category: logCategory
+            )
+            return nil
+        }
+    }
+}
+
+extension JSONDecoder {
+    /// Decode with logging on failure
+    func safeDecode<T: Decodable>(
+        _ type: T.Type,
+        from data: Data,
+        context: String = #function,
+        logCategory: Logger.Category = .general
+    ) -> T? {
+        do {
+            return try decode(type, from: data)
+        } catch {
+            Logger.shared.warning(
+                "JSON decoding failed for \(type) in \(context): \(error.localizedDescription)",
+                category: logCategory
+            )
+            return nil
+        }
+    }
+}
+
+extension Result {
+    /// Log failure and return nil for value
+    func loggedValue(
+        context: String = #function,
+        logCategory: Logger.Category = .general
+    ) -> Success? {
+        switch self {
+        case .success(let value):
+            return value
+        case .failure(let error):
+            Logger.shared.warning(
+                "Operation failed in \(context): \(error.localizedDescription)",
+                category: logCategory
+            )
+            return nil
+        }
+    }
+}
+
+/// Execute an operation with automatic error logging
+func safeExecute<T>(
+    _ operation: () throws -> T,
+    context: String = #function,
+    logCategory: Logger.Category = .general
+) -> T? {
+    do {
+        return try operation()
+    } catch {
+        Logger.shared.warning(
+            "Operation failed in \(context): \(error.localizedDescription)",
+            category: logCategory
+        )
+        return nil
+    }
+}
+
+/// Execute an async operation with automatic error logging
+func safeExecuteAsync<T>(
+    _ operation: () async throws -> T,
+    context: String = #function,
+    logCategory: Logger.Category = .general
+) async -> T? {
+    do {
+        return try await operation()
+    } catch {
+        Logger.shared.warning(
+            "Async operation failed in \(context): \(error.localizedDescription)",
+            category: logCategory
+        )
+        return nil
+    }
+}
+
+// MARK: - Retry Helper
+
+/// Retry an async operation with exponential backoff
+func withRetry<T>(
+    maxAttempts: Int = 3,
+    initialDelay: TimeInterval = 1.0,
+    maxDelay: TimeInterval = 30.0,
+    multiplier: Double = 2.0,
+    context: String = #function,
+    logCategory: Logger.Category = .network,
+    operation: () async throws -> T
+) async throws -> T {
+    var lastError: Error?
+    var delay = initialDelay
+
+    for attempt in 1...maxAttempts {
+        do {
+            return try await operation()
+        } catch {
+            lastError = error
+
+            if attempt < maxAttempts {
+                Logger.shared.warning(
+                    "\(context) attempt \(attempt) failed: \(error.localizedDescription). Retrying in \(delay)s...",
+                    category: logCategory
+                )
+                try? await Task.sleep(seconds: delay)
+                delay = min(delay * multiplier, maxDelay)
+            }
+        }
+    }
+
+    Logger.shared.error(
+        "\(context) failed after \(maxAttempts) attempts",
+        category: logCategory,
+        error: lastError
+    )
+    throw lastError ?? NSError(domain: "RetryError", code: -1)
+}
+
+// MARK: - Error Alert Helper
+
+struct ErrorAlertInfo: Identifiable {
+    let id = UUID()
+    let title: String
+    let message: String
+    let retryAction: (() -> Void)?
+
+    init(
+        title: String = "Error",
+        message: String,
+        retryAction: (() -> Void)? = nil
+    ) {
+        self.title = title
+        self.message = message
+        self.retryAction = retryAction
+    }
+
+    static func from(_ error: Error, retryAction: (() -> Void)? = nil) -> ErrorAlertInfo {
+        ErrorAlertInfo(
+            title: "Error",
+            message: error.localizedDescription,
+            retryAction: retryAction
+        )
+    }
+}
+
+extension View {
+    /// Present an error alert with optional retry action
+    func errorAlert(info: Binding<ErrorAlertInfo?>) -> some View {
+        alert(
+            info.wrappedValue?.title ?? "Error",
+            isPresented: Binding(
+                get: { info.wrappedValue != nil },
+                set: { if !$0 { info.wrappedValue = nil } }
+            )
+        ) {
+            Button("OK", role: .cancel) {
+                info.wrappedValue = nil
+            }
+            if let retry = info.wrappedValue?.retryAction {
+                Button("Retry") {
+                    info.wrappedValue = nil
+                    retry()
+                }
+            }
+        } message: {
+            Text(info.wrappedValue?.message ?? "")
+        }
+    }
+}
+

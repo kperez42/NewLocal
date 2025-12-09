@@ -113,12 +113,14 @@ enum AppConstants {
     }
     
     // MARK: - Feature Flags
+    // Note: These flags control local features. Remote feature flags in FeatureFlagManager take precedence.
     enum Features {
-        static let voiceMessagesEnabled = false
-        static let videoCallsEnabled = false
-        static let storiesEnabled = false
-        static let groupChatsEnabled = false
-        static let gifSupportEnabled = true
+        static let voiceMessagesEnabled = false  // Not implemented yet
+        static let videoCallsEnabled = false  // Not implemented yet
+        static let storiesEnabled = false  // Not implemented yet
+        static let groupChatsEnabled = false  // Not implemented yet
+        static let gifSupportEnabled = false  // Not implemented yet - requires Giphy SDK
+        static let stickersEnabled = false  // Not implemented yet
         static let locationTrackingEnabled = true
     }
     

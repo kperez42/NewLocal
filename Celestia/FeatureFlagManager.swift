@@ -302,9 +302,9 @@ enum FeatureFlag: String, CaseIterable {
         case .enableReadReceipts: return true
         case .enableSmartMatching: return true
         case .enableVideoChat: return false
-        case .enableVoiceNotes: return true
-        case .enableGiphy: return true
-        case .enableStickers: return true
+        case .enableVoiceNotes: return false  // Not implemented yet - disabled until voice recording UI is complete
+        case .enableGiphy: return false  // Not implemented yet - requires Giphy SDK integration
+        case .enableStickers: return false  // Not implemented yet - requires sticker pack integration
         case .enableContentModeration: return true
         case .enableProfileReview: return true
         case .autoModerateMessages: return true

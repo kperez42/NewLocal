@@ -325,4 +325,326 @@ extension View {
     ) -> some View {
         modifier(CardModifier(cornerRadius: cornerRadius, shadow: shadow))
     }
+
+    /// Apply gradient border
+    func gradientBorder(
+        colors: [Color] = [.pink, .purple],
+        lineWidth: CGFloat = 2
+    ) -> some View {
+        self.overlay(
+            RoundedRectangle(cornerRadius: DesignSystem.CornerRadius.md)
+                .strokeBorder(
+                    LinearGradient(
+                        colors: colors,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: lineWidth
+                )
+        )
+    }
+
+    /// Apply shimmer loading effect
+    func shimmer(isActive: Bool = true) -> some View {
+        modifier(ShimmerModifier(isActive: isActive))
+    }
+
+    /// Apply press effect animation
+    func pressEffect() -> some View {
+        modifier(PressEffectModifier())
+    }
+
+    /// Apply standard list row style
+    func listRowStyle() -> some View {
+        self
+            .padding(.horizontal, DesignSystem.Spacing.md)
+            .padding(.vertical, DesignSystem.Spacing.sm)
+            .background(Color(.systemBackground))
+    }
+}
+
+// MARK: - Shimmer Effect Modifier
+
+struct ShimmerModifier: ViewModifier {
+    let isActive: Bool
+    @State private var phase: CGFloat = 0
+
+    func body(content: Content) -> some View {
+        if isActive {
+            content
+                .overlay(
+                    GeometryReader { geo in
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0),
+                                Color.white.opacity(0.5),
+                                Color.white.opacity(0)
+                            ],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                        .frame(width: geo.size.width * 2)
+                        .offset(x: -geo.size.width + (geo.size.width * 2 * phase))
+                    }
+                )
+                .mask(content)
+                .onAppear {
+                    withAnimation(.linear(duration: 1.5).repeatForever(autoreverses: false)) {
+                        phase = 1
+                    }
+                }
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - Press Effect Modifier
+
+struct PressEffectModifier: ViewModifier {
+    @State private var isPressed = false
+
+    func body(content: Content) -> some View {
+        content
+            .scaleEffect(isPressed ? 0.96 : 1.0)
+            .animation(.spring(response: 0.2, dampingFraction: 0.6), value: isPressed)
+            .simultaneousGesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in isPressed = true }
+                    .onEnded { _ in isPressed = false }
+            )
+    }
+}
+
+// MARK: - Avatar View
+
+/// Reusable avatar view with consistent styling
+struct AvatarView: View {
+    let imageURL: String?
+    let size: CGFloat
+    let showBorder: Bool
+    let borderColors: [Color]
+    let fallbackIcon: String
+
+    init(
+        imageURL: String?,
+        size: CGFloat = DesignSystem.IconSize.avatar,
+        showBorder: Bool = false,
+        borderColors: [Color] = [.pink, .purple],
+        fallbackIcon: String = "person.circle.fill"
+    ) {
+        self.imageURL = imageURL
+        self.size = size
+        self.showBorder = showBorder
+        self.borderColors = borderColors
+        self.fallbackIcon = fallbackIcon
+    }
+
+    var body: some View {
+        Group {
+            if let url = imageURL, let imageUrl = URL(string: url) {
+                CachedAsyncImage(url: imageUrl) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    placeholderView
+                }
+            } else {
+                placeholderView
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(Circle())
+        .overlay(
+            Circle()
+                .strokeBorder(
+                    showBorder ? LinearGradient(
+                        colors: borderColors,
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ) : LinearGradient(colors: [.clear], startPoint: .top, endPoint: .bottom),
+                    lineWidth: showBorder ? 3 : 0
+                )
+        )
+    }
+
+    private var placeholderView: some View {
+        Image(systemName: fallbackIcon)
+            .resizable()
+            .scaledToFit()
+            .foregroundColor(.gray)
+            .padding(size * 0.2)
+            .background(Color(.systemGray5))
+    }
+}
+
+// MARK: - Badge View
+
+/// Notification badge with count
+struct BadgeView: View {
+    let count: Int
+    let maxDisplay: Int
+    let color: Color
+
+    init(count: Int, maxDisplay: Int = 99, color: Color = .red) {
+        self.count = count
+        self.maxDisplay = maxDisplay
+        self.color = color
+    }
+
+    var body: some View {
+        if count > 0 {
+            Text(count > maxDisplay ? "\(maxDisplay)+" : "\(count)")
+                .font(.system(size: 11, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(
+                    Capsule()
+                        .fill(color)
+                )
+        }
+    }
+}
+
+// MARK: - Tag View
+
+/// Pill-shaped tag for categories, interests, etc.
+struct TagView: View {
+    let text: String
+    let icon: String?
+    let color: Color
+    let isSelected: Bool
+    let action: (() -> Void)?
+
+    init(
+        text: String,
+        icon: String? = nil,
+        color: Color = .accentColor,
+        isSelected: Bool = false,
+        action: (() -> Void)? = nil
+    ) {
+        self.text = text
+        self.icon = icon
+        self.color = color
+        self.isSelected = isSelected
+        self.action = action
+    }
+
+    var body: some View {
+        Button(action: { action?() }) {
+            HStack(spacing: 4) {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .font(.caption)
+                }
+                Text(text)
+                    .font(.caption.weight(.medium))
+            }
+            .padding(.horizontal, DesignSystem.Spacing.sm)
+            .padding(.vertical, DesignSystem.Spacing.xxs)
+            .foregroundColor(isSelected ? .white : color)
+            .background(
+                Capsule()
+                    .fill(isSelected ? color : color.opacity(0.15))
+            )
+        }
+        .buttonStyle(.plain)
+        .disabled(action == nil)
+    }
+}
+
+// MARK: - Divider with Label
+
+/// Custom divider with optional centered label
+struct LabeledDivider: View {
+    let label: String?
+
+    init(_ label: String? = nil) {
+        self.label = label
+    }
+
+    var body: some View {
+        HStack {
+            Rectangle()
+                .fill(Color(.separator))
+                .frame(height: 1)
+
+            if let label = label {
+                Text(label)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal, DesignSystem.Spacing.xs)
+            }
+
+            Rectangle()
+                .fill(Color(.separator))
+                .frame(height: 1)
+        }
+    }
+}
+
+// MARK: - Gradient Button Style
+
+struct GradientButtonStyle: ButtonStyle {
+    let colors: [Color]
+    let cornerRadius: CGFloat
+
+    init(
+        colors: [Color] = [.pink, .purple],
+        cornerRadius: CGFloat = DesignSystem.CornerRadius.button
+    ) {
+        self.colors = colors
+        self.cornerRadius = cornerRadius
+    }
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .frame(height: DesignSystem.Layout.buttonHeight)
+            .background(
+                LinearGradient(
+                    colors: colors,
+                    startPoint: .leading,
+                    endPoint: .trailing
+                )
+            )
+            .cornerRadius(cornerRadius)
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.9 : 1.0)
+            .animation(.spring(response: 0.2), value: configuration.isPressed)
+    }
+}
+
+// MARK: - Outline Button Style
+
+struct OutlineButtonStyle: ButtonStyle {
+    let color: Color
+    let cornerRadius: CGFloat
+
+    init(
+        color: Color = .accentColor,
+        cornerRadius: CGFloat = DesignSystem.CornerRadius.button
+    ) {
+        self.color = color
+        self.cornerRadius = cornerRadius
+    }
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.headline)
+            .foregroundColor(color)
+            .frame(maxWidth: .infinity)
+            .frame(height: DesignSystem.Layout.buttonHeight)
+            .background(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .strokeBorder(color, lineWidth: 2)
+            )
+            .scaleEffect(configuration.isPressed ? 0.97 : 1.0)
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+            .animation(.spring(response: 0.2), value: configuration.isPressed)
+    }
 }
