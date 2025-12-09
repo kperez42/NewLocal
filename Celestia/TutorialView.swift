@@ -299,10 +299,10 @@ class TutorialManager: ObservableObject {
         return [
             Tutorial(
                 id: "welcome",
-                title: "Welcome to Celestia! 🌟",
-                description: "Your journey to meaningful connections starts here. Let's show you around!",
+                title: "Welcome to NewLocal! 🌟",
+                description: "Your journey to building community starts here. Let's show you around!",
                 icon: "star.fill",
-                accentColor: .purple,
+                accentColor: .teal,
                 tips: [
                     "Be authentic and genuine",
                     "Add photos that show your personality",

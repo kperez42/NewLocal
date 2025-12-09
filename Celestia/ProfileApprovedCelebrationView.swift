@@ -100,7 +100,7 @@ struct ProfileApprovedCelebrationView: View {
                         )
                         .scaleEffect(appearAnimation ? 1.0 : 0.8)
 
-                    Text("Welcome to Celestia")
+                    Text("Welcome to NewLocal")
                         .font(.title2)
                         .foregroundColor(.secondary)
                 }
