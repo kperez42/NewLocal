@@ -97,7 +97,7 @@ struct ProfileInsightsView: View {
                     .trim(from: 0, to: CGFloat(insights.profileScore) / 100)
                     .stroke(
                         LinearGradient(
-                            colors: [.purple, .pink, .orange],
+                            colors: [.teal, .cyan, .orange],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         ),
@@ -111,7 +111,7 @@ struct ProfileInsightsView: View {
                         .font(.system(size: 56, weight: .bold))
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -175,14 +175,14 @@ struct ProfileInsightsView: View {
                                 .font(.subheadline)
                                 .fontWeight(selectedTab == index ? .bold : .medium)
                         }
-                        .foregroundColor(selectedTab == index ? .purple : .gray)
+                        .foregroundColor(selectedTab == index ? .teal : .gray)
 
                         // Indicator line
                         Rectangle()
                             .fill(
                                 selectedTab == index ?
                                 LinearGradient(
-                                    colors: [.purple, .pink],
+                                    colors: [.teal, .cyan],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 ) :
@@ -268,15 +268,15 @@ struct ProfileInsightsView: View {
                     title: "Shutterbug",
                     subtitle: "6 photos",
                     isUnlocked: (authService.currentUser?.photos.count ?? 0) >= 6,
-                    color: .purple
+                    color: .teal
                 )
 
                 achievementBadge(
-                    icon: "heart.fill",
-                    title: "Heartthrob",
-                    subtitle: "50+ likes",
+                    icon: "person.2.fill",
+                    title: "Community Star",
+                    subtitle: "50+ connections",
                     isUnlocked: insights.likesReceived >= 50,
-                    color: .pink
+                    color: .cyan
                 )
 
                 achievementBadge(
@@ -353,7 +353,7 @@ struct ProfileInsightsView: View {
                     .font(.title3)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -374,14 +374,14 @@ struct ProfileInsightsView: View {
                             .font(.system(size: 36, weight: .bold))
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [.purple, .pink],
+                                    colors: [.teal, .cyan],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
                             )
                         Text("%")
                             .font(.headline)
-                            .foregroundColor(.purple)
+                            .foregroundColor(.teal)
                     }
 
                     Text("of profiles")
@@ -392,7 +392,7 @@ struct ProfileInsightsView: View {
                 .padding()
                 .background(
                     LinearGradient(
-                        colors: [.purple.opacity(0.1), .pink.opacity(0.05)],
+                        colors: [.teal.opacity(0.1), .cyan.opacity(0.05)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -402,7 +402,7 @@ struct ProfileInsightsView: View {
                 // Quick stats
                 VStack(alignment: .leading, spacing: 12) {
                     rankingStat(icon: "eye.fill", label: "Views today", value: "\(Int.random(in: 5...20))", color: .blue)
-                    rankingStat(icon: "heart.fill", label: "Likes today", value: "\(Int.random(in: 2...10))", color: .pink)
+                    rankingStat(icon: "person.badge.plus", label: "Requests today", value: "\(Int.random(in: 2...10))", color: .cyan)
                     rankingStat(icon: "message.fill", label: "Messages", value: "\(Int.random(in: 1...5))", color: .green)
                 }
                 .frame(maxWidth: .infinity)
@@ -528,7 +528,7 @@ struct ProfileInsightsView: View {
                     .font(.title3)
                     .foregroundStyle(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -539,10 +539,10 @@ struct ProfileInsightsView: View {
 
             HStack(spacing: 20) {
                 statBox(
-                    title: "Likes",
+                    title: "Interests",
                     value: "\(insights.likesReceived)",
-                    color: .pink,
-                    icon: "heart.fill"
+                    color: .cyan,
+                    icon: "person.badge.plus.fill"
                 )
 
                 statBox(
@@ -563,7 +563,7 @@ struct ProfileInsightsView: View {
                     Text("\(Int(insights.likeRate * 100))%")
                         .font(.subheadline)
                         .fontWeight(.bold)
-                        .foregroundColor(.pink)
+                        .foregroundColor(.teal)
                 }
 
                 GeometryReader { geometry in
@@ -576,7 +576,7 @@ struct ProfileInsightsView: View {
                         Rectangle()
                             .fill(
                                 LinearGradient(
-                                    colors: [.pink, .purple],
+                                    colors: [.teal, .cyan],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -775,14 +775,14 @@ struct ProfileInsightsView: View {
                         .scaledToFill()
                 },
                 placeholder: {
-                    Color.purple.opacity(0.3)
+                    Color.teal.opacity(0.3)
                 }
             )
             .frame(width: 60, height: 60)
             .clipShape(Circle())
             .overlay(
                 Circle()
-                    .stroke(Color.purple.opacity(0.3), lineWidth: 2)
+                    .stroke(Color.teal.opacity(0.3), lineWidth: 2)
             )
 
             VStack(alignment: .leading, spacing: 6) {
@@ -841,7 +841,7 @@ struct ProfileInsightsView: View {
                 .font(.system(size: 64))
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.purple, .pink],
+                        colors: [.teal, .cyan],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -934,7 +934,7 @@ struct ProfileInsightsView: View {
                         .foregroundColor(.secondary)
                     Text("\(photo.likes)")
                         .font(.headline)
-                        .foregroundColor(.pink)
+                        .foregroundColor(.teal)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -983,7 +983,7 @@ struct ProfileInsightsView: View {
                 HStack(spacing: 8) {
                     Image(systemName: categoryIcon(suggestion.category))
                         .font(.subheadline)
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
 
                     Text(suggestion.title)
                         .font(.headline)
