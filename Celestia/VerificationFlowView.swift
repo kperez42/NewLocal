@@ -1,6 +1,6 @@
 //
 //  VerificationFlowView.swift
-//  Celestia
+//  NewLocal
 //
 //  Complete verification flow UI (Photo, ID, Background Check)
 //
@@ -222,7 +222,7 @@ struct VerificationFlowView: View {
                 .font(.headline)
 
             benefitRow(icon: "eye.fill", text: "Stand out with verified badge on your profile")
-            benefitRow(icon: "heart.fill", text: "Get more matches from other verified users")
+            benefitRow(icon: "person.2.fill", text: "Make more connections with verified locals")
             benefitRow(icon: "shield.fill", text: "Build trust and safety in the community")
             benefitRow(icon: "star.fill", text: "Unlock premium features and visibility boosts")
         }

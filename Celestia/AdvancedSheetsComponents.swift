@@ -1,6 +1,6 @@
 //
 //  AdvancedFiltersSheet.swift
-//  Celestia
+//  NewLocal
 //
 //  Advanced filtering options for user discovery
 //
@@ -70,7 +70,7 @@ struct AdvancedFiltersSheet: View {
                     Button("Reset") {
                         resetFilters()
                     }
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                 }
             }
         }
@@ -111,7 +111,7 @@ struct AdvancedFiltersSheet: View {
                 Text("\(Int(ageRange.lowerBound))")
                     .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                     .frame(width: 50)
                 
                 Spacer()
@@ -125,7 +125,7 @@ struct AdvancedFiltersSheet: View {
                 Text("\(Int(ageRange.upperBound))")
                     .font(.title3)
                     .fontWeight(.bold)
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                     .frame(width: 50)
             }
             
@@ -146,7 +146,7 @@ struct AdvancedFiltersSheet: View {
                     in: 18...99,
                     step: 1
                 )
-                .accentColor(.purple)
+                .accentColor(.teal)
             }
             
             // Max age slider
@@ -166,7 +166,7 @@ struct AdvancedFiltersSheet: View {
                     in: 18...99,
                     step: 1
                 )
-                .accentColor(.purple)
+                .accentColor(.teal)
             }
         }
         .padding(16)
@@ -225,7 +225,7 @@ struct AdvancedFiltersSheet: View {
                         
                         if sortBy == option {
                             Image(systemName: "checkmark.circle.fill")
-                                .foregroundColor(.purple)
+                                .foregroundColor(.teal)
                         }
                     }
                     .padding(14)
@@ -290,13 +290,13 @@ struct AdvancedFiltersSheet: View {
             .padding(.vertical, 16)
             .background(
                 LinearGradient(
-                    colors: [Color.purple, Color.blue],
+                    colors: [Color.teal, Color.blue],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
             )
             .cornerRadius(16)
-            .shadow(color: .purple.opacity(0.4), radius: 10, y: 5)
+            .shadow(color: .teal.opacity(0.4), radius: 10, y: 5)
         }
         .padding(.top, 10)
     }
@@ -306,7 +306,7 @@ struct AdvancedFiltersSheet: View {
     private func sectionHeader(icon: String, title: String) -> some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
-                .foregroundColor(.purple)
+                .foregroundColor(.teal)
             Text(title)
                 .font(.headline)
         }
@@ -348,14 +348,14 @@ struct FilterOptionButton: View {
             Text(title)
                 .font(.subheadline)
                 .fontWeight(.medium)
-                .foregroundColor(isSelected ? .white : .purple)
+                .foregroundColor(isSelected ? .white : .teal)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)
                 .background(
                     isSelected ?
                     AnyShapeStyle(
                         LinearGradient(
-                            colors: [Color.purple, Color.blue],
+                            colors: [Color.teal, Color.blue],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
@@ -378,14 +378,14 @@ struct FilterToggle: View {
         Toggle(isOn: $isOn) {
             HStack(spacing: 10) {
                 Image(systemName: icon)
-                    .foregroundColor(isOn ? .purple : .gray)
+                    .foregroundColor(isOn ? .teal : .gray)
                 Text(title)
             }
         }
         .padding(14)
         .background(Color(.systemGray6))
         .cornerRadius(12)
-        .tint(.purple)
+        .tint(.teal)
     }
 }
 
@@ -498,11 +498,11 @@ struct BoostProfileSheet: View {
             }
             
             VStack(spacing: 8) {
-                Text("Get More Matches")
+                Text("Meet More People")
                     .font(.title2)
                     .fontWeight(.bold)
-                
-                Text("Boost your profile to be seen by more people")
+
+                Text("Boost your profile to connect with more locals")
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .multilineTextAlignment(.center)
@@ -517,7 +517,7 @@ struct BoostProfileSheet: View {
         VStack(spacing: 12) {
             BenefitRow(icon: "eye.fill", text: "Be one of the top profiles in your area")
             BenefitRow(icon: "chart.line.uptrend.xyaxis", text: "Get up to 15x more profile views")
-            BenefitRow(icon: "heart.fill", text: "Increase your chances of matching")
+            BenefitRow(icon: "person.2.fill", text: "Increase your chances of connecting")
             BenefitRow(icon: "timer", text: "Instant activation")
         }
         .padding(16)
@@ -531,7 +531,7 @@ struct BoostProfileSheet: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "clock.fill")
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                 Text("Choose Duration")
                     .font(.headline)
             }
@@ -558,11 +558,11 @@ struct BoostProfileSheet: View {
                             Text(duration.price)
                                 .font(.title3)
                                 .fontWeight(.bold)
-                                .foregroundColor(.purple)
+                                .foregroundColor(.teal)
                             
                             if selectedDuration == duration {
                                 Image(systemName: "checkmark.circle.fill")
-                                    .foregroundColor(.purple)
+                                    .foregroundColor(.teal)
                             } else {
                                 Image(systemName: "circle")
                                     .foregroundColor(.gray)
@@ -572,14 +572,14 @@ struct BoostProfileSheet: View {
                     .padding(16)
                     .background(
                         selectedDuration == duration ?
-                        Color.purple.opacity(0.1) :
+                        Color.teal.opacity(0.1) :
                         Color(.systemGray6)
                     )
                     .cornerRadius(12)
                     .overlay(
                         RoundedRectangle(cornerRadius: 12)
                             .stroke(
-                                selectedDuration == duration ? Color.purple : Color.clear,
+                                selectedDuration == duration ? Color.teal : Color.clear,
                                 lineWidth: 2
                             )
                     )
