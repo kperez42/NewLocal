@@ -45,7 +45,7 @@ struct CurrentUserProfileCard: View {
                 .padding(.vertical, 6)
                 .background(
                     LinearGradient(
-                        colors: [.purple, .pink],
+                        colors: [.teal, .cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -84,7 +84,7 @@ struct CurrentUserProfileCard: View {
 
                     Image(systemName: "mappin.circle.fill")
                         .font(.caption)
-                        .foregroundColor(.purple)
+                        .foregroundColor(.teal)
 
                     Text("\(user.location), \(user.country)")
                         .font(.subheadline)
@@ -98,7 +98,7 @@ struct CurrentUserProfileCard: View {
                 HStack(spacing: 4) {
                     Image(systemName: "person.2.fill")
                         .font(.caption)
-                        .foregroundColor(.pink)
+                        .foregroundColor(.teal)
 
                     Text("Seeking \(user.lookingFor), \(user.ageRangeMin)-\(user.ageRangeMax)")
                         .font(.subheadline)
@@ -112,7 +112,7 @@ struct CurrentUserProfileCard: View {
                     HStack(spacing: 4) {
                         Image(systemName: "photo.stack.fill")
                             .font(.caption)
-                            .foregroundColor(.purple)
+                            .foregroundColor(.teal)
 
                         Text("\(user.photos.count) photo\(user.photos.count == 1 ? "" : "s")")
                             .font(.subheadline)
@@ -134,7 +134,7 @@ struct CurrentUserProfileCard: View {
                         .font(.subheadline)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -145,7 +145,7 @@ struct CurrentUserProfileCard: View {
                         .fontWeight(.medium)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -155,7 +155,7 @@ struct CurrentUserProfileCard: View {
                         .font(.caption)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .cyan],
                                 startPoint: .leading,
                                 endPoint: .trailing
                             )
@@ -175,7 +175,7 @@ struct CurrentUserProfileCard: View {
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
                     LinearGradient(
-                        colors: [.purple.opacity(0.3), .pink.opacity(0.3)],
+                        colors: [.teal.opacity(0.3), .cyan.opacity(0.3)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ),

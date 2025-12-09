@@ -623,17 +623,17 @@ enum NotificationPayload {
         if matches > 0 {
             return matches == 1 ? "You got a new match!" : "You got \(matches) new matches!"
         } else if likes > 0 {
-            return likes == 1 ? "Someone new likes you!" : "\(likes) people like you!"
+            return likes == 1 ? "Someone wants to connect!" : "\(likes) people want to connect!"
         } else if messages > 0 {
             return messages == 1 ? "You have an unread message" : "You have \(messages) unread messages"
         } else {
             let titles = [
-                "Your dating life awaits!",
+                "Your community awaits!",
                 "New people are nearby",
-                "Time to find your match!",
+                "Time to explore your community!",
                 "Ready to meet someone new?"
             ]
-            return titles.randomElement() ?? "Your dating life awaits!"
+            return titles.randomElement() ?? "Your community awaits!"
         }
     }
 

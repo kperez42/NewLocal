@@ -210,7 +210,7 @@ struct ProfileFeedCard: View {
 
             Image(systemName: "mappin.circle.fill")
                 .font(.caption)
-                .foregroundColor(.purple)
+                .foregroundColor(.teal)
 
             Text("\(user.location), \(user.country)")
                 .font(.subheadline)
@@ -391,7 +391,7 @@ struct ProfileFeedCard: View {
             // View profile button (replaces photos-only)
             ActionButton(
                 icon: "person.circle.fill",
-                color: .purple,
+                color: .cyan,
                 label: "Profile",
                 isProcessing: false,
                 action: {
@@ -672,13 +672,13 @@ struct CardFullScreenPhotoViewer: View {
                             .padding(.vertical, 14)
                             .background(
                                 LinearGradient(
-                                    colors: [.purple, .pink],
+                                    colors: [.teal, .cyan],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
                             )
                             .cornerRadius(25)
-                            .shadow(color: .purple.opacity(0.4), radius: 10, y: 4)
+                            .shadow(color: .teal.opacity(0.4), radius: 10, y: 4)
                         }
                     }
                     .padding(.bottom, 50)

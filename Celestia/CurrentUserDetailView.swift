@@ -58,7 +58,7 @@ struct CurrentUserDetailView: View {
                     .padding(.vertical, 6)
                     .background(
                         LinearGradient(
-                            colors: [.purple, .pink],
+                            colors: [.teal, .cyan],
                             startPoint: .leading,
                             endPoint: .trailing
                         )
@@ -76,7 +76,7 @@ struct CurrentUserDetailView: View {
                                 .font(.system(size: 32, weight: .bold))
                                 .foregroundStyle(
                                     LinearGradient(
-                                        colors: [.purple, .pink],
+                                        colors: [.teal, .cyan],
                                         startPoint: .leading,
                                         endPoint: .trailing
                                     )
@@ -96,7 +96,7 @@ struct CurrentUserDetailView: View {
                         // Location
                         HStack(spacing: 6) {
                             Image(systemName: "mappin.circle.fill")
-                                .foregroundColor(.purple)
+                                .foregroundColor(.teal)
                             Text("\(user.location), \(user.country)")
                                 .foregroundColor(.secondary)
                         }
@@ -105,7 +105,7 @@ struct CurrentUserDetailView: View {
                         // Photo count
                         HStack(spacing: 6) {
                             Image(systemName: "photo.stack.fill")
-                                .foregroundColor(.purple)
+                                .foregroundColor(.teal)
                             Text("\(validPhotos.count) photo\(validPhotos.count == 1 ? "" : "s")")
                                 .foregroundColor(.secondary)
                         }
@@ -117,8 +117,8 @@ struct CurrentUserDetailView: View {
                         ProfileSectionCard(
                             icon: "quote.bubble.fill",
                             title: "About",
-                            iconColors: [.purple, .pink],
-                            borderColor: .purple
+                            iconColors: [.teal, .cyan],
+                            borderColor: .teal
                         ) {
                             Text(user.bio)
                                 .font(.body)
@@ -148,12 +148,12 @@ struct CurrentUserDetailView: View {
                         ProfileSectionCard(
                             icon: "sparkles",
                             title: "Interests",
-                            iconColors: [.orange, .pink],
+                            iconColors: [.orange, .teal],
                             borderColor: .orange
                         ) {
                             FlowLayout2(spacing: 10) {
                                 ForEach(user.interests, id: \.self) { interest in
-                                    ProfileTagView(text: interest, colors: [.orange, .pink], textColor: .orange)
+                                    ProfileTagView(text: interest, colors: [.orange, .teal], textColor: .orange)
                                 }
                             }
                         }
@@ -164,8 +164,8 @@ struct CurrentUserDetailView: View {
                         ProfileSectionCard(
                             icon: "quote.bubble.fill",
                             title: "Get to Know Me",
-                            iconColors: [.purple, .pink],
-                            borderColor: .purple
+                            iconColors: [.teal, .cyan],
+                            borderColor: .teal
                         ) {
                             VStack(spacing: 12) {
                                 ForEach(user.prompts) { prompt in
@@ -180,7 +180,7 @@ struct CurrentUserDetailView: View {
                         ProfileSectionCard(
                             icon: "person.text.rectangle",
                             title: "Details",
-                            iconColors: [.indigo, .purple],
+                            iconColors: [.indigo, .blue],
                             borderColor: .indigo
                         ) {
                             VStack(spacing: 12) {
@@ -232,8 +232,8 @@ struct CurrentUserDetailView: View {
                     ProfileSectionCard(
                         icon: "heart.fill",
                         title: "Looking for",
-                        iconColors: [.purple, .pink],
-                        borderColor: .purple
+                        iconColors: [.teal, .cyan],
+                        borderColor: .teal
                     ) {
                         Text("\(user.lookingFor), ages \(user.ageRangeMin)-\(user.ageRangeMax)")
                             .font(.body)
@@ -281,13 +281,13 @@ struct CurrentUserDetailView: View {
                     .frame(width: 120, height: 60)
                     .background(
                         LinearGradient(
-                            colors: [Color.purple, Color.pink],
+                            colors: [Color.teal, Color.cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .clipShape(Capsule())
-                    .shadow(color: Color.purple.opacity(0.4), radius: 10)
+                    .shadow(color: Color.teal.opacity(0.4), radius: 10)
                 }
                 .accessibilityLabel("Edit Profile")
             }

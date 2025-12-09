@@ -157,24 +157,24 @@ struct ImprovedUserCard: View {
     private var placeholderGradient: some View {
         LinearGradient(
             colors: [
-                Color.purple.opacity(0.7),
-                Color.pink.opacity(0.6),
+                Color.teal.opacity(0.7),
+                Color.cyan.opacity(0.6),
                 Color.blue.opacity(0.5)
             ],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
     }
-    
+
     // MARK: - Swipe Indicators
-    
+
     private var swipeIndicators: some View {
         ZStack {
-            // LIKE indicator (right swipe)
+            // CONNECT indicator (right swipe)
             if offset.width > 20 {
                 SwipeLabel(
-                    text: "LIKE",
-                    color: .green,
+                    text: "CONNECT",
+                    color: .teal,
                     rotation: -15
                 )
                 .opacity(min(Double(offset.width / swipeThreshold), 1.0))
