@@ -1,8 +1,8 @@
 //
 //  DiscoverFiltersView.swift
-//  Celestia
+//  NewLocal
 //
-//  Professional filter settings for discovery
+//  Filter settings for discovering locals and newcomers in your community
 //
 
 import SwiftUI
@@ -11,64 +11,88 @@ struct DiscoverFiltersView: View {
     @ObservedObject var filters = DiscoveryFilters.shared
     @Environment(\.dismiss) var dismiss
 
-    // Section expansion state - basics, interests, and background open by default
-    @State private var expandedSections: Set<FilterSection> = [.basics, .interests, .background]
+    // Section expansion state
+    @State private var expandedSections: Set<FilterSection> = [.userType, .interests]
 
     enum FilterSection: String, CaseIterable {
-        case basics = "Basics"
+        case userType = "Who to Meet"
+        case location = "Location & Neighborhood"
         case interests = "Interests"
-        case background = "Background"
-        case lifestyle = "Lifestyle"
+        case professional = "Professional"
+        case timeInCity = "Time in City"
     }
 
+    // NewLocal Categories
+    let userTypeOptions = [
+        ("local", "Locals", "People who know the city well"),
+        ("newcomer", "Newcomers", "Recently moved (< 1 year)"),
+        ("transplant", "Transplants", "Moved 1-2 years ago")
+    ]
+
+    let connectionGoalOptions = [
+        "Find Local Guides", "Meet Other Newcomers", "Professional Networking",
+        "Make New Friends", "Find Activity Partners", "Learn About Neighborhoods",
+        "Get Local Recommendations", "Help Newcomers"
+    ]
+
+    let exploreOptions = [
+        "Best Restaurants", "Hidden Gems", "Nightlife", "Outdoor Activities",
+        "Coffee Shops", "Fitness & Gyms", "Art & Culture", "Local Events",
+        "Neighborhoods", "Shopping", "Parks & Nature", "Family Activities",
+        "Pet-Friendly Places", "Professional Networking", "Sports & Recreation"
+    ]
+
     let commonInterests = [
-        "Travel", "Hiking", "Coffee", "Food", "Photography",
-        "Music", "Fitness", "Art", "Reading", "Cooking",
-        "Dancing", "Movies", "Gaming", "Yoga", "Sports",
-        "Wine", "Dogs", "Cats", "Beach", "Mountains"
+        "Food & Restaurants", "Outdoor Activities", "Sports", "Fitness",
+        "Art & Culture", "Music", "Tech & Startups", "Professional Networking",
+        "Travel", "Hiking", "Coffee Shops", "Photography", "Local Events",
+        "Gaming", "Cooking", "Reading", "Yoga", "Running", "Volunteering"
     ]
 
-    let educationOptions = [
-        "High School", "Some College", "Associate's", "Bachelor's",
-        "Master's", "Doctorate", "Trade School"
+    let professionOptions = [
+        "Technology", "Healthcare", "Finance", "Education", "Creative/Arts",
+        "Retail", "Hospitality", "Manufacturing", "Government", "Non-profit",
+        "Consulting", "Legal", "Marketing", "Real Estate", "Startup"
     ]
-
-    let religionOptions = [
-        "Agnostic", "Atheist", "Buddhist", "Catholic", "Christian",
-        "Hindu", "Jewish", "Muslim", "Spiritual", "Other", "Prefer not to say"
-    ]
-
-    let relationshipGoalOptions = [
-        "Casual Dating", "Long-term Relationship", "Marriage",
-        "Friendship", "Not Sure Yet"
-    ]
-
-    let smokingOptions = ["Never", "Socially", "Regularly", "Trying to Quit"]
-    let drinkingOptions = ["Never", "Socially", "Regularly", "Rarely"]
-    let petOptions = ["Dog", "Cat", "Both", "Other Pets", "No Pets", "Want Pets"]
-    let exerciseOptions = ["Daily", "Often", "Sometimes", "Rarely", "Never"]
-    let dietOptions = ["Vegan", "Vegetarian", "Pescatarian", "Kosher", "Halal", "No Restrictions"]
 
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 0) {
-                    // Active Filters Summary (no quick filters - cleaner UI)
+                    // Quick Filters
+                    quickFiltersSection
+
+                    // Active Filters Summary
                     if filters.hasActiveFilters {
                         activeFiltersSummary
                     }
 
                     // Filter Sections
                     VStack(spacing: 12) {
-                        // Basics Section (no distance - advertising in specific city)
+                        // User Type Section
                         filterSection(
-                            section: .basics,
-                            icon: "slider.horizontal.3",
+                            section: .userType,
+                            icon: "person.2.fill",
                             content: {
                                 VStack(spacing: 20) {
-                                    ageRangeSection
+                                    userTypeSection
                                     Divider().padding(.horizontal)
-                                    verificationSection
+                                    connectionGoalsSection
+                                }
+                            }
+                        )
+
+                        // Location Section
+                        filterSection(
+                            section: .location,
+                            icon: "mappin.circle.fill",
+                            content: {
+                                VStack(spacing: 20) {
+                                    neighborhoodSection
+                                    Divider().padding(.horizontal)
+                                    hometownSection
+                                    Divider().padding(.horizontal)
+                                    distanceSection
                                 }
                             }
                         )
@@ -78,43 +102,29 @@ struct DiscoverFiltersView: View {
                             section: .interests,
                             icon: "star.circle.fill",
                             content: {
-                                interestsSection
-                            }
-                        )
-
-                        // Background Section
-                        filterSection(
-                            section: .background,
-                            icon: "person.text.rectangle",
-                            content: {
                                 VStack(spacing: 20) {
-                                    educationSection
+                                    interestsSection
                                     Divider().padding(.horizontal)
-                                    heightSection
-                                    Divider().padding(.horizontal)
-                                    religionSection
-                                    Divider().padding(.horizontal)
-                                    relationshipGoalsSection
+                                    exploreSection
                                 }
                             }
                         )
 
-                        // Lifestyle Section
+                        // Professional Section
                         filterSection(
-                            section: .lifestyle,
-                            icon: "leaf.circle.fill",
+                            section: .professional,
+                            icon: "briefcase.fill",
                             content: {
-                                VStack(spacing: 20) {
-                                    lifestyleChipsSection("Smoking", icon: "smoke.fill", options: smokingOptions, selected: $filters.smokingPreferences)
-                                    Divider().padding(.horizontal)
-                                    lifestyleChipsSection("Drinking", icon: "wineglass.fill", options: drinkingOptions, selected: $filters.drinkingPreferences)
-                                    Divider().padding(.horizontal)
-                                    lifestyleChipsSection("Pets", icon: "pawprint.fill", options: petOptions, selected: $filters.petPreferences)
-                                    Divider().padding(.horizontal)
-                                    lifestyleChipsSection("Exercise", icon: "figure.run", options: exerciseOptions, selected: $filters.exercisePreferences)
-                                    Divider().padding(.horizontal)
-                                    lifestyleChipsSection("Diet", icon: "leaf.fill", options: dietOptions, selected: $filters.dietPreferences)
-                                }
+                                professionsSection
+                            }
+                        )
+
+                        // Time in City Section
+                        filterSection(
+                            section: .timeInCity,
+                            icon: "calendar.circle.fill",
+                            content: {
+                                timeInCitySection
                             }
                         )
                     }
@@ -156,7 +166,7 @@ struct DiscoverFiltersView: View {
                             .padding(.vertical, 8)
                             .background(
                                 LinearGradient(
-                                    colors: [.purple, .pink],
+                                    colors: [.teal, .blue],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -168,6 +178,47 @@ struct DiscoverFiltersView: View {
         }
     }
 
+    // MARK: - Quick Filters
+
+    private var quickFiltersSection: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                QuickFilterChip(
+                    title: "Locals Only",
+                    icon: "house.fill",
+                    isActive: filters.userTypes == ["local"],
+                    color: .teal
+                ) {
+                    HapticManager.shared.impact(.light)
+                    filters.showLocalsOnly()
+                }
+
+                QuickFilterChip(
+                    title: "Newcomers Only",
+                    icon: "airplane.arrival",
+                    isActive: filters.userTypes.contains("newcomer"),
+                    color: .orange
+                ) {
+                    HapticManager.shared.impact(.light)
+                    filters.showNewcomersOnly()
+                }
+
+                QuickFilterChip(
+                    title: "Verified",
+                    icon: "checkmark.seal.fill",
+                    isActive: filters.showVerifiedOnly,
+                    color: .green
+                ) {
+                    HapticManager.shared.impact(.light)
+                    filters.showVerifiedOnly.toggle()
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+        }
+        .background(Color(.systemBackground))
+    }
+
     // MARK: - Active Filters Summary
 
     private var activeFiltersSummary: some View {
@@ -175,7 +226,7 @@ struct DiscoverFiltersView: View {
 
         return HStack(spacing: 8) {
             Image(systemName: "line.3.horizontal.decrease.circle.fill")
-                .foregroundColor(.purple)
+                .foregroundColor(.teal)
 
             Text("\(activeCount) filter\(activeCount == 1 ? "" : "s") active")
                 .font(.subheadline)
@@ -193,12 +244,12 @@ struct DiscoverFiltersView: View {
                 Text("Clear All")
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
             }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
-        .background(Color.purple.opacity(0.08))
+        .background(Color.teal.opacity(0.08))
     }
 
     // MARK: - Filter Section Container
@@ -225,7 +276,7 @@ struct DiscoverFiltersView: View {
                         .font(.title3)
                         .foregroundStyle(
                             LinearGradient(
-                                colors: [.purple, .pink],
+                                colors: [.teal, .blue],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             )
@@ -248,7 +299,7 @@ struct DiscoverFiltersView: View {
                             .padding(.vertical, 4)
                             .background(
                                 LinearGradient(
-                                    colors: [.purple, .pink],
+                                    colors: [.teal, .blue],
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -278,77 +329,227 @@ struct DiscoverFiltersView: View {
         .cornerRadius(16)
     }
 
-    // MARK: - Age Range Section
+    // MARK: - User Type Section
 
-    private var ageRangeSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
+    private var userTypeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Age Range")
+                Text("Show me")
                     .font(.subheadline)
                     .fontWeight(.medium)
 
                 Spacer()
 
-                Text("\(filters.minAge) - \(filters.maxAge)")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                    .foregroundColor(.purple)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
-                    .background(Color.purple.opacity(0.1))
-                    .cornerRadius(8)
+                if !filters.userTypes.isEmpty {
+                    Button("Clear") {
+                        HapticManager.shared.impact(.light)
+                        filters.userTypes.removeAll()
+                    }
+                    .font(.caption)
+                    .foregroundColor(.teal)
+                }
             }
 
-            // Combined range slider visualization
-            VStack(spacing: 8) {
-                // Min age slider
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Min: \(filters.minAge)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+            ForEach(userTypeOptions, id: \.0) { option in
+                Button {
+                    HapticManager.shared.impact(.light)
+                    if filters.userTypes.contains(option.0) {
+                        filters.userTypes.remove(option.0)
+                    } else {
+                        filters.userTypes.insert(option.0)
+                    }
+                } label: {
+                    HStack {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(option.1)
+                                .fontWeight(.medium)
+                            Text(option.2)
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
 
-                    Slider(value: Binding(
-                        get: { Double(filters.minAge) },
-                        set: { filters.minAge = Int($0) }
-                    ), in: 18...Double(filters.maxAge - 1), step: 1)
-                    .tint(.purple)
+                        Spacer()
+
+                        Image(systemName: filters.userTypes.contains(option.0) ? "checkmark.circle.fill" : "circle")
+                            .foregroundColor(filters.userTypes.contains(option.0) ? .teal : .gray.opacity(0.3))
+                    }
+                    .padding()
+                    .background(
+                        filters.userTypes.contains(option.0) ?
+                        Color.teal.opacity(0.1) : Color(.systemGray6)
+                    )
+                    .cornerRadius(12)
                 }
+                .foregroundColor(.primary)
+            }
+        }
+    }
 
-                // Max age slider
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Max: \(filters.maxAge)")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
+    // MARK: - Connection Goals Section
 
-                    Slider(value: Binding(
-                        get: { Double(filters.maxAge) },
-                        set: { filters.maxAge = Int($0) }
-                    ), in: Double(filters.minAge + 1)...65, step: 1)
-                    .tint(.pink)
+    private var connectionGoalsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("I'm looking to...")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+
+                Spacer()
+
+                if !filters.connectionGoals.isEmpty {
+                    Button("Clear") {
+                        HapticManager.shared.impact(.light)
+                        filters.connectionGoals.removeAll()
+                    }
+                    .font(.caption)
+                    .foregroundColor(.teal)
+                }
+            }
+
+            FlowLayout(spacing: 8) {
+                ForEach(connectionGoalOptions, id: \.self) { goal in
+                    SelectableFilterChip(
+                        title: goal,
+                        isSelected: filters.connectionGoals.contains(goal),
+                        accentColor: .teal
+                    ) {
+                        HapticManager.shared.impact(.light)
+                        if filters.connectionGoals.contains(goal) {
+                            filters.connectionGoals.remove(goal)
+                        } else {
+                            filters.connectionGoals.insert(goal)
+                        }
+                    }
                 }
             }
         }
     }
 
-    // MARK: - Verification Section
+    // MARK: - Neighborhood Section
 
-    private var verificationSection: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Verified Users Only")
+    private var neighborhoodSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Neighborhoods")
                     .font(.subheadline)
                     .fontWeight(.medium)
 
-                Text("Only show profiles with ID verification")
+                Spacer()
+
+                if !filters.neighborhoods.isEmpty {
+                    Button("Clear") {
+                        HapticManager.shared.impact(.light)
+                        filters.neighborhoods.removeAll()
+                    }
                     .font(.caption)
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.teal)
+                }
             }
 
-            Spacer()
+            Text("Enter neighborhood names to filter")
+                .font(.caption)
+                .foregroundColor(.secondary)
 
-            Toggle("", isOn: $filters.showVerifiedOnly)
-                .labelsHidden()
-                .tint(.purple)
+            // Display selected neighborhoods as chips
+            if !filters.neighborhoods.isEmpty {
+                FlowLayout(spacing: 8) {
+                    ForEach(Array(filters.neighborhoods), id: \.self) { neighborhood in
+                        HStack(spacing: 4) {
+                            Text(neighborhood)
+                                .font(.subheadline)
+
+                            Button {
+                                filters.neighborhoods.remove(neighborhood)
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .foregroundColor(.white)
+                        .background(Color.teal)
+                        .cornerRadius(16)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Hometown Section
+
+    private var hometownSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("From Same Hometown")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+
+                Spacer()
+
+                if !filters.movedFromCities.isEmpty {
+                    Button("Clear") {
+                        HapticManager.shared.impact(.light)
+                        filters.movedFromCities.removeAll()
+                    }
+                    .font(.caption)
+                    .foregroundColor(.teal)
+                }
+            }
+
+            Text("Connect with people from your hometown")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            // Display selected hometowns as chips
+            if !filters.movedFromCities.isEmpty {
+                FlowLayout(spacing: 8) {
+                    ForEach(Array(filters.movedFromCities), id: \.self) { city in
+                        HStack(spacing: 4) {
+                            Text(city)
+                                .font(.subheadline)
+
+                            Button {
+                                filters.movedFromCities.remove(city)
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .font(.caption)
+                            }
+                        }
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .foregroundColor(.white)
+                        .background(Color.orange)
+                        .cornerRadius(16)
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Distance Section
+
+    private var distanceSection: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("Maximum Distance")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+
+                Spacer()
+
+                Text("\(Int(filters.maxDistance)) miles")
+                    .font(.subheadline)
+                    .fontWeight(.semibold)
+                    .foregroundColor(.teal)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.teal.opacity(0.1))
+                    .cornerRadius(8)
+            }
+
+            Slider(value: $filters.maxDistance, in: 5...100, step: 5)
+                .tint(.teal)
         }
     }
 
@@ -357,9 +558,9 @@ struct DiscoverFiltersView: View {
     private var interestsSection: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Match users with these interests")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
+                Text("Shared Interests")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
 
                 Spacer()
 
@@ -369,7 +570,7 @@ struct DiscoverFiltersView: View {
                         filters.selectedInterests.removeAll()
                     }
                     .font(.caption)
-                    .foregroundColor(.purple)
+                    .foregroundColor(.teal)
                 }
             }
 
@@ -377,215 +578,134 @@ struct DiscoverFiltersView: View {
                 ForEach(commonInterests, id: \.self) { interest in
                     SelectableFilterChip(
                         title: interest,
-                        isSelected: filters.selectedInterests.contains(interest)
-                    ) {
-                        toggleInterest(interest)
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Education Section
-
-    private var educationSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Education Level")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Spacer()
-
-                if !filters.educationLevels.isEmpty {
-                    Button("Clear") {
-                        HapticManager.shared.impact(.light)
-                        filters.educationLevels.removeAll()
-                    }
-                    .font(.caption)
-                    .foregroundColor(.purple)
-                }
-            }
-
-            FlowLayout(spacing: 8) {
-                ForEach(educationOptions, id: \.self) { option in
-                    SelectableFilterChip(
-                        title: option,
-                        isSelected: filters.educationLevels.contains(option)
-                    ) {
-                        toggleEducation(option)
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Height Section
-
-    private var heightSection: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            HStack {
-                Text("Height Range")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Spacer()
-
-                if filters.minHeight != nil || filters.maxHeight != nil {
-                    Button("Clear") {
-                        HapticManager.shared.impact(.light)
-                        filters.minHeight = nil
-                        filters.maxHeight = nil
-                    }
-                    .font(.caption)
-                    .foregroundColor(.purple)
-                }
-            }
-
-            VStack(spacing: 12) {
-                // Min height
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Min: \(filters.minHeight ?? 140) cm (\(heightToFeetInches(filters.minHeight ?? 140)))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                    Slider(value: Binding(
-                        get: { Double(filters.minHeight ?? 140) },
-                        set: { filters.minHeight = Int($0) }
-                    ), in: 140...220, step: 1)
-                    .tint(.purple)
-                }
-
-                // Max height
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Max: \(filters.maxHeight ?? 220) cm (\(heightToFeetInches(filters.maxHeight ?? 220)))")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-
-                    Slider(value: Binding(
-                        get: { Double(filters.maxHeight ?? 220) },
-                        set: { filters.maxHeight = Int($0) }
-                    ), in: 140...220, step: 1)
-                    .tint(.pink)
-                }
-            }
-        }
-    }
-
-    private func heightToFeetInches(_ cm: Int) -> String {
-        let totalInches = Double(cm) / 2.54
-        let feet = Int(totalInches / 12)
-        let inches = Int(totalInches.truncatingRemainder(dividingBy: 12))
-        return "\(feet)'\(inches)\""
-    }
-
-    // MARK: - Religion Section
-
-    private var religionSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Religion/Spirituality")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Spacer()
-
-                if !filters.religions.isEmpty {
-                    Button("Clear") {
-                        HapticManager.shared.impact(.light)
-                        filters.religions.removeAll()
-                    }
-                    .font(.caption)
-                    .foregroundColor(.purple)
-                }
-            }
-
-            FlowLayout(spacing: 8) {
-                ForEach(religionOptions, id: \.self) { option in
-                    SelectableFilterChip(
-                        title: option,
-                        isSelected: filters.religions.contains(option)
-                    ) {
-                        toggleReligion(option)
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Relationship Goals Section
-
-    private var relationshipGoalsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Looking For")
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Spacer()
-
-                if !filters.relationshipGoals.isEmpty {
-                    Button("Clear") {
-                        HapticManager.shared.impact(.light)
-                        filters.relationshipGoals.removeAll()
-                    }
-                    .font(.caption)
-                    .foregroundColor(.purple)
-                }
-            }
-
-            FlowLayout(spacing: 8) {
-                ForEach(relationshipGoalOptions, id: \.self) { option in
-                    SelectableFilterChip(
-                        title: option,
-                        isSelected: filters.relationshipGoals.contains(option)
-                    ) {
-                        toggleRelationshipGoal(option)
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: - Lifestyle Chips Section
-
-    private func lifestyleChipsSection(_ title: String, icon: String, options: [String], selected: Binding<Set<String>>) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: icon)
-                    .font(.subheadline)
-                    .foregroundColor(.purple)
-
-                Text(title)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-
-                Spacer()
-
-                if !selected.wrappedValue.isEmpty {
-                    Button("Clear") {
-                        HapticManager.shared.impact(.light)
-                        selected.wrappedValue.removeAll()
-                    }
-                    .font(.caption)
-                    .foregroundColor(.purple)
-                }
-            }
-
-            FlowLayout(spacing: 8) {
-                ForEach(options, id: \.self) { option in
-                    SelectableFilterChip(
-                        title: option,
-                        isSelected: selected.wrappedValue.contains(option)
+                        isSelected: filters.selectedInterests.contains(interest),
+                        accentColor: .teal
                     ) {
                         HapticManager.shared.impact(.light)
-                        if selected.wrappedValue.contains(option) {
-                            selected.wrappedValue.remove(option)
+                        if filters.selectedInterests.contains(interest) {
+                            filters.selectedInterests.remove(interest)
                         } else {
-                            selected.wrappedValue.insert(option)
+                            filters.selectedInterests.insert(interest)
                         }
                     }
                 }
+            }
+        }
+    }
+
+    // MARK: - Explore Section
+
+    private var exploreSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("What They Want to Explore")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+
+                Spacer()
+
+                if !filters.whatToExplore.isEmpty {
+                    Button("Clear") {
+                        HapticManager.shared.impact(.light)
+                        filters.whatToExplore.removeAll()
+                    }
+                    .font(.caption)
+                    .foregroundColor(.teal)
+                }
+            }
+
+            FlowLayout(spacing: 8) {
+                ForEach(exploreOptions, id: \.self) { option in
+                    SelectableFilterChip(
+                        title: option,
+                        isSelected: filters.whatToExplore.contains(option),
+                        accentColor: .orange
+                    ) {
+                        HapticManager.shared.impact(.light)
+                        if filters.whatToExplore.contains(option) {
+                            filters.whatToExplore.remove(option)
+                        } else {
+                            filters.whatToExplore.insert(option)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Professions Section
+
+    private var professionsSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Industry/Profession")
+                    .font(.subheadline)
+                    .fontWeight(.medium)
+
+                Spacer()
+
+                if !filters.professions.isEmpty {
+                    Button("Clear") {
+                        HapticManager.shared.impact(.light)
+                        filters.professions.removeAll()
+                    }
+                    .font(.caption)
+                    .foregroundColor(.teal)
+                }
+            }
+
+            Text("Connect with people in your industry")
+                .font(.caption)
+                .foregroundColor(.secondary)
+
+            FlowLayout(spacing: 8) {
+                ForEach(professionOptions, id: \.self) { profession in
+                    SelectableFilterChip(
+                        title: profession,
+                        isSelected: filters.professions.contains(profession),
+                        accentColor: .blue
+                    ) {
+                        HapticManager.shared.impact(.light)
+                        if filters.professions.contains(profession) {
+                            filters.professions.remove(profession)
+                        } else {
+                            filters.professions.insert(profession)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Time in City Section
+
+    private var timeInCitySection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("How long they've been here")
+                .font(.subheadline)
+                .fontWeight(.medium)
+
+            VStack(spacing: 10) {
+                TimeInCityToggle(
+                    title: "New Arrivals",
+                    subtitle: "Less than 3 months",
+                    isOn: $filters.showNewArrivals,
+                    color: .orange
+                )
+
+                TimeInCityToggle(
+                    title: "Recent Movers",
+                    subtitle: "3-12 months",
+                    isOn: $filters.showRecentMovers,
+                    color: .teal
+                )
+
+                TimeInCityToggle(
+                    title: "Established",
+                    subtitle: "1+ years",
+                    isOn: $filters.showEstablished,
+                    color: .green
+                )
             }
         }
     }
@@ -621,85 +741,72 @@ struct DiscoverFiltersView: View {
 
     private func countActiveFilters() -> Int {
         var count = 0
-        // Removed distance filter - not needed for city-specific advertising
-        if filters.minAge > 18 { count += 1 }
-        if filters.maxAge < 65 { count += 1 }
-        if filters.showVerifiedOnly { count += 1 }
+        count += filters.userTypes.count
+        count += filters.connectionGoals.count
+        count += filters.neighborhoods.count
+        count += filters.movedFromCities.count
         count += filters.selectedInterests.count
-        count += filters.educationLevels.count
-        if filters.minHeight != nil { count += 1 }
-        if filters.maxHeight != nil { count += 1 }
-        count += filters.religions.count
-        count += filters.relationshipGoals.count
-        count += filters.smokingPreferences.count
-        count += filters.drinkingPreferences.count
-        count += filters.petPreferences.count
-        count += filters.exercisePreferences.count
-        count += filters.dietPreferences.count
+        count += filters.whatToExplore.count
+        count += filters.professions.count
+        if filters.showNewArrivals { count += 1 }
+        if filters.showRecentMovers { count += 1 }
+        if filters.showEstablished { count += 1 }
+        if filters.showVerifiedOnly { count += 1 }
         return count
     }
 
     private func sectionFilterCount(_ section: FilterSection) -> Int? {
         switch section {
-        case .basics:
-            var count = 0
-            // Removed distance filter
-            if filters.minAge > 18 || filters.maxAge < 65 { count += 1 }
-            if filters.showVerifiedOnly { count += 1 }
+        case .userType:
+            let count = filters.userTypes.count + filters.connectionGoals.count
+            return count > 0 ? count : nil
+        case .location:
+            let count = filters.neighborhoods.count + filters.movedFromCities.count
             return count > 0 ? count : nil
         case .interests:
-            return filters.selectedInterests.isEmpty ? nil : filters.selectedInterests.count
-        case .background:
+            let count = filters.selectedInterests.count + filters.whatToExplore.count
+            return count > 0 ? count : nil
+        case .professional:
+            return filters.professions.isEmpty ? nil : filters.professions.count
+        case .timeInCity:
             var count = 0
-            count += filters.educationLevels.count
-            if filters.minHeight != nil || filters.maxHeight != nil { count += 1 }
-            count += filters.religions.count
-            count += filters.relationshipGoals.count
-            return count > 0 ? count : nil
-        case .lifestyle:
-            let count = filters.smokingPreferences.count +
-                       filters.drinkingPreferences.count +
-                       filters.petPreferences.count +
-                       filters.exercisePreferences.count +
-                       filters.dietPreferences.count
+            if filters.showNewArrivals { count += 1 }
+            if filters.showRecentMovers { count += 1 }
+            if filters.showEstablished { count += 1 }
             return count > 0 ? count : nil
         }
     }
+}
 
-    private func toggleInterest(_ interest: String) {
-        HapticManager.shared.impact(.light)
-        if filters.selectedInterests.contains(interest) {
-            filters.selectedInterests.remove(interest)
-        } else {
-            filters.selectedInterests.insert(interest)
-        }
-    }
+// MARK: - Time In City Toggle
 
-    private func toggleEducation(_ option: String) {
-        HapticManager.shared.impact(.light)
-        if filters.educationLevels.contains(option) {
-            filters.educationLevels.remove(option)
-        } else {
-            filters.educationLevels.insert(option)
-        }
-    }
+struct TimeInCityToggle: View {
+    let title: String
+    let subtitle: String
+    @Binding var isOn: Bool
+    let color: Color
 
-    private func toggleReligion(_ option: String) {
-        HapticManager.shared.impact(.light)
-        if filters.religions.contains(option) {
-            filters.religions.remove(option)
-        } else {
-            filters.religions.insert(option)
-        }
-    }
+    var body: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.subheadline)
+                    .fontWeight(.medium)
 
-    private func toggleRelationshipGoal(_ option: String) {
-        HapticManager.shared.impact(.light)
-        if filters.relationshipGoals.contains(option) {
-            filters.relationshipGoals.remove(option)
-        } else {
-            filters.relationshipGoals.insert(option)
+                Text(subtitle)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: $isOn)
+                .labelsHidden()
+                .tint(color)
         }
+        .padding()
+        .background(isOn ? color.opacity(0.1) : Color(.systemGray6))
+        .cornerRadius(12)
     }
 }
 
@@ -743,6 +850,7 @@ struct QuickFilterChip: View {
 struct SelectableFilterChip: View {
     let title: String
     let isSelected: Bool
+    var accentColor: Color = .teal
     let action: () -> Void
 
     var body: some View {
@@ -755,7 +863,7 @@ struct SelectableFilterChip: View {
                 .foregroundColor(isSelected ? .white : .primary)
                 .background(
                     isSelected ?
-                    Color.purple :
+                    accentColor :
                     Color(.systemGray6)
                 )
                 .cornerRadius(20)
