@@ -67,12 +67,12 @@ struct UserDetailView: View {
             // BUGFIX: Use effectiveId for reliable user identification (handles @DocumentID edge cases)
             isSaved = savedProfilesVM.savedProfiles.contains(where: { $0.user.effectiveId == user.effectiveId })
         }
-        .alert("Like Sent! 💫", isPresented: $showingInterestSent) {
+        .alert("Request Sent! 💫", isPresented: $showingInterestSent) {
             Button("OK") { dismiss() }
         } message: {
-            Text("If \(user.fullName) likes you back, you'll be matched!")
+            Text("If \(user.fullName) also wants to connect, you'll be connected!")
         }
-        .alert("It's a Match! 🎉", isPresented: $showingMatched) {
+        .alert("You're Connected! 🎉", isPresented: $showingMatched) {
             Button("Send Message") {
                 NotificationCenter.default.post(
                     name: .navigateToMessages,
@@ -81,19 +81,19 @@ struct UserDetailView: View {
                 )
                 dismiss()
             }
-            Button("Keep Browsing") { dismiss() }
+            Button("Keep Exploring") { dismiss() }
         } message: {
-            Text("You and \(user.fullName) liked each other!")
+            Text("You and \(user.fullName) both want to connect!")
         }
         .alert("Error", isPresented: $showingError) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text(errorMessage.isEmpty ? "Failed to send like. Please try again." : errorMessage)
+            Text(errorMessage.isEmpty ? "Failed to send request. Please try again." : errorMessage)
         }
-        .alert("Unliked", isPresented: $showingUnliked) {
+        .alert("Request Cancelled", isPresented: $showingUnliked) {
             Button("OK", role: .cancel) { }
         } message: {
-            Text("You unliked \(user.fullName)")
+            Text("You cancelled your connection request to \(user.fullName)")
         }
         .sheet(isPresented: $showingChat) {
             if let match = chatMatch {
@@ -368,10 +368,10 @@ struct UserDetailView: View {
 
     private var lookingForSection: some View {
         ProfileSectionCard(
-            icon: "heart.fill",
-            title: "Looking for",
-            iconColors: [.purple, .pink],
-            borderColor: .purple
+            icon: "person.2.fill",
+            title: "Open to",
+            iconColors: [.teal, .cyan],
+            borderColor: .teal
         ) {
             Text(user.lookingFor)
                 .font(.body)
@@ -485,12 +485,12 @@ struct UserDetailView: View {
             ZStack {
                 if isProcessing {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: isLiked ? .pink : .white))
+                        .progressViewStyle(CircularProgressViewStyle(tint: isLiked ? .teal : .white))
                         .scaleEffect(1.0)
                 } else {
-                    Image(systemName: isLiked ? "heart.fill" : "heart")
+                    Image(systemName: isLiked ? "person.badge.plus.fill" : "person.badge.plus")
                         .font(.title2)
-                        .foregroundColor(isLiked ? .pink : .white)
+                        .foregroundColor(isLiked ? .teal : .white)
                 }
             }
             .frame(width: 60, height: 60)
@@ -500,7 +500,7 @@ struct UserDetailView: View {
                         Color.white
                     } else {
                         LinearGradient(
-                            colors: [Color.purple, Color.pink],
+                            colors: [Color.teal, Color.cyan],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -511,7 +511,7 @@ struct UserDetailView: View {
             .shadow(color: Color.black.opacity(0.1), radius: 5)
         }
         .disabled(isProcessing)
-        .accessibilityLabel(isLiked ? "Unlike" : "Like")
+        .accessibilityLabel(isLiked ? "Cancel request" : "Connect")
         .accessibilityHint(isLiked ? "Remove like from \(user.fullName)" : "Send interest to \(user.fullName)")
     }
 
@@ -883,7 +883,7 @@ struct PromptCard: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
             LinearGradient(
-                colors: [Color.purple.opacity(0.05), Color.pink.opacity(0.03)],
+                colors: [Color.teal.opacity(0.05), Color.cyan.opacity(0.03)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )

@@ -1119,23 +1119,23 @@ struct FeedDiscoverView: View {
                         user2Id: userId
                     )
                 } else {
-                    // Show toast for regular like (no match)
+                    // Show toast for regular connection request (no mutual match)
                     await MainActor.run {
                         let truncatedName = user.fullName.count > 20 ? String(user.fullName.prefix(20)) + "..." : user.fullName
                         showToast(
-                            message: "You like \(truncatedName)!",
-                            icon: "heart.fill",
-                            color: .pink
+                            message: "Request sent to \(truncatedName)!",
+                            icon: "person.badge.plus.fill",
+                            color: .teal
                         )
                     }
                 }
             } catch {
-                Logger.shared.error("Error sending like", category: .matching, error: error)
+                Logger.shared.error("Error sending connection request", category: .matching, error: error)
                 await MainActor.run {
                     // Revert optimistic update on error
                     likedUsers.remove(userId)
                     showToast(
-                        message: "Failed to send like. Try again.",
+                        message: "Failed to send request. Try again.",
                         icon: "exclamationmark.triangle.fill",
                         color: .red
                     )
