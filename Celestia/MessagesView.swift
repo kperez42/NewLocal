@@ -196,8 +196,8 @@ struct MessagesView: View {
             // Gradient background
             LinearGradient(
                 colors: [
-                    Color.purple.opacity(0.9),
-                    Color.pink.opacity(0.7),
+                    Color.teal.opacity(0.9),
+                    Color.cyan.opacity(0.7),
                     Color.blue.opacity(0.6)
                 ],
                 startPoint: .topLeading,
@@ -404,7 +404,7 @@ struct MessagesView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [Color.purple.opacity(0.2), Color.pink.opacity(0.1)],
+                            colors: [Color.teal.opacity(0.2), Color.cyan.opacity(0.1)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -440,8 +440,8 @@ struct MessagesView: View {
                 HapticManager.shared.impact(.medium)
             } label: {
                 HStack(spacing: 10) {
-                    Image(systemName: "heart.fill")
-                    Text("Start Swiping")
+                    Image(systemName: "person.2.fill")
+                    Text("Explore Community")
                         .fontWeight(.semibold)
                 }
                 .foregroundColor(.white)
@@ -449,7 +449,7 @@ struct MessagesView: View {
                 .padding(.vertical, 14)
                 .background(
                     LinearGradient(
-                        colors: [Color.purple, Color.pink],
+                        colors: [Color.teal, Color.cyan],
                         startPoint: .leading,
                         endPoint: .trailing
                     )
@@ -474,7 +474,7 @@ struct MessagesView: View {
                 Circle()
                     .fill(
                         LinearGradient(
-                            colors: [Color.purple.opacity(0.15), Color.pink.opacity(0.1)],
+                            colors: [Color.teal.opacity(0.15), Color.cyan.opacity(0.1)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
@@ -662,8 +662,8 @@ struct ConversationRow: View {
                 if unreadCount > 0 {
                     LinearGradient(
                         colors: [
-                            Color.purple.opacity(0.08),
-                            Color.pink.opacity(0.05)
+                            Color.teal.opacity(0.08),
+                            Color.cyan.opacity(0.05)
                         ],
                         startPoint: .leading,
                         endPoint: .trailing
@@ -675,7 +675,7 @@ struct ConversationRow: View {
         )
         .cornerRadius(20)
         .shadow(
-            color: unreadCount > 0 ? Color.purple.opacity(0.15) : Color.black.opacity(0.05),
+            color: unreadCount > 0 ? Color.teal.opacity(0.15) : Color.black.opacity(0.05),
             radius: 8,
             y: 4
         )
@@ -684,7 +684,7 @@ struct ConversationRow: View {
                 .stroke(
                     unreadCount > 0 || isNewMatch ?
                     LinearGradient(
-                        colors: [Color.purple.opacity(0.3), Color.pink.opacity(0.2)],
+                        colors: [Color.teal.opacity(0.3), Color.cyan.opacity(0.2)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ) :
@@ -709,8 +709,8 @@ struct ConversationRow: View {
                 .stroke(
                     LinearGradient(
                         colors: [
-                            Color.purple.opacity(0.3),
-                            Color.pink.opacity(0.2)
+                            Color.teal.opacity(0.3),
+                            Color.cyan.opacity(0.2)
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -719,13 +719,13 @@ struct ConversationRow: View {
                 )
         )
     }
-    
+
     private var placeholderImage: some View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color.purple.opacity(0.7),
-                    Color.pink.opacity(0.6),
+                    Color.teal.opacity(0.7),
+                    Color.cyan.opacity(0.6),
                     Color.blue.opacity(0.5)
                 ],
                 startPoint: .topLeading,
