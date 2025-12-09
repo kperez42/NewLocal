@@ -2,7 +2,7 @@
 //  MutualLikesView.swift
 //  Celestia
 //
-//  Shows people you both liked (mutual likes that haven't matched yet)
+//  Shows people who both want to connect (mutual interests that haven't connected yet)
 //
 
 import SwiftUI
@@ -71,20 +71,20 @@ struct MutualLikesView: View {
 
     private var headerCard: some View {
         VStack(spacing: 8) {
-            Image(systemName: "heart.circle.fill")
+            Image(systemName: "person.2.fill")
                 .font(.system(size: 50))
                 .foregroundStyle(
                     LinearGradient(
-                        colors: [.pink, .purple],
+                        colors: [.teal, .cyan],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
                 )
 
-            Text("\(viewModel.mutualLikes.count) Mutual Likes")
+            Text("\(viewModel.mutualLikes.count) Mutual Interests")
                 .font(.title2.bold())
 
-            Text("You both liked each other!")
+            Text("You both want to connect!")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -101,7 +101,7 @@ struct MutualLikesView: View {
     private var loadingView: some View {
         VStack(spacing: 16) {
             ProgressView()
-            Text("Loading mutual likes...")
+            Text("Loading mutual interests...")
                 .font(.subheadline)
                 .foregroundColor(.secondary)
         }
@@ -111,16 +111,16 @@ struct MutualLikesView: View {
 
     private var emptyStateView: some View {
         VStack(spacing: 24) {
-            Image(systemName: "heart.slash.circle")
+            Image(systemName: "person.2.slash")
                 .font(.system(size: 80))
                 .foregroundColor(.gray.opacity(0.5))
 
             VStack(spacing: 8) {
-                Text("No Mutual Likes Yet")
+                Text("No Mutual Interests Yet")
                     .font(.title2)
                     .fontWeight(.bold)
 
-                Text("Keep swiping to find people who like you back!")
+                Text("Keep exploring to find people who want to connect!")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.center)
@@ -149,7 +149,7 @@ struct MutualLikeCard: View {
                     CachedCardImage(url: url)
                 } else {
                     LinearGradient(
-                        colors: [.purple.opacity(0.6), .pink.opacity(0.5)],
+                        colors: [.teal.opacity(0.6), .cyan.opacity(0.5)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
@@ -176,12 +176,12 @@ struct MutualLikeCard: View {
 
                     // Mutual indicator
                     HStack(spacing: 4) {
-                        Image(systemName: "heart.fill")
+                        Image(systemName: "person.2.fill")
                             .font(.caption2)
-                        Text("You both liked!")
+                        Text("Mutual interest!")
                             .font(.caption)
                     }
-                    .foregroundColor(.pink)
+                    .foregroundColor(.teal)
                 }
                 .padding(12)
             }
