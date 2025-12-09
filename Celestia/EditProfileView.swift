@@ -71,7 +71,7 @@ struct EditProfileView: View {
     let lookingForOptions = ["Men", "Women", "Everyone"]
     let educationOptions = ["Prefer not to say", "High School", "Some College", "Associate's", "Bachelor's", "Master's", "Doctorate", "Trade School"]
     let religionOptions = ["Prefer not to say", "Agnostic", "Atheist", "Buddhist", "Catholic", "Christian", "Hindu", "Jewish", "Muslim", "Spiritual", "Other"]
-    let relationshipGoalOptions = ["Prefer not to say", "Casual Dating", "Long-term Relationship", "Marriage", "Friendship", "Not Sure Yet"]
+    let relationshipGoalOptions = ["Prefer not to say", "Casual Meetups", "Activity Partners", "Professional Networking", "Friendship", "Not Sure Yet"]
     let smokingOptions = ["Prefer not to say", "Never", "Socially", "Regularly", "Trying to Quit"]
     let drinkingOptions = ["Prefer not to say", "Never", "Rarely", "Socially", "Regularly"]
     let petsOptions = ["Prefer not to say", "No Pets", "Dog", "Cat", "Both", "Other Pets", "Want Pets"]
@@ -1220,7 +1220,7 @@ struct EditProfileView: View {
 
     private var preferencesSection: some View {
         VStack(spacing: 20) {
-            SectionHeader(icon: "heart.fill", title: "Dating Preferences", color: .pink)
+            SectionHeader(icon: "person.2.fill", title: "Connection Preferences", color: .teal)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Looking for")

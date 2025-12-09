@@ -14,7 +14,7 @@ enum LegalDocumentType: String, CaseIterable {
     case privacyPolicy = "Privacy Policy"
     case termsOfService = "Terms of Service"
     case communityGuidelines = "Community Guidelines"
-    case safetyTips = "Dating Safety Tips"
+    case safetyTips = "Community Safety Tips"
     case cookiePolicy = "Cookie & Data Policy"
     case eula = "End User License Agreement"
     case accessibility = "Accessibility Statement"

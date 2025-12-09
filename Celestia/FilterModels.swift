@@ -416,20 +416,20 @@ enum RelationshipGoal: String, Codable, CaseIterable {
 
     var displayName: String {
         switch self {
-        case .longTerm: return "Long-term Relationship"
-        case .shortTerm: return "Short-term Relationship"
-        case .marriage: return "Marriage"
+        case .longTerm: return "Long-term Connections"
+        case .shortTerm: return "Casual Meetups"
+        case .marriage: return "Activity Partners"
         case .friendship: return "Friendship"
-        case .casual: return "Casual Dating"
+        case .casual: return "Casual Hangouts"
         case .figureItOut: return "Figure it Out"
         }
     }
 
     var icon: String {
         switch self {
-        case .longTerm: return "heart.fill"
-        case .shortTerm: return "heart"
-        case .marriage: return "heart.circle.fill"
+        case .longTerm: return "person.2.fill"
+        case .shortTerm: return "person.2"
+        case .marriage: return "person.3.fill"
         case .friendship: return "person.2.fill"
         case .casual: return "figure.walk"
         case .figureItOut: return "questionmark.circle"
