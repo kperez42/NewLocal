@@ -1,6 +1,6 @@
 //
 //  EditProfileViewModel.swift
-//  Celestia
+//  NewLocal
 //
 //  ViewModel for Edit Profile - centralizes state and business logic
 //  Extracted from EditProfileView.swift to reduce file size and improve testability
@@ -60,7 +60,7 @@ class EditProfileViewModel: ObservableObject {
     let genderOptions = ["Male", "Female", "Non-binary", "Other"]
     let lookingForOptions = ["Men", "Women", "Everyone"]
     let religionOptions = ["Prefer not to say", "Agnostic", "Atheist", "Buddhist", "Catholic", "Christian", "Hindu", "Jewish", "Muslim", "Spiritual", "Other"]
-    let relationshipGoalOptions = ["Prefer not to say", "Casual dating", "Relationship", "Long-term partner", "Marriage", "Open to anything"]
+    let relationshipGoalOptions = ["Prefer not to say", "Find Local Friends", "Activity Buddies", "Professional Network", "Roommate Search", "Explore the City", "Not Sure Yet"]
     let smokingOptions = ["Prefer not to say", "Non-smoker", "Social smoker", "Regular smoker", "Trying to quit"]
     let drinkingOptions = ["Prefer not to say", "Non-drinker", "Social drinker", "Regular drinker"]
     let petsOptions = ["Prefer not to say", "No pets", "Dog", "Cat", "Dog & Cat", "Other pets"]

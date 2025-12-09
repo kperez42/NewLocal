@@ -1220,7 +1220,7 @@ struct EditProfileView: View {
 
     private var preferencesSection: some View {
         VStack(spacing: 20) {
-            SectionHeader(icon: "heart.fill", title: "Dating Preferences", color: .pink)
+            SectionHeader(icon: "person.2.fill", title: "Connection Preferences", color: .teal)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("Looking for")
