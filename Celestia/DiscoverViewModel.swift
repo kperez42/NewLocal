@@ -1,8 +1,8 @@
 //
 //  DiscoverViewModel.swift
-//  Celestia
+//  NewLocal
 //
-//  Handles user discovery and browsing
+//  Handles community discovery - connecting newcomers with locals and other newcomers
 //
 
 import Foundation
@@ -25,19 +25,24 @@ class DiscoverViewModel: ObservableObject {
     @Published var showingUpgradeSheet = false
     @Published var upgradeReason: UpgradeReason = .general
 
+    // NewLocal: Filter by user type for targeted connections
+    @Published var filterByUserType: String? = nil  // nil = all, "local", "newcomer", "transplant"
+    @Published var filterByNeighborhood: String? = nil
+    @Published var filterByProfession: String? = nil
+
     enum UpgradeReason {
         case general
-        case likeLimitReached
-        case superLikesExhausted
+        case connectionLimitReached
+        case premiumFeature
 
         var message: String {
             switch self {
             case .general:
                 return ""
-            case .likeLimitReached:
-                return "You've reached your daily like limit. Subscribe to continue liking!"
-            case .superLikesExhausted:
-                return "You're out of Super Likes. Subscribe to get more!"
+            case .connectionLimitReached:
+                return "You've reached your daily connection limit. Subscribe to connect with unlimited locals and newcomers!"
+            case .premiumFeature:
+                return "Unlock premium features to get priority matching with locals in your area!"
             }
         }
     }
@@ -677,6 +682,127 @@ class DiscoverViewModel: ObservableObject {
 
         // Return boosted users first, then regular users
         return boostedUsers + regularUsers
+    }
+
+    /// NewLocal: Prioritize users based on relocation compatibility
+    /// - Newcomers see locals first (to find guides)
+    /// - Locals see newcomers first (to help out)
+    /// - Transplants see both newcomers and other transplants
+    /// - Also prioritize by shared interests and neighborhood
+    func prioritizeForNewLocal(_ users: [User], currentUser: User) -> [User] {
+        guard !users.isEmpty else { return users }
+
+        let currentUserType = currentUser.userType
+
+        // Calculate compatibility score for each user
+        let scoredUsers = users.map { user -> (user: User, score: Int) in
+            var score = 0
+
+            // User type matching
+            switch currentUserType {
+            case "newcomer":
+                // Newcomers want to meet locals who can show them around
+                if user.userType == "local" {
+                    score += 50
+                } else if user.userType == "transplant" {
+                    score += 30  // Transplants can also help
+                } else if user.userType == "newcomer" {
+                    score += 20  // Connect with fellow newcomers too
+                }
+            case "local":
+                // Locals want to help newcomers
+                if user.userType == "newcomer" {
+                    score += 50
+                } else if user.userType == "transplant" {
+                    score += 20
+                }
+            case "transplant":
+                // Transplants connect with newcomers and other transplants
+                if user.userType == "newcomer" {
+                    score += 40
+                } else if user.userType == "transplant" {
+                    score += 35
+                } else if user.userType == "local" {
+                    score += 25
+                }
+            default:
+                break
+            }
+
+            // Same neighborhood bonus
+            if !currentUser.neighborhood.isEmpty && !user.neighborhood.isEmpty {
+                if currentUser.neighborhood.lowercased() == user.neighborhood.lowercased() {
+                    score += 25
+                }
+            }
+
+            // Same profession/industry bonus
+            if !currentUser.profession.isEmpty && !user.profession.isEmpty {
+                if currentUser.profession.lowercased() == user.profession.lowercased() {
+                    score += 15
+                }
+            }
+
+            // Shared interests bonus (up to 20 points)
+            let sharedInterests = Set(currentUser.interests).intersection(Set(user.interests))
+            score += min(sharedInterests.count * 5, 20)
+
+            // Same "moved from" city bonus - fellow expatriates!
+            if !currentUser.movedFrom.isEmpty && !user.movedFrom.isEmpty {
+                if currentUser.movedFrom.lowercased() == user.movedFrom.lowercased() {
+                    score += 30  // Big bonus for people from same hometown
+                }
+            }
+
+            // Shared "what to explore" interests
+            let sharedExplore = Set(currentUser.whatToExplore).intersection(Set(user.whatToExplore))
+            score += min(sharedExplore.count * 5, 15)
+
+            // Recency bonus for newcomers (newer = higher priority)
+            if user.userType == "newcomer", let movedDate = user.movedToDate {
+                let monthsInCity = Calendar.current.dateComponents([.month], from: movedDate, to: Date()).month ?? 0
+                if monthsInCity <= 3 {
+                    score += 10  // Very new to city
+                } else if monthsInCity <= 6 {
+                    score += 5
+                }
+            }
+
+            return (user: user, score: score)
+        }
+
+        // Sort by score (highest first) and return users
+        let sortedUsers = scoredUsers.sorted { $0.score > $1.score }.map { $0.user }
+
+        Logger.shared.info("NewLocal: Prioritized \(sortedUsers.count) users based on relocation compatibility", category: .matching)
+
+        return sortedUsers
+    }
+
+    /// Filter users by NewLocal criteria (user type, neighborhood, profession)
+    func applyNewLocalFilters(_ users: [User]) -> [User] {
+        var filtered = users
+
+        // Filter by user type if set
+        if let userType = filterByUserType {
+            filtered = filtered.filter { $0.userType == userType }
+        }
+
+        // Filter by neighborhood if set
+        if let neighborhood = filterByNeighborhood, !neighborhood.isEmpty {
+            filtered = filtered.filter {
+                $0.neighborhood.lowercased().contains(neighborhood.lowercased())
+            }
+        }
+
+        // Filter by profession if set
+        if let profession = filterByProfession, !profession.isEmpty {
+            filtered = filtered.filter {
+                $0.profession.lowercased().contains(profession.lowercased())
+            }
+        }
+
+        return filtered
     }
 
     /// Load user images for analysis

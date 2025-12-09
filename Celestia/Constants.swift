@@ -2,7 +2,7 @@
 //  Constants.swift
 //  NewLocal
 //
-//  Centralized constants for the app
+//  Centralized constants for the relocation community app
 //
 
 import Foundation
@@ -11,7 +11,8 @@ import SwiftUI
 enum AppConstants {
     // MARK: - App Identity
     static let appName = "NewLocal"
-    static let appTagline = "Connect with your new city"
+    static let appTagline = "Your community in a new city"
+    static let appDescription = "Connect with locals who can show you around and other newcomers who share your journey"
 
     // MARK: - API Configuration
     enum API {
@@ -44,15 +45,18 @@ enum AppConstants {
     
     // MARK: - Premium Pricing
     enum Premium {
-        static let monthlyPrice = 9.99
-        static let sixMonthPrice = 49.99
-        static let yearlyPrice = 79.99
+        static let monthlyPrice = 7.99
+        static let sixMonthPrice = 39.99
+        static let yearlyPrice = 59.99
 
-        // Features
-        static let freeConnectionsPerDay = 20
+        // Features - Community focused
+        static let freeConnectionsPerDay = 10  // Free users get 10 connections/day
         static let premiumUnlimitedConnections = true
         static let premiumSeeWhoViewed = true
         static let premiumAdvancedFilters = true
+        static let premiumPriorityMatching = true  // Get matched with locals faster
+        static let premiumNeighborhoodInsights = true  // Detailed neighborhood guides
+        static let premiumEventAccess = true  // Priority access to NewLocal meetups
     }
     
     // MARK: - Colors
@@ -168,6 +172,61 @@ enum AppConstants {
         static let newConnectionTitle = "New Connection!"
         static let newMessageTitle = "New Message"
         static let newInterestTitle = "Someone wants to connect!"
+        static let localGuideTitle = "A local wants to help!"
+        static let newcomerConnectionTitle = "Meet a fellow newcomer!"
+    }
+
+    // MARK: - User Types
+    enum UserTypes {
+        static let local = "local"
+        static let newcomer = "newcomer"
+        static let transplant = "transplant"
+
+        static let localDescription = "I've lived here for years and love showing people around"
+        static let newcomerDescription = "I just moved here and want to explore my new city"
+        static let transplantDescription = "I moved here a while ago and know my way around"
+    }
+
+    // MARK: - Connection Types
+    enum ConnectionTypes {
+        static let findLocalGuide = "Find local guides"
+        static let meetNewcomers = "Meet other newcomers"
+        static let professionalNetwork = "Professional networking"
+        static let exploreTogether = "Explore together"
+        static let makeFriends = "Make friends"
+        static let neighborhoodTips = "Get neighborhood tips"
+    }
+
+    // MARK: - Why Moved Options
+    enum WhyMovedOptions {
+        static let work = "Work/Career"
+        static let family = "Family"
+        static let education = "Education"
+        static let adventure = "Adventure"
+        static let lifestyle = "Lifestyle change"
+        static let partner = "Following partner"
+        static let retirement = "Retirement"
+        static let other = "Other"
+
+        static let allOptions = [work, family, education, adventure, lifestyle, partner, retirement, other]
+    }
+
+    // MARK: - Explore Categories
+    enum ExploreCategories {
+        static let restaurants = "Best restaurants"
+        static let nightlife = "Nightlife & bars"
+        static let outdoors = "Outdoor activities"
+        static let fitness = "Gyms & fitness"
+        static let arts = "Arts & culture"
+        static let shopping = "Shopping spots"
+        static let cafes = "Coffee shops"
+        static let events = "Local events"
+        static let sports = "Sports & recreation"
+        static let neighborhoods = "Neighborhoods"
+        static let publicTransit = "Public transit tips"
+        static let hiddenGems = "Hidden gems"
+
+        static let allCategories = [restaurants, nightlife, outdoors, fitness, arts, shopping, cafes, events, sports, neighborhoods, publicTransit, hiddenGems]
     }
     
     // MARK: - Analytics Events
@@ -184,6 +243,11 @@ enum AppConstants {
         static let profileEdited = "profile_edited"
         static let premiumViewed = "premium_viewed"
         static let premiumPurchased = "premium_purchased"
+        // NewLocal specific events
+        static let localGuideConnected = "local_guide_connected"
+        static let newcomerMet = "newcomer_met"
+        static let neighborhoodExplored = "neighborhood_explored"
+        static let cityTipShared = "city_tip_shared"
     }
     
     // MARK: - Error Messages
