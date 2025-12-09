@@ -234,7 +234,7 @@ enum DesignSystem {
 
         // Gradients
         static let primaryGradient = LinearGradient(
-            colors: [Color.pink, Color.purple],
+            colors: [Color.teal, Color.cyan],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -328,7 +328,7 @@ extension View {
 
     /// Apply gradient border
     func gradientBorder(
-        colors: [Color] = [.pink, .purple],
+        colors: [Color] = [.teal, .cyan],
         lineWidth: CGFloat = 2
     ) -> some View {
         self.overlay(
@@ -430,7 +430,7 @@ struct AvatarView: View {
         imageURL: String?,
         size: CGFloat = DesignSystem.IconSize.avatar,
         showBorder: Bool = false,
-        borderColors: [Color] = [.pink, .purple],
+        borderColors: [Color] = [.teal, .cyan],
         fallbackIcon: String = "person.circle.fill"
     ) {
         self.imageURL = imageURL
@@ -592,7 +592,7 @@ struct GradientButtonStyle: ButtonStyle {
     let cornerRadius: CGFloat
 
     init(
-        colors: [Color] = [.pink, .purple],
+        colors: [Color] = [.teal, .cyan],
         cornerRadius: CGFloat = DesignSystem.CornerRadius.button
     ) {
         self.colors = colors

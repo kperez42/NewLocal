@@ -36,7 +36,7 @@ struct PrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, 16)
             .background(
                 LinearGradient(
-                    colors: [Color.purple, Color.pink],
+                    colors: [Color.teal, Color.cyan],
                     startPoint: .leading,
                     endPoint: .trailing
                 )
@@ -59,7 +59,7 @@ struct SecondaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundColor(.purple)
+            .foregroundColor(.teal)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 16)
             .background(Color.white)
@@ -68,7 +68,7 @@ struct SecondaryButtonStyle: ButtonStyle {
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(
                         LinearGradient(
-                            colors: [Color.purple, Color.pink],
+                            colors: [Color.teal, Color.cyan],
                             startPoint: .leading,
                             endPoint: .trailing
                         ),
